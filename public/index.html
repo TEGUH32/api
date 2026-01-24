@@ -3,1107 +3,1338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REST API Documentation</title>
+    <title>API Teguh - Professional REST API Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #7c3aed;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #7209b7;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --success: #4cc9f0;
-            --warning: #f72585;
-            --info: #4895ef;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --radius: 8px;
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
             color: var(--dark);
-            background: linear-gradient(135deg, #f5f7ff 0%, #f0f2ff 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 1.5rem;
         }
 
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 2rem 0;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
+        /* Header & Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 1000;
+            padding: 1rem 0;
         }
 
-        .header-content {
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            position: relative;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 0.75rem;
+            text-decoration: none;
         }
 
-        .logo i {
-            font-size: 2.5rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 50%;
-            backdrop-filter: blur(5px);
-        }
-
-        .logo-text h1 {
-            font-size: 2rem;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .logo-text p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .server-status {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 12px 24px;
-            border-radius: 50px;
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            justify-content: center;
+            font-size: 1.25rem;
         }
 
-        .status-indicator {
-            width: 12px;
-            height: 12px;
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.05) 70%, transparent 100%);
             border-radius: 50%;
-            background-color: #4ade80;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 10px #4ade80;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
+        .hero-content {
+            max-width: 48rem;
+            position: relative;
         }
 
-        /* Main Content */
-        .dashboard {
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badge i {
+            font-size: 0.75rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--dark), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+
+        /* Features Section */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 1.125rem;
+            max-width: 48rem;
+            margin: 0 auto 3rem;
+        }
+
+        .features-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 1px solid var(--gray-200);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-description {
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        /* API Documentation */
+        .api-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .api-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .api-method {
+            padding: 0.375rem 1rem;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .method-get {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .method-post {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .api-details {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .api-path {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gray-800);
+            border: 1px solid var(--gray-200);
+            word-break: break-all;
+        }
+
+        .api-parameters, .api-response {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        .api-subtitle {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .parameter-table th {
+            text-align: left;
+            padding: 0.75rem;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .parameter-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 0.875rem;
+        }
+
+        .parameter-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .parameter-required {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .parameter-optional {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .response-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .json-key {
+            color: #9cdcfe;
+        }
+
+        .json-string {
+            color: #ce9178;
+        }
+
+        .json-number {
+            color: #b5cea8;
+        }
+
+        .json-boolean {
+            color: #569cd6;
+        }
+
+        /* Server Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
 
-        @media (min-width: 992px) {
-            .dashboard {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .card {
+        .metric-card {
             background: white;
-            border-radius: var(--radius);
             padding: 1.5rem;
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid var(--gray-200);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
+        .metric-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-gray);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
 
-        .card-header i {
-            color: var(--primary);
-            font-size: 1.5rem;
+        .metric-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
         }
 
-        .card-header h2 {
-            font-size: 1.3rem;
+        .metric-title {
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--dark);
         }
 
-        .info-grid {
-            display: grid;
-            gap: 12px;
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
         }
 
-        .info-item {
+        .metric-desc {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 3px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* API Console */
+        .console-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        .console-header {
             display: flex;
             justify-content: space-between;
-            padding: 12px 15px;
-            background: var(--light-gray);
-            border-radius: var(--radius);
-            transition: all 0.2s ease;
-        }
-
-        .info-item:hover {
-            background: #e3f2fd;
-            transform: translateX(5px);
-        }
-
-        .info-label {
-            font-weight: 500;
-            color: var(--gray);
-            display: flex;
             align-items: center;
-            gap: 8px;
+            margin-bottom: 1.5rem;
         }
 
-        .info-value {
-            font-weight: 600;
-            color: var(--dark);
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.95rem;
-        }
-
-        .value-good {
-            color: #10b981;
-        }
-
-        .value-warning {
-            color: #f59e0b;
-        }
-
-        /* Endpoint Cards */
-        .endpoint-grid {
-            display: grid;
+        .console-controls {
+            display: flex;
             gap: 1rem;
-        }
-
-        .endpoint-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.25rem;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .endpoint-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .endpoint-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .endpoint-method {
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            font-family: 'Roboto Mono', monospace;
-            letter-spacing: 0.5px;
-        }
-
-        .method-get {
-            background-color: #d1e7dd;
-            color: #0a3622;
-            border: 1px solid #a3cfbb;
-        }
-
-        .method-post {
-            background-color: #cfe2ff;
-            color: #052c65;
-            border: 1px solid #9ec5fe;
-        }
-
-        .endpoint-path {
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-            color: var(--dark);
-            font-size: 1rem;
-        }
-
-        .endpoint-desc {
-            color: var(--gray);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 10px;
-        }
-
-        .endpoint-detail {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--light-gray);
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--gray);
-            font-size: 0.85rem;
-        }
-
-        .detail-item i {
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        /* Deepseek Chat Interface */
-        .deepseek-interface {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            height: 400px;
-        }
-
-        .chat-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-gray);
-        }
-
-        .chat-header i {
-            color: #10b981;
-            font-size: 1.5rem;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            background: var(--light-gray);
-            border-radius: var(--radius);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 250px;
-        }
-
-        .message {
-            padding: 12px 15px;
-            border-radius: var(--radius);
-            max-width: 80%;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message-user {
-            background: var(--primary);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message-ai {
-            background: white;
-            color: var(--dark);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid var(--light-gray);
-        }
-
-        .chat-input {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: var(--radius);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-        }
-
-        .chat-input input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-        }
-
-        .chat-input button {
-            padding: 12px 24px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .chat-input button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .chat-input button:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 10px;
-            background: white;
-            border-radius: var(--radius);
-            align-self: flex-start;
-            border: 1px solid var(--light-gray);
-        }
-
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: var(--gray);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-5px); }
-        }
-
-        /* API Tester */
-        .api-tester {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .tester-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
 
-        .method-select {
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
+        .console-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
             border-radius: var(--radius);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-weight: 500;
             background: white;
-            cursor: pointer;
+            color: var(--dark);
             min-width: 120px;
-            transition: all 0.3s;
         }
 
-        .method-select:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        .endpoint-input {
+        .console-input {
             flex: 1;
-            min-width: 200px;
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
+            min-width: 300px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
             border-radius: var(--radius);
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.95rem;
-            transition: all 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
         }
 
-        .endpoint-input:focus {
-            border-color: var(--primary);
+        .console-input:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .send-btn {
-            padding: 12px 30px;
-            background: var(--primary);
-            color: white;
-            border: none;
+        .console-response {
+            background: #f8fafc;
+            border: 1px solid var(--gray-200);
             border-radius: var(--radius);
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .send-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .response-container {
-            margin-top: 20px;
+            overflow: hidden;
         }
 
         .response-header {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
         }
 
-        #response-status {
-            padding: 6px 12px;
-            border-radius: 4px;
+        .response-status {
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 0.85rem;
-            font-family: 'Roboto Mono', monospace;
         }
 
         .status-success {
-            background: #d1e7dd;
-            color: #0a3622;
-            border: 1px solid #a3cfbb;
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .status-error {
-            background: #f8d7da;
-            color: #58151c;
-            border: 1px solid #f1aeb5;
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        #response-body {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border: 1px solid #333;
-            border-radius: var(--radius);
-            padding: 20px;
-            min-height: 200px;
+        .response-body {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
             max-height: 400px;
-            overflow: auto;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            white-space: pre-wrap;
-            line-height: 1.5;
+            overflow-y: auto;
         }
 
         /* Footer */
-        footer {
-            text-align: center;
-            padding: 2.5rem 0;
-            color: var(--gray);
-            border-top: 1px solid var(--light-gray);
-            margin-top: 3rem;
-            background: white;
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 5rem;
         }
 
-        .footer-content {
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-icon {
+            background: white;
+            color: var(--primary);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .footer-description {
+            color: var(--gray-400);
+            line-height: 1.7;
+        }
+
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
         }
 
         .footer-links {
             display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin: 10px 0;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-        .footer-links a {
-            color: var(--primary);
+        .footer-link {
+            color: var(--gray-400);
             text-decoration: none;
-            transition: all 0.3s;
-            padding: 8px 16px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            transition: color 0.2s;
         }
 
-        .footer-links a:hover {
-            color: var(--secondary);
-            background: var(--light-gray);
-            transform: translateY(-2px);
+        .footer-link:hover {
+            color: white;
         }
 
-        .footer-info {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-800);
+            color: var(--gray-400);
+            font-size: 0.875rem;
         }
 
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
+            .hero-title {
+                font-size: 2.5rem;
             }
             
-            .logo {
-                justify-content: center;
+            .nav-links {
+                display: none;
             }
             
-            .dashboard {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 0 1rem;
             }
             
-            .tester-controls {
-                flex-direction: column;
+            .api-section {
+                padding: 1.5rem;
             }
             
-            .endpoint-input {
+            .console-input {
                 min-width: 100%;
             }
             
-            .chat-input {
+            .hero-stats {
                 flex-direction: column;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-            }
-            
-            .message {
-                max-width: 90%;
+                gap: 1rem;
             }
         }
 
-        /* Scrollbar Styling */
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--light-gray);
+            background: var(--gray-100);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: var(--gray-400);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
+            background: var(--gray-500);
         }
     </style>
 </head>
 <body>
-    <header>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <span class="logo-text">API Teguh</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#documentation" class="nav-link">Documentation</a>
+                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#console" class="nav-link">API Console</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#get-started" class="cta-button">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-server"></i>
-                    <div class="logo-text">
-                        <h1>Advanced REST API</h1>
-                        <p>Complete backend solution with AI integration</p>
+            <div class="hero-content fade-in-up">
+                <div class="hero-badge">
+                    <i class="fas fa-rocket"></i>
+                    <span>Professional REST API Services</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Build Amazing Applications
+                    <br>With Our Powerful API
+                </h1>
+                
+                <p class="hero-subtitle">
+                    API Teguh provides robust, scalable, and secure REST API solutions with 
+                    AI integration, real-time monitoring, and enterprise-grade performance.
+                    Start building with our comprehensive API suite today.
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="#get-started" class="cta-button" style="margin-right: 1rem;">
+                        <i class="fas fa-play"></i> Get Started Free
+                    </a>
+                    <a href="#documentation" class="cta-button" style="background: transparent; border: 2px solid var(--primary); color: var(--primary);">
+                        <i class="fas fa-book"></i> View Documentation
+                    </a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="uptime-count">00:00:00</span>
+                        <span class="stat-label">Server Uptime</span>
                     </div>
-                </div>
-                <div class="server-status">
-                    <div class="status-indicator"></div>
-                    <span>Server is running on port <span id="current-port">3000</span></span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <!-- Server Dashboard -->
-        <div class="dashboard">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-chart-line"></i>
-                    <h2>Server Status & Metrics</h2>
-                </div>
-                <div class="card-content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">
-                                <i class="fas fa-heart"></i>
-                                Status
-                            </span>
-                            <span class="info-value value-good">Healthy & Running</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">
-                                <i class="fas fa-microchip"></i>
-                                Memory Usage
-                            </span>
-                            <span class="info-value" id="memory-usage">Loading...</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">
-                                <i class="fas fa-clock"></i>
-                                Server Uptime
-                            </span>
-                            <span class="info-value" id="server-uptime">Loading...</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">
-                                <i class="fas fa-shield-alt"></i>
-                                Rate Limit
-                            </span>
-                            <span class="info-value">2000 req/min</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">
-                                <i class="fas fa-plug"></i>
-                                API Endpoints
-                            </span>
-                            <span class="info-value">3 Active</span>
-                        </div>
+                    <div class="stat-item">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Availability</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-code-branch"></i>
-                    <h2>Available API Endpoints</h2>
-                </div>
-                <div class="card-content">
-                    <div class="endpoint-grid">
-                        <div class="endpoint-card" data-method="GET" data-path="/api/status">
-                            <div class="endpoint-header">
-                                <span class="endpoint-method method-get">GET</span>
-                                <span class="endpoint-path">/api/status</span>
-                            </div>
-                            <div class="endpoint-desc">
-                                Get server status, memory usage, and system information
-                            </div>
-                            <div class="endpoint-detail">
-                                <span class="detail-item">
-                                    <i class="fas fa-bolt"></i>
-                                    Real-time data
-                                </span>
-                                <span class="detail-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    Always available
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="endpoint-card" data-method="GET" data-path="/api/ping">
-                            <div class="endpoint-header">
-                                <span class="endpoint-method method-get">GET</span>
-                                <span class="endpoint-path">/api/ping</span>
-                            </div>
-                            <div class="endpoint-desc">
-                                Simple ping endpoint to check if the server is responding
-                            </div>
-                            <div class="endpoint-detail">
-                                <span class="detail-item">
-                                    <i class="fas fa-heartbeat"></i>
-                                    Health check
-                                </span>
-                                <span class="detail-item">
-                                    <i class="fas fa-rocket"></i>
-                                    Instant response
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="endpoint-card" data-method="GET" data-path="/api/deepseek">
-                            <div class="endpoint-header">
-                                <span class="endpoint-method method-get">GET</span>
-                                <span class="endpoint-path">/api/deepseek</span>
-                            </div>
-                            <div class="endpoint-desc">
-                                AI-powered chat using Deepseek API. Requires query parameter "q"
-                            </div>
-                            <div class="endpoint-detail">
-                                <span class="detail-item">
-                                    <i class="fas fa-robot"></i>
-                                    AI Integration
-                                </span>
-                                <span class="detail-item">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    External API
-                                </span>
-                            </div>
-                        </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="request-count">0</span>
+                        <span class="stat-label">Requests Today</span>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Deepseek AI Chat Interface -->
-        <div class="deepseek-interface">
-            <div class="chat-header">
-                <i class="fas fa-robot"></i>
-                <h2>Deepseek AI Chat</h2>
-                <span style="margin-left: auto; font-size: 0.85rem; color: var(--gray);">
-                    Powered by Deepseek API
-                </span>
-            </div>
-            <div class="chat-container">
-                <div class="chat-messages" id="chat-messages">
-                    <div class="message message-ai">
-                        <strong>🤖 AI Assistant:</strong> Hello! I'm your Deepseek AI assistant. Ask me anything and I'll help you with your questions!
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title">Why Choose API Teguh</h2>
+            <p class="section-subtitle">
+                Enterprise-grade features designed for developers who demand reliability, 
+                performance, and ease of use.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
                     </div>
-                    <div class="message message-ai">
-                        <strong>💡 Tip:</strong> You can ask about programming, mathematics, science, or any other topic you're curious about.
-                    </div>
+                    <h3 class="feature-title">High Performance</h3>
+                    <p class="feature-description">
+                        Optimized for speed with response times under 100ms. Built on Node.js 
+                        with efficient caching and load balancing.
+                    </p>
                 </div>
-                <div class="chat-input">
-                    <input type="text" id="ai-query" placeholder="Type your question here... (e.g., What is JavaScript?)" autocomplete="off">
-                    <button id="send-ai-query">
-                        <i class="fas fa-paper-plane"></i>
-                        Send
-                    </button>
+                
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Enterprise Security</h3>
+                    <p class="feature-description">
+                        Advanced rate limiting, API key authentication, SSL encryption, 
+                        and DDoS protection to keep your data secure.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">AI Integration</h3>
+                    <p class="feature-description">
+                        Built-in AI capabilities with multiple models including DeepSeek 
+                        and Microsoft Copilot for intelligent applications.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Real-time Analytics</h3>
+                    <p class="feature-description">
+                        Comprehensive monitoring dashboard with real-time metrics, 
+                        usage statistics, and performance insights.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Developer Friendly</h3>
+                    <p class="feature-description">
+                        Clean RESTful design, comprehensive documentation, SDKs for 
+                        popular languages, and excellent developer support.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="feature-title">Scalable Infrastructure</h3>
+                    <p class="feature-description">
+                        Auto-scaling architecture that grows with your needs. 
+                        Handle from 1 to 1 million requests without performance degradation.
+                    </p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- API Tester -->
-        <div class="api-tester">
-            <div class="card-header">
-                <i class="fas fa-terminal"></i>
-                <h2>API Testing Console</h2>
-                <span style="margin-left: auto; font-size: 0.85rem; color: var(--gray);">
-                    Test any endpoint directly
-                </span>
-            </div>
-            <div class="tester-controls">
-                <select class="method-select" id="method-select">
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="DELETE">DELETE</option>
-                </select>
-                <input type="text" class="endpoint-input" id="endpoint-input" value="/api/status" placeholder="Enter endpoint path (e.g., /api/status)">
-                <button class="send-btn" id="send-request">
-                    <i class="fas fa-play"></i>
-                    Execute Request
-                </button>
+    <!-- API Documentation -->
+    <section id="documentation" class="section">
+        <div class="container">
+            <h2 class="section-title">API Documentation</h2>
+            <p class="section-subtitle">
+                Complete reference for all available endpoints. Integrate with our API in minutes.
+            </p>
+            
+            <!-- Status Endpoint -->
+            <div class="api-section fade-in-up">
+                <div class="api-header">
+                    <h3 class="api-title">Server Status</h3>
+                    <span class="api-method method-get">GET</span>
+                </div>
+                <div class="api-details">
+                    <div class="api-path">GET /api/status</div>
+                    <div class="api-parameters">
+                        <h4 class="api-subtitle">
+                            <i class="fas fa-list"></i> Parameters
+                        </h4>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>No parameters required</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="api-response">
+                        <h4 class="api-subtitle">
+                            <i class="fas fa-code"></i> Response Example
+                        </h4>
+                        <pre class="response-example"><code>{
+  <span class="json-key">"status"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"creator"</span>: <span class="json-string">"API Teguh"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Server is running normally"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"server"</span>: {
+      <span class="json-key">"platform"</span>: <span class="json-string">"linux"</span>,
+      <span class="json-key">"uptime"</span>: <span class="json-number">123456</span>,
+      <span class="json-key">"hostname"</span>: <span class="json-string">"api-teguh-server"</span>
+    },
+    <span class="json-key">"memory"</span>: {
+      <span class="json-key">"total"</span>: <span class="json-number">8589934592</span>,
+      <span class="json-key">"used"</span>: <span class="json-number">2147483648</span>,
+      <span class="json-key">"usage_percent"</span>: <span class="json-number">25.00</span>
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
             </div>
             
-            <div class="response-container">
-                <div class="response-header">
-                    <h3>Response Details</h3>
-                    <div id="response-status" class="status-success">Ready to test</div>
+            <!-- AI Chat Endpoint -->
+            <div class="api-section fade-in-up">
+                <div class="api-header">
+                    <h3 class="api-title">AI Chat Completion</h3>
+                    <span class="api-method method-get">GET</span>
                 </div>
-                <pre id="response-body">{
-  "message": "Select an endpoint card or enter a path above",
-  "status": "ready"
-}</pre>
+                <div class="api-details">
+                    <div class="api-path">GET /api/ai/chat?text=Hello&model=auto</div>
+                    <div class="api-parameters">
+                        <h4 class="api-subtitle">
+                            <i class="fas fa-list"></i> Parameters
+                        </h4>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>text</td>
+                                    <td>string</td>
+                                    <td><span class="parameter-required">Required</span></td>
+                                    <td>The message to send to the AI</td>
+                                </tr>
+                                <tr>
+                                    <td>model</td>
+                                    <td>string</td>
+                                    <td><span class="parameter-optional">Optional</span></td>
+                                    <td>AI model to use: auto, copilot, deepseek</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="api-response">
+                        <h4 class="api-subtitle">
+                            <i class="fas fa-code"></i> Response Example
+                        </h4>
+                        <pre class="response-example"><code>{
+  <span class="json-key">"status"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"creator"</span>: <span class="json-string">"API Teguh"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"copilot AI response successful"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"model"</span>: <span class="json-string">"copilot"</span>,
+    <span class="json-key">"query"</span>: <span class="json-string">"Hello"</span>,
+    <span class="json-key">"response"</span>: <span class="json-string">"Hello! How can I assist you today?"</span>,
+    <span class="json-key">"source"</span>: <span class="json-string">"microsoft-copilot"</span>
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More endpoints would go here... -->
+        </div>
+    </section>
+
+    <!-- Server Dashboard -->
+    <section id="dashboard" class="section">
+        <div class="container">
+            <h2 class="section-title">Server Dashboard</h2>
+            <p class="section-subtitle">
+                Real-time monitoring and analytics for your API usage and server performance.
+            </p>
+            
+            <div class="dashboard-grid">
+                <div class="metric-card fade-in-up">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3 class="metric-title">Server Status</h3>
+                    </div>
+                    <div class="metric-value" id="server-status-text">Online</div>
+                    <div class="metric-desc" id="server-uptime-text">Uptime: 00:00:00</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="server-health-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card fade-in-up">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-memory"></i>
+                        </div>
+                        <h3 class="metric-title">Memory Usage</h3>
+                    </div>
+                    <div class="metric-value" id="memory-usage-text">0%</div>
+                    <div class="metric-desc" id="memory-details">0 MB / 0 MB</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="memory-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card fade-in-up">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="metric-title">Response Time</h3>
+                    </div>
+                    <div class="metric-value" id="response-time-text">0ms</div>
+                    <div class="metric-desc">Average API response time</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="response-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card fade-in-up">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 class="metric-title">Requests Today</h3>
+                    </div>
+                    <div class="metric-value" id="requests-today">0</div>
+                    <div class="metric-desc">Total API requests made today</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="requests-bar" style="width: 0%"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <footer>
+    <!-- API Console -->
+    <section id="console" class="section">
         <div class="container">
-            <div class="footer-content">
+            <h2 class="section-title">API Testing Console</h2>
+            <p class="section-subtitle">
+                Test our API endpoints directly from your browser. No setup required.
+            </p>
+            
+            <div class="console-container fade-in-up">
+                <div class="console-header">
+                    <h3>Live API Tester</h3>
+                    <button id="reset-console" class="cta-button" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <div class="console-controls">
+                    <select class="console-select" id="endpoint-select">
+                        <option value="/api/status">Server Status</option>
+                        <option value="/api/ping">Ping Test</option>
+                        <option value="/api/deepseek?q=Hello">DeepSeek AI</option>
+                        <option value="/api/copilot?text=Hello">Copilot AI</option>
+                        <option value="/api/ai/chat?text=Hello&model=auto">AI Chat</option>
+                        <option value="/api/health">Health Check</option>
+                        <option value="/api/info">API Info</option>
+                    </select>
+                    
+                    <input type="text" class="console-input" id="endpoint-input" placeholder="/api/status" value="/api/status">
+                    
+                    <button id="send-request" class="cta-button">
+                        <i class="fas fa-play"></i> Send Request
+                    </button>
+                </div>
+                
+                <div class="console-response">
+                    <div class="response-header">
+                        <div>Response</div>
+                        <div class="response-status status-success" id="response-status">200 OK</div>
+                    </div>
+                    <pre class="response-body" id="response-body">{
+  "message": "Select an endpoint and click 'Send Request' to test"
+}</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-grid">
                 <div>
-                    <h3 style="color: var(--dark); margin-bottom: 10px;">REST API Server</h3>
-                    <p class="footer-info">Built with Node.js, Express.js, and modern web technologies</p>
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <span class="footer-logo-text">API Teguh</span>
+                    </div>
+                    <p class="footer-description">
+                        Professional REST API services providing robust, scalable, 
+                        and secure solutions for modern applications.
+                    </p>
                 </div>
                 
-                <div class="footer-links">
-                    <a href="/api" target="_blank">
-                        <i class="fas fa-book"></i>
-                        API Documentation
-                    </a>
-                    <a href="/api/status" target="_blank">
-                        <i class="fas fa-heartbeat"></i>
-                        Server Status
-                    </a>
-                    <a href="https://github.com" target="_blank">
-                        <i class="fab fa-github"></i>
-                        GitHub Repository
-                    </a>
-                    <a href="https://expressjs.com" target="_blank">
-                        <i class="fas fa-code"></i>
-                        Express.js Docs
-                    </a>
+                <div>
+                    <h4 class="footer-title">Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="#home" class="footer-link">Home</a>
+                        <a href="#documentation" class="footer-link">Documentation</a>
+                        <a href="#dashboard" class="footer-link">Dashboard</a>
+                        <a href="#console" class="footer-link">API Console</a>
+                        <a href="#contact" class="footer-link">Contact</a>
+                    </div>
                 </div>
                 
-                <div class="footer-info">
-                    <p id="creator-info">Loading creator info...</p>
-                    <p>Server Time: <span id="server-time"></span></p>
-                    <p>&copy; 2024 Advanced REST API Server. All rights reserved.</p>
+                <div>
+                    <h4 class="footer-title">API Endpoints</h4>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">/api/status</a>
+                        <a href="#" class="footer-link">/api/ai/chat</a>
+                        <a href="#" class="footer-link">/api/deepseek</a>
+                        <a href="#" class="footer-link">/api/copilot</a>
+                        <a href="#" class="footer-link">/api/health</a>
+                    </div>
                 </div>
+                
+                <div>
+                    <h4 class="footer-title">Contact & Support</h4>
+                    <div class="footer-links">
+                        <a href="mailto:support@apiteguh.com" class="footer-link">
+                            <i class="fas fa-envelope"></i> support@apiteguh.com
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-file-alt"></i> Documentation
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-code-branch"></i> GitHub
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-life-ring"></i> Support Portal
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 API Teguh. All rights reserved. | Built with Node.js & Express.js</p>
+                <p style="margin-top: 0.5rem; color: var(--gray-500);">
+                    Server Time: <span id="footer-time"></span> | 
+                    Requests: <span id="footer-requests">0</span> | 
+                    Status: <span id="footer-status" style="color: var(--success);">● Online</span>
+                </p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Initialize variables
-        let startTime = Date.now();
-        let creatorName = "System Creator";
-        let isAiTyping = false;
-
-        // Get server port from current URL
-        const currentPort = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
-        document.getElementById('current-port').textContent = currentPort;
+        // Global variables
+        let requestCount = 0;
+        let serverStartTime = Date.now();
+        let isMonitoring = true;
 
         // Format bytes to human readable
         function formatBytes(bytes, decimals = 2) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
             const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         }
 
-        // Format uptime to human readable
-        function formatUptime(seconds) {
-            const days = Math.floor(seconds / (3600 * 24));
-            const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+        // Format time to HH:MM:SS
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
             const secs = Math.floor(seconds % 60);
-            
-            let result = [];
-            if (days > 0) result.push(`${days}d`);
-            if (hours > 0) result.push(`${hours}h`);
-            if (minutes > 0) result.push(`${minutes}m`);
-            result.push(`${secs}s`);
-            
-            return result.join(' ');
-        }
-
-        // Update server time
-        function updateServerTime() {
-            const now = new Date();
-            document.getElementById('server-time').textContent = 
-                now.toLocaleTimeString() + ' ' + now.toLocaleDateString();
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         // Update server metrics
         async function updateServerMetrics() {
             try {
+                const startTime = Date.now();
                 const response = await fetch('/api/status');
+                const endTime = Date.now();
+                
                 if (response.ok) {
                     const data = await response.json();
                     
-                    // Update creator info
-                    creatorName = data.creator || "System Creator";
-                    document.getElementById('creator-info').textContent = 
-                        `Created by: ${creatorName}`;
-                    
                     // Update memory usage
-                    const usedMem = data.memory.used;
-                    const totalMem = data.memory.total;
-                    const memPercentage = ((usedMem / totalMem) * 100).toFixed(1);
-                    document.getElementById('memory-usage').textContent = 
-                        `${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercentage}%)`;
-                    
-                    // Update uptime
-                    if (data.uptime) {
-                        document.getElementById('server-uptime').textContent = 
-                            formatUptime(data.uptime);
+                    if (data.data?.memory) {
+                        const memory = data.data.memory;
+                        const usagePercent = memory.usage_percent || 
+                            ((memory.used / memory.total) * 100).toFixed(1);
+                        
+                        document.getElementById('memory-usage-text').textContent = `${usagePercent}%`;
+                        document.getElementById('memory-details').textContent = 
+                            `${formatBytes(memory.used)} / ${formatBytes(memory.total)}`;
+                        
+                        const barWidth = Math.min(usagePercent, 100);
+                        document.getElementById('memory-bar').style.width = `${barWidth}%`;
+                        
+                        // Change color based on usage
+                        if (barWidth > 80) {
+                            document.getElementById('memory-bar').style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
+                        } else if (barWidth > 60) {
+                            document.getElementById('memory-bar').style.background = 'linear-gradient(90deg, #f59e0b, #eab308)';
+                        }
                     }
                     
-                    return data;
+                    // Update server uptime
+                    if (data.data?.server?.uptime) {
+                        const uptimeText = formatTime(data.data.server.uptime);
+                        document.getElementById('server-uptime-text').textContent = `Uptime: ${uptimeText}`;
+                        document.getElementById('uptime-count').textContent = uptimeText;
+                    }
+                    
+                    // Update response time
+                    const responseTime = endTime - startTime;
+                    document.getElementById('response-time-text').textContent = `${responseTime}ms`;
+                    document.getElementById('response-bar').style.width = `${Math.min(responseTime / 10, 100)}%`;
+                    
+                    // Change color based on response time
+                    if (responseTime > 500) {
+                        document.getElementById('response-bar').style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
+                    } else if (responseTime > 200) {
+                        document.getElementById('response-bar').style.background = 'linear-gradient(90deg, #f59e0b, #eab308)';
+                    }
+                    
+                    return true;
                 }
             } catch (error) {
-                console.log('Could not fetch server metrics:', error);
-                document.getElementById('memory-usage').textContent = 'Not available';
-                document.getElementById('server-uptime').textContent = 'Not available';
+                console.error('Failed to fetch server metrics:', error);
+                document.getElementById('server-status-text').textContent = 'Offline';
+                document.getElementById('server-status-text').style.color = 'var(--error)';
+                document.getElementById('server-health-bar').style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                return false;
             }
         }
 
         // Update local uptime counter
-        function updateLocalUptime() {
-            const diff = Date.now() - startTime;
-            const seconds = Math.floor(diff / 1000);
-            document.getElementById('server-uptime').textContent = formatUptime(seconds);
+        function updateUptimeCounter() {
+            const now = Date.now();
+            const uptime = Math.floor((now - serverStartTime) / 1000);
+            document.getElementById('uptime-count').textContent = formatTime(uptime);
         }
 
-        // Add message to chat
-        function addMessage(content, isUser = false) {
-            const chatMessages = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'message-user' : 'message-ai'}`;
-            
-            if (isUser) {
-                messageDiv.innerHTML = `<strong>👤 You:</strong> ${content}`;
-            } else {
-                messageDiv.innerHTML = `<strong>🤖 AI:</strong> ${content}`;
-            }
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Update server time
+        function updateServerTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const dateString = now.toLocaleDateString();
+            document.getElementById('footer-time').textContent = `${timeString} ${dateString}`;
         }
 
-        // Show typing indicator
-        function showTypingIndicator() {
-            if (isAiTyping) return;
+        // Send API request
+        async function sendApiRequest(endpoint) {
+            requestCount++;
+            document.getElementById('request-count').textContent = requestCount;
+            document.getElementById('footer-requests').textContent = requestCount;
             
-            const chatMessages = document.getElementById('chat-messages');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.id = 'typing-indicator';
-            typingDiv.innerHTML = `
-                <span></span>
-                <span></span>
-                <span></span>
-            `;
-            
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            isAiTyping = true;
-        }
-
-        // Hide typing indicator
-        function hideTypingIndicator() {
-            const typingIndicator = document.getElementById('typing-indicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-            isAiTyping = false;
-        }
-
-        // Handle AI chat query
-        async function handleAiQuery(query) {
-            if (!query.trim()) return;
-            
-            // Add user message
-            addMessage(query, true);
-            
-            // Show typing indicator
-            showTypingIndicator();
-            
-            try {
-                const encodedQuery = encodeURIComponent(query);
-                const response = await fetch(`/api/deepseek?q=${encodedQuery}`);
-                
-                hideTypingIndicator();
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.status && data.data) {
-                        addMessage(data.data);
-                    } else {
-                        addMessage("I apologize, but I couldn't process your request. Please try again.");
-                    }
-                } else {
-                    hideTypingIndicator();
-                    addMessage("Sorry, I'm having trouble connecting to the AI service. Please try again later.");
-                }
-            } catch (error) {
-                hideTypingIndicator();
-                addMessage("Network error. Please check your connection and try again.");
-            }
-        }
-
-        // Handle API test request
-        async function handleApiRequest(method, endpoint) {
+            const startTime = Date.now();
             const responseStatus = document.getElementById('response-status');
             const responseBody = document.getElementById('response-body');
             
             // Show loading state
             responseStatus.textContent = 'Loading...';
-            responseStatus.className = '';
+            responseStatus.className = 'response-status';
             responseBody.textContent = 'Sending request...';
             
             try {
-                const options = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                };
-                
-                // For POST and PUT requests, add some sample data
-                if (method === 'POST' || method === 'PUT') {
-                    options.body = JSON.stringify({
-                        sample: 'test data',
-                        timestamp: new Date().toISOString(),
-                        requestId: 'test-' + Date.now()
-                    });
-                }
-                
-                const startTime = Date.now();
-                const response = await fetch(endpoint, options);
+                const response = await fetch(endpoint);
                 const endTime = Date.now();
+                const responseTime = endTime - startTime;
                 
-                // Update status indicator
+                // Update response status
                 const statusText = `${response.status} ${response.statusText}`;
-                responseStatus.textContent = `${statusText} (${endTime - startTime}ms)`;
+                responseStatus.textContent = `${statusText} (${responseTime}ms)`;
                 
                 if (response.ok) {
-                    responseStatus.className = 'status-success';
+                    responseStatus.className = 'response-status status-success';
                 } else {
-                    responseStatus.className = 'status-error';
+                    responseStatus.className = 'response-status status-error';
                 }
                 
                 // Parse and display response
@@ -1111,107 +1342,161 @@
                     const data = await response.json();
                     responseBody.textContent = JSON.stringify(data, null, 2);
                     
-                    // Update server metrics if we fetched /api/status
-                    if (endpoint.includes('/api/status')) {
-                        updateServerMetrics();
-                    }
+                    // Update request bar
+                    const requestsBar = document.getElementById('requests-bar');
+                    const barWidth = Math.min(requestCount / 10, 100);
+                    requestsBar.style.width = `${barWidth}%`;
+                    document.getElementById('requests-today').textContent = requestCount;
+                    
                 } catch (jsonError) {
                     const text = await response.text();
                     responseBody.textContent = text || 'No response body';
                 }
                 
+                // Update metrics if needed
+                if (endpoint.includes('/api/status')) {
+                    updateServerMetrics();
+                }
+                
             } catch (error) {
                 responseStatus.textContent = 'Network Error';
-                responseStatus.className = 'status-error';
+                responseStatus.className = 'response-status status-error';
                 responseBody.textContent = `Failed to fetch: ${error.message}`;
             }
         }
 
         // Initialize event listeners
         function initializeEventListeners() {
-            // Endpoint card click handlers
-            document.querySelectorAll('.endpoint-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const method = this.dataset.method;
-                    const path = this.dataset.path;
-                    
-                    document.getElementById('method-select').value = method;
-                    document.getElementById('endpoint-input').value = path;
-                    
-                    // Auto-execute for GET requests
-                    if (method === 'GET') {
-                        setTimeout(() => handleApiRequest(method, path), 100);
-                    }
-                });
+            // API console controls
+            document.getElementById('endpoint-select').addEventListener('change', function() {
+                document.getElementById('endpoint-input').value = this.value;
             });
-
-            // API test button
+            
             document.getElementById('send-request').addEventListener('click', function() {
-                const method = document.getElementById('method-select').value;
                 const endpoint = document.getElementById('endpoint-input').value;
-                
                 if (endpoint.trim()) {
-                    handleApiRequest(method, endpoint);
-                } else {
-                    alert('Please enter an endpoint path');
+                    sendApiRequest(endpoint);
                 }
             });
-
-            // Enter key for endpoint input
+            
             document.getElementById('endpoint-input').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     document.getElementById('send-request').click();
                 }
             });
-
-            // AI chat send button
-            document.getElementById('send-ai-query').addEventListener('click', function() {
-                const query = document.getElementById('ai-query').value.trim();
-                if (query) {
-                    handleAiQuery(query);
-                    document.getElementById('ai-query').value = '';
-                }
+            
+            document.getElementById('reset-console').addEventListener('click', function() {
+                document.getElementById('endpoint-input').value = '/api/status';
+                document.getElementById('endpoint-select').value = '/api/status';
+                document.getElementById('response-status').textContent = '200 OK';
+                document.getElementById('response-status').className = 'response-status status-success';
+                document.getElementById('response-body').textContent = '{\n  "message": "Select an endpoint and click \'Send Request\' to test"\n}';
             });
-
-            // Enter key for AI chat
-            document.getElementById('ai-query').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('send-ai-query').click();
-                }
+            
+            // Navigation smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update active nav link
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                });
             });
+            
+            // Auto update endpoint examples
+            document.querySelectorAll('.api-path').forEach(pathElement => {
+                pathElement.addEventListener('click', function() {
+                    const path = this.textContent.split(' ')[1];
+                    if (path) {
+                        document.getElementById('endpoint-input').value = path;
+                        document.getElementById('endpoint-select').value = path;
+                    }
+                });
+            });
+        }
+
+        // Initialize monitoring
+        function initializeMonitoring() {
+            // Initial metrics update
+            updateServerMetrics();
+            updateServerTime();
+            updateUptimeCounter();
+            
+            // Periodic updates
+            setInterval(updateServerMetrics, 10000); // Every 10 seconds
+            setInterval(updateServerTime, 1000); // Every second
+            setInterval(updateUptimeCounter, 1000); // Every second
+            
+            // Initial test request
+            setTimeout(() => {
+                sendApiRequest('/api/status');
+            }, 1000);
         }
 
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize event listeners
+            // Add fade-in animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all sections for animations
+            document.querySelectorAll('.feature-card, .api-section, .metric-card').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Initialize app
             initializeEventListeners();
+            initializeMonitoring();
             
-            // Fetch initial server metrics
-            updateServerMetrics();
-            
-            // Start local uptime counter
-            setInterval(updateLocalUptime, 1000);
-            
-            // Start server time updater
-            updateServerTime();
-            setInterval(updateServerTime, 1000);
-            
-            // Auto-test the status endpoint
-            setTimeout(() => {
-                handleApiRequest('GET', '/api/status');
-            }, 500);
-            
-            // Add welcome message
-            setTimeout(() => {
-                addMessage("Welcome to the REST API Dashboard! You can test endpoints using the console below or chat with me using the Deepseek AI integration.");
-            }, 1000);
+            // Update active nav based on scroll
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY + 100;
+                
+                document.querySelectorAll('section[id]').forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    const sectionId = section.getAttribute('id');
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${sectionId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            });
         });
 
-        // Add some sample endpoints for testing
-        window.sampleEndpoints = {
-            status: { method: 'GET', path: '/api/status' },
-            ping: { method: 'GET', path: '/api/ping' },
-            deepseek: { method: 'GET', path: '/api/deepseek?q=What is Node.js?' }
+        // Expose some functions globally for debugging
+        window.apiTeguh = {
+            sendRequest: sendApiRequest,
+            updateMetrics: updateServerMetrics,
+            getRequestCount: () => requestCount
         };
     </script>
 </body>
