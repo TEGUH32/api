@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>API Teguh | Professional REST API</title>
+    <title>API Teguh | Auto-Detect REST API</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -333,19 +333,6 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 100px 1fr auto;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        @media (max-width: 640px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
         /* Response Area */
         .response-container {
             margin-top: 2rem;
@@ -458,67 +445,35 @@
             margin-bottom: 1rem;
         }
 
-        /* AI Chat */
-        .ai-chat-container {
-            background: var(--surface);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow-xl);
-            margin-bottom: 2rem;
-        }
-
-        .ai-models {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .ai-model-btn {
-            padding: 0.75rem 1.5rem;
-            border: 2px solid var(--light-2);
-            border-radius: var(--radius);
-            background: white;
-            color: var(--dark-2);
+        /* Category Badges */
+        .category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .ai-model-btn.active {
-            border-color: var(--primary);
+        .category-ai {
             background: rgba(37, 99, 235, 0.1);
             color: var(--primary);
         }
 
-        .chat-messages {
-            background: var(--light);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            height: 300px;
-            overflow-y: auto;
-            margin-bottom: 1.5rem;
+        .category-social {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
         }
 
-        .message {
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius);
-            margin-bottom: 0.75rem;
-            max-width: 80%;
+        .category-system {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
         }
 
-        .message-user {
-            background: var(--primary);
-            color: white;
-            margin-left: auto;
-        }
-
-        .message-ai {
-            background: white;
-            border: 1px solid var(--light-2);
+        .category-tools {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--secondary);
         }
 
         /* Dashboard */
@@ -557,6 +512,41 @@
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             border-radius: 3px;
             transition: width 0.3s;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
         }
 
         /* Footer */
@@ -604,6 +594,21 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--light-2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .hero-title {
@@ -624,10 +629,6 @@
             
             .section {
                 padding: 3rem 0;
-            }
-            
-            .ai-models {
-                justify-content: center;
             }
         }
 
@@ -657,7 +658,7 @@
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#endpoints" class="nav-link">Endpoints</a>
                 <a href="#console" class="nav-link">API Console</a>
-                <a href="#ai" class="nav-link">AI Chat</a>
+                <a href="#features" class="nav-link">Features</a>
                 <a href="#dashboard" class="nav-link">Dashboard</a>
                 <a href="#console" class="btn btn-primary">
                     <i class="fas fa-terminal"></i> Try API
@@ -673,13 +674,13 @@
             <div class="hero-content">
                 <div class="hero-badge">
                     <i class="fas fa-bolt"></i>
-                    <span>Professional REST API Platform</span>
+                    <span>Auto-Detect API Platform</span>
                 </div>
                 
-                <h1 class="hero-title">Build Amazing Apps<br>With Powerful API</h1>
+                <h1 class="hero-title">Smart REST API<br>With Auto-Discovery</h1>
                 
                 <p style="color: var(--dark-2); font-size: 1.25rem; margin-bottom: 2rem; max-width: 800px;">
-                    Complete API solution with AI integration, real-time monitoring, and enterprise-grade performance.
+                    All API endpoints are automatically detected from your server. No manual updates needed.
                 </p>
                 
                 <div class="flex gap-3" style="display: flex; gap: 1rem;">
@@ -687,7 +688,7 @@
                         <i class="fas fa-terminal"></i> Try API Console
                     </a>
                     <a href="#endpoints" class="btn" style="background: transparent; border: 2px solid var(--primary); color: var(--primary);">
-                        <i class="fas fa-code"></i> View Endpoints
+                        <i class="fas fa-code"></i> View Auto-Detected Endpoints
                     </a>
                 </div>
                 
@@ -705,39 +706,78 @@
                         <div class="stat-label">Today's Requests</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number">4</div>
-                        <div class="stat-label">AI Models</div>
+                        <div class="stat-number" id="endpointCount">0</div>
+                        <div class="stat-label">Auto-Detected Endpoints</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- API Endpoints -->
-    <section id="endpoints" class="section">
+    <!-- Features -->
+    <section id="features" class="section">
         <div class="container">
-            <h2 class="section-title">API Endpoints</h2>
+            <h2 class="section-title">Smart Features</h2>
             <p class="section-subtitle">
-                Complete list of available API endpoints with automatic parameter detection
+                Advanced features powered by automatic detection technology
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">AI Auto-Detection</h3>
+                    <p style="color: var(--dark-2);">Automatically detects all API endpoints from your server configuration</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">Parameter Intelligence</h3>
+                    <p style="color: var(--dark-2);">Smart parameter detection and auto-fill for all endpoints</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">Real-time Updates</h3>
+                    <p style="color: var(--dark-2);">Live updates when new endpoints are added to the server</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Endpoints -->
+    <section id="endpoints" class="section" style="background: var(--light);">
+        <div class="container">
+            <h2 class="section-title">Auto-Detected API Endpoints</h2>
+            <p class="section-subtitle">
+                All endpoints are automatically discovered from your server. No configuration needed.
             </p>
             
             <div class="endpoints-grid" id="endpointsGrid">
-                <!-- Auto-populated by JavaScript -->
+                <div class="text-center" style="grid-column: 1 / -1; padding: 3rem;">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto;"></div>
+                    <p style="color: var(--dark-2); margin-top: 1rem;">Detecting API endpoints from server...</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- API Console -->
-    <section id="console" class="section" style="background: var(--light);">
+    <section id="console" class="section">
         <div class="container">
-            <h2 class="section-title">API Testing Console</h2>
+            <h2 class="section-title">Smart API Console</h2>
             <p class="section-subtitle">
-                Test any endpoint with real-time response preview
+                Test any auto-detected endpoint with intelligent parameter handling
             </p>
             
             <div class="console-container fade-in">
                 <div class="console-header">
-                    <h4 style="color: white; margin: 0;">API Request Builder</h4>
+                    <h4 style="color: white; margin: 0;">Smart API Tester</h4>
                     <div class="console-tabs">
                         <button class="console-tab active" data-tab="simple">Simple</button>
                         <button class="console-tab" data-tab="advanced">Advanced</button>
@@ -748,14 +788,17 @@
                     <!-- Simple Tab -->
                     <div class="tab-content" id="simpleTab">
                         <div class="form-group">
-                            <label class="form-label">Select Endpoint</label>
+                            <label class="form-label">Select Auto-Detected Endpoint</label>
                             <select class="form-control" id="endpointSelect">
-                                <option value="">Loading endpoints...</option>
+                                <option value="">Detecting endpoints...</option>
                             </select>
                         </div>
                         
                         <div class="form-group" id="paramsContainer">
-                            <!-- Parameters auto-generated -->
+                            <!-- Parameters will be auto-generated here -->
+                            <div style="color: var(--dark-2); text-align: center; padding: 1rem;">
+                                Select an endpoint to see its parameters
+                            </div>
                         </div>
                         
                         <div style="display: flex; gap: 1rem;">
@@ -770,7 +813,7 @@
                     
                     <!-- Advanced Tab -->
                     <div class="tab-content" id="advancedTab" style="display: none;">
-                        <div class="form-row">
+                        <div style="display: grid; grid-template-columns: 100px 1fr auto; gap: 1rem; align-items: center;">
                             <select class="form-control" id="methodSelect">
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
@@ -796,49 +839,9 @@
                             <div class="response-status" id="responseStatus">Ready</div>
                         </div>
                         <pre class="response-body" id="responseBody">{
-  "message": "Select an endpoint and click 'Send Request'"
+  "message": "Select an auto-detected endpoint and click 'Send Request'"
 }</pre>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- AI Chat -->
-    <section id="ai" class="section">
-        <div class="container">
-            <h2 class="section-title">AI Chat Interface</h2>
-            <p class="section-subtitle">
-                Chat with multiple AI models through our unified API
-            </p>
-            
-            <div class="ai-chat-container fade-in">
-                <div class="ai-models">
-                    <button class="ai-model-btn active" data-model="copilot">
-                        <i class="fab fa-microsoft"></i> Copilot
-                    </button>
-                    <button class="ai-model-btn" data-model="gpt5">
-                        <i class="fas fa-brain"></i> GPT-5
-                    </button>
-                    <button class="ai-model-btn" data-model="deepseek">
-                        <i class="fas fa-robot"></i> DeepSeek
-                    </button>
-                    <button class="ai-model-btn" data-model="auto">
-                        <i class="fas fa-random"></i> Auto
-                    </button>
-                </div>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message message-ai">
-                        <strong>🤖 AI Assistant:</strong> Hello! I'm your AI assistant. Select a model above and start chatting!
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 1rem;">
-                    <input type="text" class="form-control" id="aiInput" placeholder="Type your message...">
-                    <button class="btn btn-primary" id="sendAiMessage">
-                        <i class="fas fa-paper-plane"></i> Send
-                    </button>
                 </div>
             </div>
         </div>
@@ -847,9 +850,9 @@
     <!-- Dashboard -->
     <section id="dashboard" class="section" style="background: var(--light);">
         <div class="container">
-            <h2 class="section-title">Server Dashboard</h2>
+            <h2 class="section-title">Smart Dashboard</h2>
             <p class="section-subtitle">
-                Real-time monitoring and analytics
+                Real-time monitoring with auto-detected metrics
             </p>
             
             <div class="dashboard-grid">
@@ -878,18 +881,19 @@
                 </div>
                 
                 <div class="metric-card">
-                    <h4>Response Time</h4>
-                    <div class="metric-value" id="avgResponseTime">0ms</div>
+                    <h4>Detected Endpoints</h4>
+                    <div class="metric-value" id="detectedEndpoints">0</div>
                     <div class="metric-progress">
-                        <div class="progress-bar" id="responseBar" style="width: 0%"></div>
+                        <div class="progress-bar" id="endpointsBar" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
             
             <div style="background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 2rem;">
-                <h4>Recent Activity</h4>
-                <div id="recentActivity" style="color: var(--dark-2); padding: 1rem 0; text-align: center;">
-                    No recent activity
+                <h4>Auto-Detection Status</h4>
+                <div id="detectionStatus" style="color: var(--dark-2); padding: 1rem 0; text-align: center;">
+                    <div class="loading" style="width: 20px; height: 20px; margin: 0 auto;"></div>
+                    <p style="margin-top: 0.5rem;">Detecting server configuration...</p>
                 </div>
             </div>
         </div>
@@ -907,7 +911,7 @@
                         <span style="font-size: 1.25rem; font-weight: 700; color: white;">API Teguh</span>
                     </div>
                     <p style="color: rgba(255, 255, 255, 0.7);">
-                        Professional REST API services with AI integration
+                        Smart REST API with auto-detection technology
                     </p>
                 </div>
                 
@@ -915,19 +919,19 @@
                     <h4 class="footer-title">Quick Links</h4>
                     <div class="footer-links">
                         <a href="#home" class="footer-link">Home</a>
-                        <a href="#endpoints" class="footer-link">Endpoints</a>
-                        <a href="#console" class="footer-link">API Console</a>
-                        <a href="#ai" class="footer-link">AI Chat</a>
+                        <a href="#endpoints" class="footer-link">Auto-Detected Endpoints</a>
+                        <a href="#console" class="footer-link">Smart Console</a>
+                        <a href="#dashboard" class="footer-link">Dashboard</a>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 class="footer-title">API Models</h4>
+                    <h4 class="footer-title">API Categories</h4>
                     <div class="footer-links">
-                        <a href="#ai" class="footer-link">Copilot AI</a>
-                        <a href="#ai" class="footer-link">GPT-5</a>
-                        <a href="#ai" class="footer-link">DeepSeek</a>
-                        <a href="#ai" class="footer-link">Auto Select</a>
+                        <a href="#endpoints" class="footer-link">AI Endpoints</a>
+                        <a href="#endpoints" class="footer-link">Social Media</a>
+                        <a href="#endpoints" class="footer-link">System Tools</a>
+                        <a href="#endpoints" class="footer-link">Utilities</a>
                     </div>
                 </div>
                 
@@ -936,13 +940,14 @@
                     <div style="color: rgba(255, 255, 255, 0.7);">
                         <div>Status: <span id="footerStatus" style="color: var(--success);">● Online</span></div>
                         <div>Uptime: <span id="footerUptime">00:00:00</span></div>
+                        <div>Endpoints: <span id="footerEndpoints">0</span></div>
                         <div>Requests: <span id="footerRequests">0</span></div>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 API Teguh. All rights reserved.</p>
+                <p>&copy; 2024 API Teguh. Auto-Detection Technology Enabled.</p>
             </div>
         </div>
     </footer>
@@ -951,19 +956,19 @@
         // Global State
         const state = {
             endpoints: [],
+            categories: {},
             recentRequests: [],
             requestCount: 0,
             serverStartTime: Date.now(),
-            currentAiModel: 'copilot',
-            chatHistory: []
+            detectionStatus: 'initializing',
+            autoRefreshInterval: null
         };
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initNavigation();
-            loadEndpoints();
             initApiConsole();
-            initAiChat();
+            startAutoDetection();
             initDashboard();
             updateUptime();
         });
@@ -988,70 +993,215 @@
                     document.getElementById(`${tab.dataset.tab}Tab`).style.display = 'block';
                 });
             });
-
-            // AI model selection
-            document.querySelectorAll('.ai-model-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.ai-model-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    state.currentAiModel = btn.dataset.model;
-                });
-            });
         }
 
-        // Load API Endpoints
-        async function loadEndpoints() {
-            try {
-                const response = await fetch('/api/info');
-                const data = await response.json();
-                
-                if (data.status && data.data?.endpoints) {
-                    state.endpoints = Object.values(data.data.endpoints);
-                    renderEndpoints();
-                    populateEndpointSelect();
+        // Auto-Detection System
+        async function startAutoDetection() {
+            await detectEndpoints();
+            
+            // Auto-refresh every 30 seconds
+            state.autoRefreshInterval = setInterval(async () => {
+                const oldCount = state.endpoints.length;
+                await detectEndpoints();
+                if (state.endpoints.length !== oldCount) {
+                    showNotification('New endpoints detected!', 'success');
                 }
+            }, 30000);
+        }
+
+        async function detectEndpoints() {
+            try {
+                updateDetectionStatus('detecting', 'Detecting API endpoints...');
+                
+                // Try to get API info first
+                const response = await fetch('/api/info');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status && data.data?.endpoints) {
+                        processApiInfo(data.data.endpoints);
+                        updateDetectionStatus('success', `Detected ${state.endpoints.length} endpoints`);
+                        return;
+                    }
+                }
+                
+                // Fallback: Try common endpoints
+                await detectCommonEndpoints();
+                
             } catch (error) {
-                console.error('Failed to load endpoints:', error);
-                // Fallback endpoints
-                state.endpoints = [
-                    { path: '/api/status', method: 'GET', description: 'Server status information' },
-                    { path: '/api/ping', method: 'GET', description: 'Ping test endpoint' },
-                    { path: '/api/deepseek', method: 'GET', description: 'DeepSeek AI chat', parameters: 'q (required)' },
-                    { path: '/api/copilot', method: 'GET', description: 'Microsoft Copilot AI', parameters: 'text (required)' },
-                    { path: '/api/gpt5', method: 'GET', description: 'GPT-5 AI model', parameters: 'text (required)' },
-                    { path: '/api/ai/chat', method: 'GET', description: 'Multi-model AI chat', parameters: 'text (required), model (optional)' }
-                ];
-                renderEndpoints();
-                populateEndpointSelect();
+                console.error('Detection failed:', error);
+                updateDetectionStatus('error', 'Failed to detect endpoints. Using fallback.');
+                await detectCommonEndpoints();
             }
+        }
+
+        function processApiInfo(endpointsData) {
+            state.endpoints = [];
+            state.categories = {
+                ai: [],
+                social: [],
+                system: [],
+                tools: []
+            };
+
+            Object.entries(endpointsData).forEach(([name, endpoint]) => {
+                const endpointObj = {
+                    name: name,
+                    path: endpoint.path,
+                    method: endpoint.method || 'GET',
+                    description: endpoint.description || 'API endpoint',
+                    parameters: endpoint.parameters || 'none',
+                    category: determineCategory(endpoint.path, endpoint.description)
+                };
+                
+                state.endpoints.push(endpointObj);
+                state.categories[endpointObj.category].push(endpointObj);
+            });
+
+            updateUI();
+        }
+
+        async function detectCommonEndpoints() {
+            const commonEndpoints = [
+                { path: '/api/status', method: 'GET', description: 'Server status information', category: 'system' },
+                { path: '/api/ping', method: 'GET', description: 'Ping test endpoint', category: 'system' },
+                { path: '/api/deepseek', method: 'GET', description: 'DeepSeek AI chat', parameters: 'q (required)', category: 'ai' },
+                { path: '/api/copilot', method: 'GET', description: 'Microsoft Copilot AI', parameters: 'text (required)', category: 'ai' },
+                { path: '/api/gpt5', method: 'GET', description: 'GPT-5 AI model', parameters: 'text (required)', category: 'ai' },
+                { path: '/api/instagram', method: 'GET', description: 'Instagram downloader', parameters: 'url (required)', category: 'social' },
+                { path: '/api/social/media', method: 'GET', description: 'Social media tools', parameters: 'url (required)', category: 'social' },
+                { path: '/api/ai/chat', method: 'GET', description: 'Multi-model AI chat', parameters: 'text (required), model (optional)', category: 'ai' },
+                { path: '/api/health', method: 'GET', description: 'Health check endpoint', category: 'system' },
+                { path: '/api/info', method: 'GET', description: 'API information', category: 'system' }
+            ];
+
+            // Test each endpoint
+            state.endpoints = [];
+            state.categories = { ai: [], social: [], system: [], tools: [] };
+
+            for (const endpoint of commonEndpoints) {
+                try {
+                    const testResponse = await fetch(endpoint.path);
+                    if (testResponse.ok || testResponse.status === 400) {
+                        state.endpoints.push(endpoint);
+                        state.categories[endpoint.category].push(endpoint);
+                    }
+                } catch (error) {
+                    // Endpoint not available
+                }
+            }
+
+            updateUI();
+            updateDetectionStatus('success', `Detected ${state.endpoints.length} endpoints (fallback mode)`);
+        }
+
+        function determineCategory(path, description) {
+            const lowerPath = path.toLowerCase();
+            const lowerDesc = (description || '').toLowerCase();
+            
+            if (lowerPath.includes('ai') || lowerPath.includes('chat') || lowerDesc.includes('ai') || 
+                lowerDesc.includes('gpt') || lowerDesc.includes('copilot') || lowerDesc.includes('deepseek')) {
+                return 'ai';
+            }
+            
+            if (lowerPath.includes('instagram') || lowerPath.includes('social') || 
+                lowerPath.includes('download') || lowerDesc.includes('social') || lowerDesc.includes('media')) {
+                return 'social';
+            }
+            
+            if (lowerPath.includes('status') || lowerPath.includes('ping') || lowerPath.includes('health') || 
+                lowerPath.includes('info') || lowerDesc.includes('server') || lowerDesc.includes('system')) {
+                return 'system';
+            }
+            
+            return 'tools';
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                ai: 'AI Services',
+                social: 'Social Media',
+                system: 'System Tools',
+                tools: 'Utilities'
+            };
+            return names[category] || 'Other';
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                ai: 'category-ai',
+                social: 'category-social',
+                system: 'category-system',
+                tools: 'category-tools'
+            };
+            return colors[category] || 'category-tools';
+        }
+
+        // UI Updates
+        function updateUI() {
+            renderEndpoints();
+            populateEndpointSelect();
+            updateStats();
         }
 
         function renderEndpoints() {
             const container = document.getElementById('endpointsGrid');
-            container.innerHTML = state.endpoints.map(endpoint => `
-                <div class="endpoint-card" onclick="testEndpoint('${endpoint.path}', '${endpoint.method}')">
-                    <div class="endpoint-header">
-                        <span class="method-badge ${endpoint.method.toLowerCase() === 'get' ? 'method-get' : 'method-post'}">
-                            ${endpoint.method}
-                        </span>
-                        <span class="endpoint-path">${endpoint.path}</span>
+            
+            if (state.endpoints.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center" style="grid-column: 1 / -1; padding: 3rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--warning);"></i>
+                        <p style="color: var(--dark-2); margin-top: 1rem;">No endpoints detected. Make sure your API server is running.</p>
                     </div>
-                    <p class="endpoint-description">${endpoint.description}</p>
-                    ${endpoint.parameters ? `
-                        <div style="font-size: 0.875rem; color: var(--dark-2);">
-                            <i class="fas fa-code"></i> ${endpoint.parameters}
+                `;
+                return;
+            }
+
+            // Render by categories
+            let html = '';
+            
+            Object.entries(state.categories).forEach(([category, endpoints]) => {
+                if (endpoints.length > 0) {
+                    html += `
+                        <div style="grid-column: 1 / -1; margin-bottom: 1rem;">
+                            <h3 style="color: var(--dark); margin-bottom: 1rem;">${getCategoryName(category)}</h3>
                         </div>
-                    ` : ''}
-                </div>
-            `).join('');
+                    `;
+                    
+                    endpoints.forEach(endpoint => {
+                        html += `
+                            <div class="endpoint-card fade-in" onclick="testEndpoint('${endpoint.path}')">
+                                <div class="endpoint-header">
+                                    <span class="method-badge ${endpoint.method.toLowerCase() === 'get' ? 'method-get' : 'method-post'}">
+                                        ${endpoint.method}
+                                    </span>
+                                    <span class="endpoint-path">${endpoint.path}</span>
+                                </div>
+                                <p class="endpoint-description">${endpoint.description}</p>
+                                <div>
+                                    <span class="category-badge ${getCategoryColor(category)}">
+                                        ${getCategoryName(category)}
+                                    </span>
+                                    ${endpoint.parameters !== 'none' ? `
+                                        <span style="font-size: 0.875rem; color: var(--dark-2);">
+                                            <i class="fas fa-code"></i> ${endpoint.parameters}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            container.innerHTML = html;
         }
 
         function populateEndpointSelect() {
             const select = document.getElementById('endpointSelect');
             select.innerHTML = `
-                <option value="">Select an endpoint...</option>
+                <option value="">Select an auto-detected endpoint...</option>
                 ${state.endpoints.map(endpoint => `
-                    <option value="${endpoint.path}">
+                    <option value="${endpoint.path}" data-method="${endpoint.method}">
                         [${endpoint.method}] ${endpoint.path}
                     </option>
                 `).join('')}
@@ -1066,29 +1216,65 @@
             const container = document.getElementById('paramsContainer');
             const endpoint = state.endpoints.find(ep => ep.path === endpointPath);
             
-            if (!endpoint || !endpoint.parameters) {
-                container.innerHTML = '<p style="color: var(--dark-2);">No parameters required for this endpoint.</p>';
+            if (!endpoint || endpoint.parameters === 'none') {
+                container.innerHTML = '<div style="color: var(--dark-2); text-align: center; padding: 1rem;">No parameters required for this endpoint.</div>';
                 return;
             }
 
             // Parse parameters
-            const params = endpoint.parameters.split(',').map(p => {
-                const match = p.match(/(\w+)\s*\((\w+)\)/);
-                return match ? { name: match[1], required: match[2] === 'required' } : null;
-            }).filter(Boolean);
-
-            let html = '<div style="margin-bottom: 1rem;"><strong>Parameters:</strong></div>';
+            const params = [];
+            const paramRegex = /(\w+)\s*\((\w+)\)/g;
+            let match;
             
-            params.forEach(param => {
-                html += `
-                    <div class="form-row" style="margin-bottom: 0.75rem;">
-                        <div style="font-weight: 500; color: var(--dark-2);">${param.name}</div>
-                        <input type="text" class="form-control param-input" data-param="${param.name}" 
-                               placeholder="${param.required ? 'Required' : 'Optional'}" ${param.required ? 'required' : ''}>
-                        ${param.required ? '<span style="color: var(--error); font-size: 0.75rem;">*</span>' : ''}
-                    </div>
-                `;
-            });
+            while ((match = paramRegex.exec(endpoint.parameters)) !== null) {
+                params.push({
+                    name: match[1],
+                    required: match[2] === 'required',
+                    type: match[2]
+                });
+            }
+
+            if (params.length === 0) {
+                // Try to extract from path
+                const url = new URL(endpointPath, window.location.origin);
+                const urlParams = new URLSearchParams(url.search);
+                
+                urlParams.forEach((value, key) => {
+                    params.push({
+                        name: key,
+                        required: true,
+                        type: 'required',
+                        example: value
+                    });
+                });
+            }
+
+            let html = '<div style="margin-bottom: 1rem;"><strong>Auto-Detected Parameters:</strong></div>';
+            
+            if (params.length > 0) {
+                params.forEach(param => {
+                    const example = param.example || (param.name === 'text' ? 'Hello' : 
+                                        param.name === 'q' ? 'What is AI?' : 
+                                        param.name === 'url' ? 'https://www.instagram.com/p/ABC123/' : 'value');
+                    
+                    html += `
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span style="font-weight: 500; color: var(--dark-2);">${param.name}</span>
+                                ${param.required ? 
+                                    '<span style="color: var(--error); font-size: 0.75rem;">(required)</span>' : 
+                                    '<span style="color: var(--warning); font-size: 0.75rem;">(optional)</span>'}
+                            </div>
+                            <input type="text" class="form-control param-input" 
+                                   data-param="${param.name}" 
+                                   placeholder="${example}"
+                                   ${param.required ? 'required' : ''}>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<div style="color: var(--dark-2); text-align: center; padding: 1rem;">Unable to auto-detect parameters for this endpoint.</div>';
+            }
 
             container.innerHTML = html;
         }
@@ -1098,9 +1284,6 @@
             document.getElementById('sendRequest').addEventListener('click', sendRequest);
             document.getElementById('sendCustomRequest').addEventListener('click', sendCustomRequest);
             document.getElementById('clearRequest').addEventListener('click', clearRequest);
-            document.getElementById('endpointInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendRequest();
-            });
         }
 
         async function sendRequest() {
@@ -1108,7 +1291,7 @@
             const endpointPath = endpointSelect.value;
             
             if (!endpointPath) {
-                alert('Please select an endpoint');
+                showNotification('Please select an endpoint', 'error');
                 return;
             }
 
@@ -1136,14 +1319,19 @@
             const body = document.getElementById('requestBody').value;
             
             if (!url) {
-                alert('Please enter an endpoint URL');
+                showNotification('Please enter an endpoint URL', 'error');
                 return;
             }
 
             if (!url.startsWith('/')) url = '/' + url;
             if (!url.startsWith('/api/')) url = '/api' + url;
 
-            await makeApiRequest(method, url, body ? JSON.parse(body) : null);
+            try {
+                const parsedBody = body ? JSON.parse(body) : null;
+                await makeApiRequest(method, url, parsedBody);
+            } catch (error) {
+                showNotification('Invalid JSON in request body', 'error');
+            }
         }
 
         async function makeApiRequest(method, url, body = null) {
@@ -1179,7 +1367,6 @@
 
                 // Update stats
                 updateRequestStats(responseTime);
-                addRecentRequest(method, url, response.status, responseTime);
 
             } catch (error) {
                 responseStatus.textContent = 'Error';
@@ -1190,98 +1377,18 @@
 
         function clearRequest() {
             document.getElementById('endpointSelect').value = '';
-            document.getElementById('paramsContainer').innerHTML = '';
+            document.getElementById('paramsContainer').innerHTML = '<div style="color: var(--dark-2); text-align: center; padding: 1rem;">Select an endpoint to see its parameters</div>';
             document.getElementById('customEndpoint').value = '';
             document.getElementById('requestBody').value = '';
             document.getElementById('responseStatus').textContent = 'Ready';
             document.getElementById('responseStatus').className = 'response-status';
-            document.getElementById('responseBody').textContent = '{\n  "message": "Select an endpoint and click \'Send Request\'"\n}';
-        }
-
-        // AI Chat
-        function initAiChat() {
-            document.getElementById('sendAiMessage').addEventListener('click', sendAiMessage);
-            document.getElementById('aiInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendAiMessage();
-            });
-        }
-
-        async function sendAiMessage() {
-            const input = document.getElementById('aiInput');
-            const message = input.value.trim();
-            const chatMessages = document.getElementById('chatMessages');
-            
-            if (!message) return;
-
-            // Add user message
-            const userMessage = document.createElement('div');
-            userMessage.className = 'message message-user';
-            userMessage.innerHTML = `<strong>👤 You:</strong> ${message}`;
-            chatMessages.appendChild(userMessage);
-            
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Add AI thinking indicator
-            const thinking = document.createElement('div');
-            thinking.className = 'message message-ai';
-            thinking.id = 'thinking';
-            thinking.innerHTML = `<strong>🤖 AI:</strong> Thinking...`;
-            chatMessages.appendChild(thinking);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            try {
-                // Build endpoint based on selected model
-                let endpoint;
-                if (state.currentAiModel === 'auto') {
-                    endpoint = `/api/ai/chat?text=${encodeURIComponent(message)}&model=auto`;
-                } else if (state.currentAiModel === 'copilot') {
-                    endpoint = `/api/copilot?text=${encodeURIComponent(message)}`;
-                } else if (state.currentAiModel === 'gpt5') {
-                    endpoint = `/api/gpt5?text=${encodeURIComponent(message)}`;
-                } else if (state.currentAiModel === 'deepseek') {
-                    endpoint = `/api/deepseek?q=${encodeURIComponent(message)}`;
-                }
-
-                const response = await fetch(endpoint);
-                const data = await response.json();
-
-                // Remove thinking indicator
-                thinking.remove();
-
-                // Add AI response
-                const aiResponse = document.createElement('div');
-                aiResponse.className = 'message message-ai';
-                
-                let responseText = '';
-                if (data.status) {
-                    responseText = data.data?.result || data.data?.response || data.result || 'No response';
-                } else {
-                    responseText = `Error: ${data.message}`;
-                }
-                
-                aiResponse.innerHTML = `<strong>🤖 ${state.currentAiModel.toUpperCase()}:</strong> ${responseText}`;
-                chatMessages.appendChild(aiResponse);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                // Update request stats
-                updateRequestStats(0);
-
-            } catch (error) {
-                thinking.remove();
-                
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'message message-ai';
-                errorMsg.innerHTML = `<strong>🤖 Error:</strong> Failed to get response`;
-                chatMessages.appendChild(errorMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
+            document.getElementById('responseBody').textContent = '{\n  "message": "Select an auto-detected endpoint and click \'Send Request\'"\n}';
         }
 
         // Dashboard
         function initDashboard() {
             updateServerMetrics();
-            setInterval(updateServerMetrics, 10000); // Update every 10 seconds
+            setInterval(updateServerMetrics, 10000);
         }
 
         async function updateServerMetrics() {
@@ -1299,18 +1406,6 @@
                     // Update server status
                     document.getElementById('serverStatus').textContent = 'Online';
                     document.getElementById('serverStatus').style.color = 'var(--success)';
-                    
-                    // Update uptime
-                    if (data.data.server?.uptime) {
-                        const uptime = data.data.server.uptime;
-                        const hours = Math.floor(uptime / 3600);
-                        const minutes = Math.floor((uptime % 3600) / 60);
-                        const seconds = Math.floor(uptime % 60);
-                        document.getElementById('uptime').textContent = 
-                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                        document.getElementById('footerUptime').textContent = 
-                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    }
                 }
             } catch (error) {
                 document.getElementById('serverStatus').textContent = 'Offline';
@@ -1324,59 +1419,42 @@
             document.getElementById('apiRequests').textContent = state.requestCount;
             document.getElementById('footerRequests').textContent = state.requestCount;
             
-            // Update progress bar
+            // Update progress bars
             const requestsBar = document.getElementById('requestsBar');
             const barWidth = Math.min(state.requestCount / 10, 100);
             requestsBar.style.width = `${barWidth}%`;
             
             // Update response time
             document.getElementById('responseTime').textContent = `${responseTime}ms`;
-            document.getElementById('avgResponseTime').textContent = `${responseTime}ms`;
-            const responseBar = document.getElementById('responseBar');
-            responseBar.style.width = `${Math.min(responseTime / 10, 100)}%`;
         }
 
-        function addRecentRequest(method, url, status, responseTime) {
-            const request = {
-                method,
-                url: url.length > 50 ? url.substring(0, 50) + '...' : url,
-                status,
-                responseTime,
-                time: new Date().toLocaleTimeString()
+        function updateStats() {
+            const endpointCount = state.endpoints.length;
+            document.getElementById('endpointCount').textContent = endpointCount;
+            document.getElementById('detectedEndpoints').textContent = endpointCount;
+            document.getElementById('footerEndpoints').textContent = endpointCount;
+            
+            // Update endpoints progress bar
+            const endpointsBar = document.getElementById('endpointsBar');
+            const barWidth = Math.min(endpointCount / 20 * 100, 100);
+            endpointsBar.style.width = `${barWidth}%`;
+        }
+
+        function updateDetectionStatus(status, message) {
+            state.detectionStatus = status;
+            const container = document.getElementById('detectionStatus');
+            
+            const icons = {
+                detecting: '<div class="loading" style="width: 20px; height: 20px; margin: 0 auto;"></div>',
+                success: '<i class="fas fa-check-circle" style="color: var(--success); font-size: 1.5rem;"></i>',
+                error: '<i class="fas fa-exclamation-circle" style="color: var(--error); font-size: 1.5rem;"></i>'
             };
             
-            state.recentRequests.unshift(request);
-            if (state.recentRequests.length > 5) {
-                state.recentRequests.pop();
-            }
-            
-            updateRecentActivity();
-        }
-
-        function updateRecentActivity() {
-            const container = document.getElementById('recentActivity');
-            
-            if (state.recentRequests.length === 0) {
-                container.innerHTML = '<p>No recent activity</p>';
-                return;
-            }
-            
-            container.innerHTML = state.recentRequests.map(req => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--light-2);">
-                    <div style="font-family: \'JetBrains Mono\', monospace; font-size: 0.875rem;">
-                        <span style="color: ${req.method === 'GET' ? 'var(--success)' : 'var(--info)'};">${req.method}</span>
-                        <span style="margin-left: 0.5rem;">${req.url}</span>
-                    </div>
-                    <div>
-                        <span style="color: ${req.status >= 200 && req.status < 300 ? 'var(--success)' : 'var(--error)'}; font-size: 0.875rem;">
-                            ${req.status}
-                        </span>
-                        <span style="color: var(--dark-2); font-size: 0.75rem; margin-left: 0.5rem;">
-                            ${req.responseTime}ms
-                        </span>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = `
+                ${icons[status] || icons.detecting}
+                <p style="margin-top: 0.5rem;">${message}</p>
+                ${status === 'success' ? `<p style="font-size: 0.875rem; color: var(--dark-2); margin-top: 0.25rem;">Auto-refresh every 30 seconds</p>` : ''}
+            `;
         }
 
         // Uptime Counter
@@ -1386,6 +1464,7 @@
                 const hours = Math.floor(uptime / 3600);
                 const minutes = Math.floor((uptime % 3600) / 60);
                 const seconds = Math.floor(uptime % 60);
+                
                 document.getElementById('uptime').textContent = 
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 document.getElementById('footerUptime').textContent = 
@@ -1393,8 +1472,41 @@
             }, 1000);
         }
 
+        // Helper functions
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : 'var(--info)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 9999;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         // Test endpoint from card click
-        function testEndpoint(path, method) {
+        function testEndpoint(path) {
             // Switch to console tab
             document.querySelector('a[href="#console"]').click();
             
@@ -1404,13 +1516,27 @@
             loadEndpointParams(path);
             
             // Auto-send if it's a simple GET endpoint
-            if (method === 'GET' && (!path.includes('?') || path.includes('?text=') || path.includes('?q='))) {
-                setTimeout(() => sendRequest(), 500);
-            }
+            setTimeout(() => sendRequest(), 500);
         }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
 
         // Make functions available globally
         window.testEndpoint = testEndpoint;
+        window.showNotification = showNotification;
     </script>
 </body>
 </html>
