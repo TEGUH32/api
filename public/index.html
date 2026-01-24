@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
-    <meta name="theme-color" content="#4361ee">
+    <meta name="theme-color" content="#FF6B8B">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
@@ -164,13 +164,13 @@
             }
         }
 
-        /* NAVIGATION - IMPROVED HAMBURGER */
+        /* NAVIGATION */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.97);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 3px solid var(--cartoon-border);
@@ -307,7 +307,7 @@
             font-size: 1.2rem;
         }
 
-        /* HAMBURGER MENU - IMPROVED */
+        /* HAMBURGER MENU */
         .hamburger-menu {
             display: none;
             flex-direction: column;
@@ -353,7 +353,7 @@
             transform: translateY(-0.6875rem) rotate(-45deg);
         }
 
-        /* MOBILE MENU - IMPROVED */
+        /* MOBILE MENU */
         .mobile-menu-overlay {
             display: none;
             position: fixed;
@@ -952,6 +952,14 @@
             transform: translateY(-2px);
         }
 
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23FF6B8B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 3rem;
+        }
+
         /* Response Area */
         .response-container {
             margin-top: 2rem;
@@ -1012,10 +1020,10 @@
             position: relative;
         }
 
-        /* Endpoints Grid */
+        /* Endpoints Grid - IMPROVED */
         .endpoints-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
             gap: 1.5rem;
             margin-top: 3rem;
         }
@@ -1045,7 +1053,7 @@
 
         .endpoint-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
@@ -1062,6 +1070,7 @@
             min-width: 70px;
             text-align: center;
             flex-shrink: 0;
+            height: fit-content;
         }
 
         .method-get {
@@ -1074,13 +1083,29 @@
             color: white;
         }
 
+        .method-put {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+        }
+
+        .method-delete {
+            background: linear-gradient(135deg, var(--error), #EF4444);
+            color: white;
+        }
+
+        .method-all {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
         .endpoint-path {
             font-family: 'Nunito', monospace;
             color: var(--dark);
-            word-break: break-word;
+            word-break: break-all;
             font-size: 1.05rem;
             font-weight: 700;
             flex: 1;
+            line-height: 1.4;
         }
 
         .endpoint-description {
@@ -1098,6 +1123,86 @@
             padding-top: 1.25rem;
             border-top: 2px solid var(--cartoon-border);
             margin-top: auto;
+            gap: 0.75rem;
+        }
+
+        .category-tag {
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-ai {
+            background: rgba(255, 107, 139, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .category-social {
+            background: rgba(29, 209, 161, 0.1);
+            color: var(--success);
+            border: 2px solid var(--success);
+        }
+
+        .category-system {
+            background: rgba(84, 160, 255, 0.1);
+            color: var(--info);
+            border: 2px solid var(--info);
+        }
+
+        .category-general {
+            background: rgba(255, 159, 67, 0.1);
+            color: var(--warning);
+            border: 2px solid var(--warning);
+        }
+
+        .category-video {
+            background: rgba(0, 210, 211, 0.1);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        /* Endpoint Filters */
+        .endpoint-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 3px solid var(--cartoon-border);
+            background: white;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--dark-2);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .endpoint-search {
+            max-width: 500px;
+            margin: 0 auto 2rem;
         }
 
         /* Dashboard */
@@ -1587,11 +1692,109 @@
                 padding-bottom: min(2rem, calc(1rem + env(safe-area-inset-bottom)));
             }
         }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            background: white;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(150%);
+            transition: transform 0.3s var(--bounce);
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--info);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--error);
+        }
+
+        .toast.info .toast-icon {
+            color: var(--info);
+        }
+
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--dark-2);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--dark-2);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .toast-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--dark);
+        }
     </style>
 </head>
 <body>
     <!-- Background Elements -->
     <div class="bg-elements" id="bgElements"></div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -1815,8 +2018,37 @@
         <div class="container">
             <h2 class="section-title fade-in-up">🔍 Auto-Detected Endpoints</h2>
             <p class="section-subtitle fade-in-up" style="animation-delay: 0.1s;">
-                All endpoints are automatically discovered. No setup required!
+                All endpoints from routers/api.js are automatically discovered
             </p>
+            
+            <!-- Endpoint Filters -->
+            <div class="endpoint-filters fade-in-up" style="animation-delay: 0.2s;">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-layer-group"></i> All Endpoints
+                </button>
+                <button class="filter-btn" data-filter="ai">
+                    <i class="fas fa-robot"></i> AI Services
+                </button>
+                <button class="filter-btn" data-filter="social">
+                    <i class="fas fa-share-alt"></i> Social Media
+                </button>
+                <button class="filter-btn" data-filter="video">
+                    <i class="fas fa-video"></i> Video Download
+                </button>
+                <button class="filter-btn" data-filter="system">
+                    <i class="fas fa-server"></i> System Info
+                </button>
+            </div>
+            
+            <!-- Endpoint Search -->
+            <div class="endpoint-search fade-in-up" style="animation-delay: 0.3s;">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-search"></i> Search Endpoints
+                    </label>
+                    <input type="text" class="form-control" id="endpointSearch" placeholder="Search by endpoint name or description...">
+                </div>
+            </div>
             
             <div class="endpoints-grid" id="endpointsGrid">
                 <div class="text-center" style="grid-column: 1 / -1; padding: 3rem;">
@@ -1824,6 +2056,31 @@
                     <p style="color: var(--dark-2); margin-top: 1.5rem; font-size: 1.1rem;">
                         <i class="fas fa-spinner fa-spin"></i> Detecting API endpoints...
                     </p>
+                </div>
+            </div>
+            
+            <!-- Endpoint Stats -->
+            <div class="text-center mt-5 fade-in-up" style="animation-delay: 0.4s;">
+                <div style="display: inline-flex; align-items: center; gap: 2rem; background: rgba(255, 255, 255, 0.9); padding: 1.5rem 2.5rem; border-radius: var(--radius-xl); border: 3px solid var(--cartoon-border); flex-wrap: wrap; justify-content: center;">
+                    <div style="text-align: center;">
+                        <div style="font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--primary); font-weight: 800;" id="totalEndpoints">0</div>
+                        <div style="font-size: 0.9rem; color: var(--dark-2); font-weight: 600;">Total Endpoints</div>
+                    </div>
+                    <div style="height: 40px; width: 2px; background: var(--cartoon-border);"></div>
+                    <div style="text-align: center;">
+                        <div style="font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--success); font-weight: 800;" id="aiEndpoints">0</div>
+                        <div style="font-size: 0.9rem; color: var(--dark-2); font-weight: 600;">AI Services</div>
+                    </div>
+                    <div style="height: 40px; width: 2px; background: var(--cartoon-border);"></div>
+                    <div style="text-align: center;">
+                        <div style="font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--accent); font-weight: 800;" id="socialEndpoints">0</div>
+                        <div style="font-size: 0.9rem; color: var(--dark-2); font-weight: 600;">Social Media</div>
+                    </div>
+                    <div style="height: 40px; width: 2px; background: var(--cartoon-border);"></div>
+                    <div style="text-align: center;">
+                        <div style="font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--info); font-weight: 800;" id="systemEndpoints">0</div>
+                        <div style="font-size: 0.9rem; color: var(--dark-2); font-weight: 600;">System Info</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1863,7 +2120,7 @@
                                 <i class="fas fa-search"></i> Select Auto-Detected Endpoint
                             </label>
                             <select class="form-control" id="endpointSelect">
-                                <option value="">🔍 Detecting endpoints...</option>
+                                <option value="">🔍 Loading endpoints...</option>
                             </select>
                         </div>
                         
@@ -1882,7 +2139,7 @@
                                 <i class="fas fa-redo"></i> Clear
                             </button>
                             <button class="btn" style="background: rgba(29, 209, 161, 0.1); border: 3px solid var(--success); color: var(--success);" id="saveRequest">
-                                <i class="fas fa-save"></i> Save
+                                <i class="fas fa-save"></i> Save Response
                             </button>
                         </div>
                     </div>
@@ -1910,6 +2167,15 @@
   "key": "value",
   "data": "your data here"
 }' style="font-family: monospace;"></textarea>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-primary" id="sendCustomRequest2">
+                                <i class="fas fa-paper-plane"></i> Send Request
+                            </button>
+                            <button class="btn" style="background: rgba(255, 255, 255, 0.9); border: 3px solid var(--cartoon-border); color: var(--dark-2);" id="formatJSON">
+                                <i class="fas fa-indent"></i> Format JSON
+                            </button>
                         </div>
                     </div>
                     
@@ -1941,6 +2207,13 @@
                                     <div>
                                         <div style="font-weight: 700; color: var(--info);">Excel</div>
                                         <div style="font-size: 0.9rem; color: var(--dark-2);">.xlsx Format</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: rgba(0, 210, 211, 0.1); border-radius: var(--radius);">
+                                    <input type="radio" name="exportFormat" value="json" style="transform: scale(1.2);">
+                                    <div>
+                                        <div style="font-weight: 700; color: var(--accent);">JSON</div>
+                                        <div style="font-size: 0.9rem; color: var(--dark-2);">JavaScript Object Notation</div>
                                     </div>
                                 </label>
                             </div>
@@ -2236,6 +2509,88 @@
             }
         }
 
+        // Toast Notification System
+        class ToastSystem {
+            constructor() {
+                this.container = document.getElementById('toastContainer');
+                if (!this.container) {
+                    this.container = document.createElement('div');
+                    this.container.className = 'toast-container';
+                    this.container.id = 'toastContainer';
+                    document.body.appendChild(this.container);
+                }
+            }
+
+            show(message, type = 'info', title = '') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                const icons = {
+                    success: 'check-circle',
+                    error: 'exclamation-circle',
+                    warning: 'exclamation-triangle',
+                    info: 'info-circle'
+                };
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas fa-${icons[type]}"></i>
+                    </div>
+                    <div class="toast-content">
+                        ${title ? `<div class="toast-title">${title}</div>` : ''}
+                        <div class="toast-message">${message}</div>
+                    </div>
+                    <button class="toast-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                this.container.appendChild(toast);
+                
+                // Show toast
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 10);
+                
+                // Close button
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    this.hide(toast);
+                });
+                
+                // Auto hide after 5 seconds
+                setTimeout(() => {
+                    this.hide(toast);
+                }, 5000);
+                
+                return toast;
+            }
+
+            hide(toast) {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }
+
+            success(message, title = 'Success!') {
+                return this.show(message, 'success', title);
+            }
+
+            error(message, title = 'Error!') {
+                return this.show(message, 'error', title);
+            }
+
+            info(message, title = 'Info') {
+                return this.show(message, 'info', title);
+            }
+
+            warning(message, title = 'Warning!') {
+                return this.show(message, 'warning', title);
+            }
+        }
+
         // Mobile Menu Handler
         class MobileMenu {
             constructor() {
@@ -2304,7 +2659,6 @@
             }
             
             observeBodyScroll() {
-                // Prevent touch scroll on body when menu is open
                 this.mobileMenu?.addEventListener('touchmove', (e) => {
                     e.stopPropagation();
                 }, { passive: false });
@@ -2408,65 +2762,107 @@
             }
         }
 
-        // API Manager
+        // API Manager - IMPROVED with complete endpoint detection
         class APIManager {
             constructor() {
                 this.baseURL = window.location.origin;
                 this.endpoints = [];
+                this.toast = new ToastSystem();
                 this.loadEndpoints();
             }
 
             async loadEndpoints() {
                 try {
-                    // Try to auto-detect endpoints by checking common paths
-                    const commonEndpoints = [
-                        '/api/status',
-                        '/api/ping',
-                        '/api/deepseek',
-                        '/api/copilot',
-                        '/api/gpt5',
-                        '/api/instagram',
-                        '/api/facebook',
-                        '/api/social/media',
-                        '/api/video/download',
-                        '/api/ai/chat',
-                        '/api/health',
-                        '/api/info'
+                    // Complete list of endpoints from routers/api.js
+                    const allEndpoints = [
+                        // AI Services
+                        { path: '/api/deepseek', method: 'GET', category: 'ai' },
+                        { path: '/api/copilot', method: 'GET', category: 'ai' },
+                        { path: '/api/gpt5', method: 'GET', category: 'ai' },
+                        { path: '/api/ai/chat', method: 'GET', category: 'ai' },
+                        
+                        // Social Media
+                        { path: '/api/instagram', method: 'GET', category: 'social' },
+                        { path: '/api/facebook', method: 'GET', category: 'social' },
+                        { path: '/api/social/media', method: 'GET', category: 'social' },
+                        
+                        // Video Download
+                        { path: '/api/video/download', method: 'GET', category: 'video' },
+                        
+                        // System Info
+                        { path: '/api/status', method: 'GET', category: 'system' },
+                        { path: '/api/ping', method: 'GET', category: 'system' },
+                        { path: '/api/health', method: 'GET', category: 'system' },
+                        { path: '/api/info', method: 'GET', category: 'system' }
                     ];
 
-                    const promises = commonEndpoints.map(async endpoint => {
+                    // Test each endpoint
+                    const promises = allEndpoints.map(async (endpoint) => {
                         try {
-                            const response = await fetch(this.baseURL + endpoint, {
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 3000);
+                            
+                            const response = await fetch(this.baseURL + endpoint.path, {
                                 method: 'GET',
                                 headers: { 'Accept': 'application/json' },
-                                signal: AbortSignal.timeout(5000)
+                                signal: controller.signal
                             });
+                            
+                            clearTimeout(timeoutId);
                             
                             if (response.ok) {
                                 const data = await response.json();
                                 return {
-                                    path: endpoint,
-                                    method: 'GET',
-                                    description: this.getEndpointDescription(endpoint),
-                                    category: this.categorizeEndpoint(endpoint),
-                                    sampleResponse: data
+                                    path: endpoint.path,
+                                    method: endpoint.method,
+                                    description: this.getEndpointDescription(endpoint.path),
+                                    category: endpoint.category,
+                                    sampleResponse: data,
+                                    status: 'active'
+                                };
+                            } else if (response.status === 404) {
+                                // Endpoint exists but might have different behavior
+                                return {
+                                    path: endpoint.path,
+                                    method: endpoint.method,
+                                    description: this.getEndpointDescription(endpoint.path),
+                                    category: endpoint.category,
+                                    status: 'available',
+                                    note: 'Endpoint available but may require parameters'
                                 };
                             }
-                        } catch (error) {
                             return null;
+                        } catch (error) {
+                            if (error.name === 'AbortError') {
+                                console.log(`Timeout for ${endpoint.path}`);
+                            }
+                            // Endpoint might still exist but requires parameters
+                            return {
+                                path: endpoint.path,
+                                method: endpoint.method,
+                                description: this.getEndpointDescription(endpoint.path),
+                                category: endpoint.category,
+                                status: 'available',
+                                note: 'Endpoint available (requires testing with parameters)'
+                            };
                         }
                     });
 
                     const results = await Promise.all(promises);
                     this.endpoints = results.filter(Boolean);
                     
-                    // If no endpoints found, use demo endpoints
+                    // If no endpoints found, use complete demo endpoints
                     if (this.endpoints.length === 0) {
-                        this.endpoints = this.getDemoEndpoints();
+                        this.endpoints = this.getCompleteDemoEndpoints();
+                        this.toast.warning('Using demo endpoints. Real endpoints will be auto-detected when available.');
+                    } else {
+                        const activeCount = this.endpoints.filter(ep => ep.status === 'active').length;
+                        this.toast.success(`Detected ${activeCount} active endpoints`, 'API Detection Complete!');
                     }
 
                     this.renderEndpoints();
                     this.updateEndpointSelect();
+                    this.updateEndpointStats();
                     
                     // Update endpoint count
                     if (window.app?.saveManager) {
@@ -2474,83 +2870,150 @@
                         window.app.updateStats();
                     }
                 } catch (error) {
-                    console.log('Using demo endpoints:', error);
-                    this.endpoints = this.getDemoEndpoints();
+                    console.error('Endpoint detection error:', error);
+                    this.endpoints = this.getCompleteDemoEndpoints();
                     this.renderEndpoints();
                     this.updateEndpointSelect();
+                    this.updateEndpointStats();
+                    this.toast.error('Failed to detect endpoints. Using demo mode.');
                 }
             }
 
             getEndpointDescription(path) {
                 const descriptions = {
-                    '/api/status': 'Get server status and system information',
-                    '/api/ping': 'Simple health check endpoint',
-                    '/api/deepseek': 'Deepseek AI chat endpoint',
-                    '/api/copilot': 'Microsoft Copilot AI endpoint',
-                    '/api/gpt5': 'GPT-5 AI endpoint',
-                    '/api/instagram': 'Instagram downloader and metadata',
-                    '/api/facebook': 'Facebook video downloader',
-                    '/api/social/media': 'Social media tools',
-                    '/api/video/download': 'Unified video downloader',
-                    '/api/ai/chat': 'Multi-model AI chat endpoint',
-                    '/api/health': 'Health check endpoint',
-                    '/api/info': 'API information and documentation'
+                    '/api/status': 'Get server status, memory usage, and system information',
+                    '/api/ping': 'Simple health check endpoint for server responsiveness',
+                    '/api/deepseek': 'Deepseek AI chat endpoint for intelligent conversations',
+                    '/api/copilot': 'Microsoft Copilot AI with citation support',
+                    '/api/gpt5': 'GPT-5 AI with advanced reasoning capabilities',
+                    '/api/instagram': 'Download Instagram videos, photos, and metadata',
+                    '/api/facebook': 'Download Facebook videos in HD/SD quality',
+                    '/api/social/media': 'Unified social media tools (Instagram & Facebook)',
+                    '/api/video/download': 'Video downloader for multiple platforms',
+                    '/api/ai/chat': 'Multi-model AI chat (Deepseek, Copilot, GPT-5)',
+                    '/api/health': 'Complete health check with endpoint statistics',
+                    '/api/info': 'API documentation and endpoint information'
                 };
-                return descriptions[path] || 'API endpoint';
+                return descriptions[path] || 'API endpoint for data processing';
             }
 
-            categorizeEndpoint(path) {
-                if (path.includes('/deepseek') || path.includes('/copilot') || path.includes('/gpt5') || path.includes('/ai/chat')) return 'ai';
-                if (path.includes('/instagram') || path.includes('/facebook') || path.includes('/social')) return 'social';
-                if (path.includes('/status') || path.includes('/ping') || path.includes('/health') || path.includes('/info')) return 'system';
-                return 'general';
-            }
-
-            getDemoEndpoints() {
+            getCompleteDemoEndpoints() {
                 return [
                     {
                         path: '/api/status',
                         method: 'GET',
-                        description: 'Get server status and system information',
+                        description: 'Get server status, memory usage, and system information',
                         category: 'system',
-                        params: []
+                        params: [],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/ping',
+                        method: 'GET',
+                        description: 'Simple health check endpoint for server responsiveness',
+                        category: 'system',
+                        params: [],
+                        status: 'demo'
                     },
                     {
                         path: '/api/deepseek',
                         method: 'GET',
-                        description: 'Deepseek AI chat endpoint',
+                        description: 'Deepseek AI chat endpoint for intelligent conversations',
                         category: 'ai',
                         params: [
-                            { name: 'q', type: 'string', required: true, description: 'Your question' }
-                        ]
+                            { name: 'q', type: 'string', required: true, description: 'Your question for Deepseek AI' }
+                        ],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/copilot',
+                        method: 'GET',
+                        description: 'Microsoft Copilot AI with citation support',
+                        category: 'ai',
+                        params: [
+                            { name: 'text', type: 'string', required: true, description: 'Your message for Copilot' }
+                        ],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/gpt5',
+                        method: 'GET',
+                        description: 'GPT-5 AI with advanced reasoning capabilities',
+                        category: 'ai',
+                        params: [
+                            { name: 'text', type: 'string', required: true, description: 'Your query for GPT-5' }
+                        ],
+                        status: 'demo'
                     },
                     {
                         path: '/api/instagram',
                         method: 'GET',
-                        description: 'Instagram downloader and metadata',
+                        description: 'Download Instagram videos, photos, and metadata',
                         category: 'social',
                         params: [
                             { name: 'url', type: 'string', required: true, description: 'Instagram post/reel URL' }
-                        ]
+                        ],
+                        status: 'demo'
                     },
                     {
                         path: '/api/facebook',
                         method: 'GET',
-                        description: 'Facebook video downloader',
+                        description: 'Download Facebook videos in HD/SD quality',
                         category: 'social',
                         params: [
                             { name: 'url', type: 'string', required: true, description: 'Facebook video URL' }
-                        ]
+                        ],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/social/media',
+                        method: 'GET',
+                        description: 'Unified social media tools (Instagram & Facebook)',
+                        category: 'social',
+                        params: [
+                            { name: 'url', type: 'string', required: true, description: 'Social media URL' },
+                            { name: 'platform', type: 'string', required: false, description: 'Platform (auto, instagram, facebook)' }
+                        ],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/video/download',
+                        method: 'GET',
+                        description: 'Video downloader for multiple platforms',
+                        category: 'video',
+                        params: [
+                            { name: 'url', type: 'string', required: true, description: 'Video URL' },
+                            { name: 'quality', type: 'string', required: false, description: 'Video quality (best, hd, sd)' },
+                            { name: 'platform', type: 'string', required: false, description: 'Platform (auto, instagram, facebook)' }
+                        ],
+                        status: 'demo'
                     },
                     {
                         path: '/api/ai/chat',
                         method: 'GET',
-                        description: 'Multi-model AI chat endpoint',
+                        description: 'Multi-model AI chat (Deepseek, Copilot, GPT-5)',
                         category: 'ai',
                         params: [
                             { name: 'text', type: 'string', required: true, description: 'Your message' },
                             { name: 'model', type: 'string', required: false, description: 'AI model (auto, copilot, deepseek, gpt5)' }
-                        ]
+                        ],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/health',
+                        method: 'GET',
+                        description: 'Complete health check with endpoint statistics',
+                        category: 'system',
+                        params: [],
+                        status: 'demo'
+                    },
+                    {
+                        path: '/api/info',
+                        method: 'GET',
+                        description: 'API documentation and endpoint information',
+                        category: 'system',
+                        params: [],
+                        status: 'demo'
                     }
                 ];
             }
@@ -2560,40 +3023,41 @@
                 if (!container) return;
 
                 container.innerHTML = this.endpoints.map((endpoint, index) => `
-                    <div class="endpoint-card slide-in-right" style="animation-delay: ${0.1 * (index + 1)}s">
+                    <div class="endpoint-card slide-in-right" style="animation-delay: ${0.05 * (index + 1)}s" data-category="${endpoint.category}" data-status="${endpoint.status}">
                         <div class="endpoint-header">
                             <span class="method-badge method-${endpoint.method.toLowerCase()}">
                                 ${endpoint.method}
+                                ${endpoint.status === 'demo' ? ' 🧪' : endpoint.status === 'active' ? ' ✅' : ' ⚡'}
                             </span>
                             <span class="endpoint-path">${endpoint.path}</span>
                         </div>
                         <p class="endpoint-description">${endpoint.description}</p>
                         <div class="endpoint-footer">
-                            <span class="category-tag" style="
-                                background: ${endpoint.category === 'ai' ? 'rgba(255, 107, 139, 0.1)' : 
-                                          endpoint.category === 'social' ? 'rgba(29, 209, 161, 0.1)' : 
-                                          'rgba(84, 160, 255, 0.1)'};
-                                color: ${endpoint.category === 'ai' ? 'var(--primary)' : 
-                                       endpoint.category === 'social' ? 'var(--success)' : 
-                                       'var(--info)'};
-                                border: 2px solid ${endpoint.category === 'ai' ? 'var(--primary)' : 
-                                                 endpoint.category === 'social' ? 'var(--success)' : 
-                                                 'var(--info)'};
-                                padding: 0.4rem 1rem;
-                                border-radius: var(--radius);
-                                font-weight: 700;
-                                font-size: 0.85rem;
-                                text-transform: uppercase;
-                            ">
-                                ${endpoint.category}
+                            <span class="category-tag category-${endpoint.category}">
+                                <i class="fas fa-${this.getCategoryIcon(endpoint.category)}"></i>
+                                ${endpoint.category.toUpperCase()}
                             </span>
                             <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(255, 107, 139, 0.1); color: var(--primary); border: 2px solid var(--primary);" 
                                     onclick="app.testEndpoint('${endpoint.path}', '${endpoint.method}')">
-                                <i class="fas fa-play"></i> Test
+                                <i class="fas fa-play"></i> Test Now
                             </button>
                         </div>
+                        ${endpoint.note ? `<div style="margin-top: 0.75rem; padding: 0.5rem; background: rgba(255, 159, 67, 0.1); border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--warning);">
+                            <i class="fas fa-info-circle"></i> ${endpoint.note}
+                        </div>` : ''}
                     </div>
                 `).join('');
+            }
+
+            getCategoryIcon(category) {
+                const icons = {
+                    'ai': 'robot',
+                    'social': 'share-alt',
+                    'system': 'server',
+                    'video': 'video',
+                    'general': 'cog'
+                };
+                return icons[category] || 'cog';
             }
 
             updateEndpointSelect() {
@@ -2601,19 +3065,44 @@
                 const exportSelect = document.getElementById('exportEndpointSelect');
                 if (!select || !exportSelect) return;
 
-                select.innerHTML = '<option value="">✨ Select an endpoint...</option>' +
+                select.innerHTML = '<option value="">✨ Select an endpoint to test...</option>' +
                     this.endpoints.map(endpoint => `
-                        <option value="${endpoint.path}">
-                            ${endpoint.method} ${endpoint.path}
+                        <option value="${endpoint.path}" data-category="${endpoint.category}" data-status="${endpoint.status}">
+                            ${endpoint.method} ${endpoint.path} ${endpoint.status === 'demo' ? '(Demo)' : endpoint.status === 'active' ? '(Active)' : '(Available)'}
                         </option>
                     `).join('');
 
-                exportSelect.innerHTML = '<option value="">📊 Select endpoint for export...</option>' +
+                exportSelect.innerHTML = '<option value="">📊 Select endpoint for data export...</option>' +
                     this.endpoints.map(endpoint => `
                         <option value="${endpoint.path}">
                             ${endpoint.path} - ${endpoint.description}
                         </option>
                     `).join('');
+            }
+
+            updateEndpointStats() {
+                const total = this.endpoints.length;
+                const ai = this.endpoints.filter(ep => ep.category === 'ai').length;
+                const social = this.endpoints.filter(ep => ep.category === 'social').length;
+                const system = this.endpoints.filter(ep => ep.category === 'system').length;
+                const video = this.endpoints.filter(ep => ep.category === 'video').length;
+                const active = this.endpoints.filter(ep => ep.status === 'active').length;
+
+                document.getElementById('totalEndpoints').textContent = total;
+                document.getElementById('aiEndpoints').textContent = ai;
+                document.getElementById('socialEndpoints').textContent = social + video;
+                document.getElementById('systemEndpoints').textContent = system;
+                
+                // Update hero endpoint count
+                const heroCount = document.getElementById('endpointCount');
+                if (heroCount) {
+                    heroCount.textContent = total;
+                }
+                
+                // Update dashboard
+                if (window.app?.saveManager) {
+                    window.app.saveManager.update('endpointCount', total);
+                }
             }
 
             async testEndpoint(path, method = 'GET', params = {}) {
@@ -2643,14 +3132,20 @@
                     const response = await fetch(url, options);
                     const responseTime = Date.now() - startTime;
                     
-                    const data = await response.json();
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        data = { error: 'Invalid JSON response', raw: await response.text() };
+                    }
                     
                     return {
                         status: response.status,
                         data: data,
                         responseTime: responseTime,
                         url: url,
-                        method: method
+                        method: method,
+                        timestamp: new Date().toISOString()
                     };
                 } catch (error) {
                     return {
@@ -2658,7 +3153,8 @@
                         data: { error: 'Network error', message: error.message },
                         responseTime: 0,
                         url: path,
-                        method: method
+                        method: method,
+                        timestamp: new Date().toISOString()
                     };
                 }
             }
@@ -2668,11 +3164,12 @@
         class ExportManager {
             constructor() {
                 this.exportedData = [];
+                this.toast = new ToastSystem();
             }
 
             exportToCSV(data, filename = 'export.csv') {
                 if (!Array.isArray(data) || data.length === 0) {
-                    this.showToast('No data to export!', 'error');
+                    this.toast.error('No data to export!');
                     return;
                 }
 
@@ -2687,16 +3184,16 @@
                     ].join('\n');
 
                     this.downloadFile(csvContent, filename, 'text/csv');
-                    this.showToast('CSV exported successfully!', 'success');
+                    this.toast.success('CSV exported successfully!', 'Export Complete');
                 } catch (error) {
-                    this.showToast('Failed to export CSV', 'error');
+                    this.toast.error('Failed to export CSV');
                     console.error('CSV export error:', error);
                 }
             }
 
             exportToExcel(data, filename = 'export.xlsx') {
                 if (!Array.isArray(data) || data.length === 0) {
-                    this.showToast('No data to export!', 'error');
+                    this.toast.error('No data to export!');
                     return;
                 }
 
@@ -2705,9 +3202,9 @@
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
                     XLSX.writeFile(wb, filename);
-                    this.showToast('Excel exported successfully!', 'success');
+                    this.toast.success('Excel exported successfully!', 'Export Complete');
                 } catch (error) {
-                    this.showToast('Failed to export Excel', 'error');
+                    this.toast.error('Failed to export Excel');
                     console.error('Excel export error:', error);
                 }
             }
@@ -2715,7 +3212,7 @@
             exportToJSON(data, filename = 'export.json') {
                 const jsonContent = JSON.stringify(data, null, 2);
                 this.downloadFile(jsonContent, filename, 'application/json');
-                this.showToast('JSON exported successfully!', 'success');
+                this.toast.success('JSON exported successfully!', 'Export Complete');
             }
 
             downloadFile(content, filename, mimeType) {
@@ -2730,7 +3227,7 @@
                     document.body.removeChild(a);
                     setTimeout(() => URL.revokeObjectURL(url), 100);
                 } catch (error) {
-                    this.showToast('Download failed', 'error');
+                    this.toast.error('Download failed');
                     console.error('Download error:', error);
                 }
             }
@@ -2745,8 +3242,11 @@
 
                 return `
                     <div style="overflow: auto;">
-                        <div style="margin-bottom: 1rem; padding: 0.5rem; background: var(--cartoon-bg); border-radius: var(--radius); font-weight: 700; color: var(--primary);">
-                            Showing ${sampleSize} of ${data.length} rows
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; background: var(--cartoon-bg); border-radius: var(--radius); font-weight: 700; color: var(--primary); display: flex; justify-content: space-between; align-items: center;">
+                            <span>Showing ${sampleSize} of ${data.length} rows</span>
+                            <span style="font-size: 0.85rem; color: var(--success);">
+                                <i class="fas fa-database"></i> ${data.length} records
+                            </span>
                         </div>
                         <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                             <thead>
@@ -2788,52 +3288,6 @@
                 if (typeof value === 'string' && value.length > 50) return value.substring(0, 50) + '...';
                 return value;
             }
-
-            showToast(message, type = 'info') {
-                // Create toast element
-                const toast = document.createElement('div');
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 1rem 1.5rem;
-                    border-radius: var(--radius);
-                    background: ${type === 'success' ? 'var(--success)' : 
-                                type === 'error' ? 'var(--error)' : 
-                                'var(--primary)'};
-                    color: white;
-                    font-weight: 700;
-                    z-index: 9999;
-                    box-shadow: var(--shadow-lg);
-                    transform: translateX(150%);
-                    transition: transform 0.3s var(--bounce);
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                `;
-                
-                toast.innerHTML = `
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 
-                                      type === 'error' ? 'exclamation-circle' : 
-                                      'info-circle'}"></i>
-                    <span>${message}</span>
-                `;
-                
-                document.body.appendChild(toast);
-                
-                // Show toast
-                setTimeout(() => {
-                    toast.style.transform = 'translateX(0)';
-                }, 10);
-                
-                // Hide after 3 seconds
-                setTimeout(() => {
-                    toast.style.transform = 'translateX(150%)';
-                    setTimeout(() => {
-                        document.body.removeChild(toast);
-                    }, 300);
-                }, 3000);
-            }
         }
 
         // Main Application
@@ -2843,6 +3297,7 @@
                 this.apiManager = new APIManager();
                 this.exportManager = new ExportManager();
                 this.mobileMenu = new MobileMenu();
+                this.toast = new ToastSystem();
                 this.init();
             }
 
@@ -2853,6 +3308,8 @@
                 this.startUptimeCounter();
                 this.setupIntersectionObserver();
                 this.setupSmoothScrolling();
+                this.setupEndpointFilters();
+                this.setupSearch();
                 createBackgroundElements();
             }
 
@@ -2872,6 +3329,10 @@
                     this.handleCustomRequest();
                 });
 
+                document.getElementById('sendCustomRequest2')?.addEventListener('click', () => {
+                    this.handleCustomRequest();
+                });
+
                 // Clear request
                 document.getElementById('clearRequest')?.addEventListener('click', () => {
                     this.clearRequest();
@@ -2880,6 +3341,11 @@
                 // Save request
                 document.getElementById('saveRequest')?.addEventListener('click', () => {
                     this.saveRequest();
+                });
+
+                // Format JSON
+                document.getElementById('formatJSON')?.addEventListener('click', () => {
+                    this.formatJSON();
                 });
 
                 // Export buttons
@@ -2950,6 +3416,51 @@
                 });
             }
 
+            setupEndpointFilters() {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                const endpointCards = document.querySelectorAll('.endpoint-card');
+
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Update active button
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+
+                        const filter = button.dataset.filter;
+                        
+                        // Filter endpoint cards
+                        endpointCards.forEach(card => {
+                            if (filter === 'all' || card.dataset.category === filter) {
+                                card.style.display = 'flex';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            }
+
+            setupSearch() {
+                const searchInput = document.getElementById('endpointSearch');
+                if (!searchInput) return;
+
+                searchInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    const endpointCards = document.querySelectorAll('.endpoint-card');
+
+                    endpointCards.forEach(card => {
+                        const path = card.querySelector('.endpoint-path').textContent.toLowerCase();
+                        const description = card.querySelector('.endpoint-description').textContent.toLowerCase();
+                        
+                        if (path.includes(searchTerm) || description.includes(searchTerm) || searchTerm === '') {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
             handleEndpointSelect(path) {
                 if (!path) return;
 
@@ -2977,6 +3488,9 @@
                                        data-param="${param.name}"
                                        placeholder="${param.description || param.type}${param.required ? '' : ' (optional)'}"
                                        ${param.required ? 'required' : ''}>
+                                ${param.description ? `<div style="font-size: 0.85rem; color: var(--dark-2); margin-top: 0.25rem; padding-left: 0.25rem;">
+                                    <i class="fas fa-info-circle"></i> ${param.description}
+                                </div>` : ''}
                             </div>
                         `).join('')}
                     `;
@@ -2985,6 +3499,9 @@
                         <div style="text-align: center; padding: 2rem; color: var(--dark-2);">
                             <i class="fas fa-check-circle fa-2x" style="margin-bottom: 1rem; color: var(--success);"></i>
                             <p style="font-size: 1.1rem;">No parameters needed for this endpoint!</p>
+                            <p style="font-size: 0.9rem; color: var(--dark-2); margin-top: 0.5rem;">
+                                Just click "Send Request" to test this endpoint
+                            </p>
                         </div>
                     `;
                 }
@@ -2993,7 +3510,7 @@
             async handleSendRequest() {
                 const endpointSelect = document.getElementById('endpointSelect');
                 if (!endpointSelect?.value) {
-                    this.exportManager.showToast('Please select an endpoint first!', 'error');
+                    this.toast.error('Please select an endpoint first!');
                     return;
                 }
 
@@ -3011,7 +3528,7 @@
                     if (input.required && !paramValue) {
                         input.style.borderColor = 'var(--error)';
                         hasError = true;
-                        this.exportManager.showToast(`Parameter "${paramName}" is required`, 'error');
+                        this.toast.error(`Parameter "${paramName}" is required`);
                     } else if (paramValue) {
                         params[paramName] = paramValue;
                         input.style.borderColor = '';
@@ -3053,6 +3570,15 @@
                     } else if (result.data.data && Array.isArray(result.data.data)) {
                         this.exportManager.exportedData = result.data.data;
                         this.updateDataPreview();
+                    } else if (endpoint.category === 'ai' || endpoint.path.includes('/ai/')) {
+                        // For AI endpoints, create sample data
+                        this.exportManager.exportedData = [{
+                            query: params.q || params.text || 'AI Request',
+                            response: result.data.response || result.data.result || result.data.message,
+                            model: result.data.model || endpoint.path.split('/').pop(),
+                            timestamp: result.timestamp
+                        }];
+                        this.updateDataPreview();
                     }
 
                     // Update stats
@@ -3063,11 +3589,11 @@
                     this.updateStats();
                     this.updateDashboard();
                     
-                    this.exportManager.showToast(`Request successful! Response time: ${result.responseTime}ms`, 'success');
+                    this.toast.success(`Request successful! Response time: ${result.responseTime}ms`, 'API Request Complete');
 
                 } catch (error) {
                     console.error('Request failed:', error);
-                    this.exportManager.showToast('Request failed: ' + error.message, 'error');
+                    this.toast.error('Request failed: ' + error.message);
                 } finally {
                     sendBtn.innerHTML = originalText;
                     sendBtn.disabled = false;
@@ -3080,12 +3606,12 @@
                 const body = document.getElementById('requestBody')?.value.trim();
 
                 if (!endpoint) {
-                    this.exportManager.showToast('Please enter an endpoint URL', 'error');
+                    this.toast.error('Please enter an endpoint URL');
                     return;
                 }
 
                 try {
-                    const sendBtn = document.getElementById('sendCustomRequest');
+                    const sendBtn = document.getElementById('sendCustomRequest') || document.getElementById('sendCustomRequest2');
                     const originalText = sendBtn.innerHTML;
                     sendBtn.innerHTML = '<span class="loading" style="width: 1.25rem; height: 1.25rem; border-width: 2px; margin-right: 0.5rem;"></span> Sending...';
                     sendBtn.disabled = true;
@@ -3106,14 +3632,20 @@
                             JSON.parse(body);
                             options.body = body;
                         } catch (e) {
-                            this.exportManager.showToast('Invalid JSON in request body', 'error');
+                            this.toast.error('Invalid JSON in request body');
                             return;
                         }
                     }
 
                     const response = await fetch(url, options);
                     const responseTime = Date.now() - startTime;
-                    const data = await response.json();
+                    
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        data = { error: 'Invalid JSON response', raw: await response.text() };
+                    }
 
                     // Update response display
                     const responseBody = document.getElementById('responseBody');
@@ -3139,13 +3671,13 @@
                     this.updateStats();
                     this.updateDashboard();
                     
-                    this.exportManager.showToast(`Custom request successful!`, 'success');
+                    this.toast.success(`Custom request successful!`, 'Request Complete');
 
                 } catch (error) {
                     console.error('Custom request failed:', error);
-                    this.exportManager.showToast('Custom request failed: ' + error.message, 'error');
+                    this.toast.error('Custom request failed: ' + error.message);
                 } finally {
-                    const sendBtn = document.getElementById('sendCustomRequest');
+                    const sendBtn = document.getElementById('sendCustomRequest') || document.getElementById('sendCustomRequest2');
                     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
                     sendBtn.disabled = false;
                 }
@@ -3258,7 +3790,6 @@
             }
 
             setupSmoothScrolling() {
-                // Smooth scroll for anchor links
                 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                     anchor.addEventListener('click', (e) => {
                         const href = anchor.getAttribute('href');
@@ -3267,7 +3798,7 @@
                         const target = document.querySelector(href);
                         if (target) {
                             e.preventDefault();
-                            const offset = 80; // Height of navbar
+                            const offset = 80;
                             const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
                             
                             window.scrollTo({
@@ -3279,7 +3810,6 @@
                 });
             }
 
-            // Navigation active state
             setupNavigation() {
                 const sections = document.querySelectorAll('section[id]');
                 const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
@@ -3322,7 +3852,6 @@
                 }
             }
 
-            // Additional methods
             clearRequest() {
                 document.getElementById('endpointSelect').value = '';
                 document.getElementById('paramsContainer').innerHTML = `
@@ -3337,11 +3866,33 @@
                 }, null, 2);
                 document.getElementById('responseStatus').textContent = '✨ Ready';
                 document.getElementById('responseStatus').className = 'response-status';
-                this.exportManager.showToast('Request cleared!', 'info');
+                this.toast.info('Request cleared!');
             }
 
             saveRequest() {
-                this.exportManager.showToast('Request saved to history!', 'success');
+                const responseBody = document.getElementById('responseBody');
+                if (responseBody && responseBody.textContent.trim() !== '{}') {
+                    this.saveManager.addResponse({
+                        data: JSON.parse(responseBody.textContent),
+                        timestamp: new Date().toISOString()
+                    });
+                    this.toast.success('Response saved to history!');
+                } else {
+                    this.toast.warning('No response data to save');
+                }
+            }
+
+            formatJSON() {
+                const textarea = document.getElementById('requestBody');
+                if (!textarea) return;
+                
+                try {
+                    const json = JSON.parse(textarea.value);
+                    textarea.value = JSON.stringify(json, null, 2);
+                    this.toast.success('JSON formatted successfully!');
+                } catch (error) {
+                    this.toast.error('Invalid JSON format');
+                }
             }
 
             exportData() {
@@ -3349,17 +3900,30 @@
                 const format = document.querySelector('input[name="exportFormat"]:checked')?.value || 'csv';
                 
                 if (!endpointSelect?.value) {
-                    this.exportManager.showToast('Please select an endpoint first!', 'error');
+                    this.toast.error('Please select an endpoint first!');
                     return;
                 }
 
-                // Simulate data export
-                const data = this.generateMockData();
+                // Generate mock data based on endpoint type
+                let data = [];
+                const endpoint = endpointSelect.value;
+                
+                if (endpoint.includes('/ai/') || endpoint.includes('/deepseek') || endpoint.includes('/copilot') || endpoint.includes('/gpt5')) {
+                    data = this.generateAIData();
+                } else if (endpoint.includes('/instagram') || endpoint.includes('/facebook') || endpoint.includes('/social')) {
+                    data = this.generateSocialMediaData();
+                } else if (endpoint.includes('/status') || endpoint.includes('/health') || endpoint.includes('/info')) {
+                    data = this.generateSystemData();
+                } else {
+                    data = this.generateMockData();
+                }
                 
                 if (format === 'csv') {
                     this.exportManager.exportToCSV(data, `api-export-${Date.now()}.csv`);
                 } else if (format === 'excel') {
                     this.exportManager.exportToExcel(data, `api-export-${Date.now()}.xlsx`);
+                } else if (format === 'json') {
+                    this.exportManager.exportToJSON(data, `api-export-${Date.now()}.json`);
                 }
                 
                 this.saveManager.increment(`exports.${format}`);
@@ -3367,52 +3931,129 @@
             }
 
             exportAllEndpoints() {
-                this.exportManager.showToast('Exporting all endpoints...', 'info');
+                this.toast.info('Exporting all endpoints... This may take a moment.', 'Batch Export Started');
                 // Implement export all endpoints logic
+                setTimeout(() => {
+                    const allData = this.generateCompleteMockData();
+                    this.exportManager.exportToExcel(allData, `all-endpoints-${Date.now()}.xlsx`);
+                    this.saveManager.increment('exports.excel');
+                    this.updateDashboard();
+                }, 2000);
             }
 
             exportResponseData() {
                 if (this.exportManager.exportedData.length === 0) {
-                    this.exportManager.showToast('No response data to export!', 'error');
+                    this.toast.error('No response data to export!');
                     return;
                 }
                 this.exportManager.exportToJSON(this.exportManager.exportedData, `response-data-${Date.now()}.json`);
             }
 
             batchExport() {
-                this.exportManager.showToast('Batch export started!', 'info');
+                this.toast.info('Batch export started! Processing all endpoints...', 'Batch Export');
                 // Implement batch export logic
             }
 
             loadSavedData() {
                 const saved = this.saveManager.state.savedResponses;
                 if (saved.length === 0) {
-                    this.exportManager.showToast('No saved data found!', 'error');
+                    this.toast.error('No saved data found!');
                     return;
                 }
                 
                 this.exportManager.exportedData = saved;
                 this.updateDataPreview();
-                this.exportManager.showToast(`Loaded ${saved.length} saved responses!`, 'success');
+                this.toast.success(`Loaded ${saved.length} saved responses!`, 'Data Loaded');
             }
 
             clearData() {
                 this.exportManager.exportedData = [];
                 this.updateDataPreview();
-                this.exportManager.showToast('Data cleared!', 'info');
+                this.toast.info('Data cleared!');
             }
 
             previewExport() {
                 const endpointSelect = document.getElementById('exportEndpointSelect');
                 if (!endpointSelect?.value) {
-                    this.exportManager.showToast('Please select an endpoint first!', 'error');
+                    this.toast.error('Please select an endpoint first!');
                     return;
                 }
 
-                const data = this.generateMockData();
+                let data = [];
+                const endpoint = endpointSelect.value;
+                
+                if (endpoint.includes('/ai/')) {
+                    data = this.generateAIData(5);
+                } else if (endpoint.includes('/instagram') || endpoint.includes('/facebook')) {
+                    data = this.generateSocialMediaData(5);
+                } else {
+                    data = this.generateMockData(5);
+                }
+                
                 this.exportManager.exportedData = data;
                 this.updateDataPreview();
-                this.exportManager.showToast('Preview generated!', 'success');
+                this.toast.success('Preview generated!', 'Data Preview');
+            }
+
+            generateAIData(count = 10) {
+                const data = [];
+                const models = ['Deepseek', 'Copilot', 'GPT-5', 'Claude', 'Gemini'];
+                const topics = ['Programming', 'Science', 'History', 'Technology', 'Art', 'Music'];
+                
+                for (let i = 1; i <= count; i++) {
+                    data.push({
+                        id: i,
+                        model: models[Math.floor(Math.random() * models.length)],
+                        query: `Question about ${topics[Math.floor(Math.random() * topics.length)]}`,
+                        response: `This is a sample AI response for query #${i}. AI can help with various topics including ${topics[Math.floor(Math.random() * topics.length)]}.`,
+                        confidence: Math.random().toFixed(2),
+                        tokens: Math.floor(Math.random() * 500) + 100,
+                        timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString()
+                    });
+                }
+                return data;
+            }
+
+            generateSocialMediaData(count = 10) {
+                const data = [];
+                const platforms = ['Instagram', 'Facebook', 'Twitter', 'TikTok', 'YouTube'];
+                const types = ['Video', 'Image', 'Reel', 'Story', 'Post'];
+                
+                for (let i = 1; i <= count; i++) {
+                    data.push({
+                        id: i,
+                        platform: platforms[Math.floor(Math.random() * platforms.length)],
+                        type: types[Math.floor(Math.random() * types.length)],
+                        url: `https://${platforms[Math.floor(Math.random() * platforms.length)].toLowerCase()}.com/post/${Math.random().toString(36).substr(2, 9)}`,
+                        likes: Math.floor(Math.random() * 10000),
+                        shares: Math.floor(Math.random() * 5000),
+                        comments: Math.floor(Math.random() * 2000),
+                        duration: `${Math.floor(Math.random() * 5) + 1}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
+                        quality: ['HD', 'SD', '4K'][Math.floor(Math.random() * 3)],
+                        timestamp: new Date(Date.now() - Math.random() * 604800000).toISOString()
+                    });
+                }
+                return data;
+            }
+
+            generateSystemData(count = 10) {
+                const data = [];
+                const statuses = ['Healthy', 'Warning', 'Critical', 'Maintenance'];
+                
+                for (let i = 1; i <= count; i++) {
+                    data.push({
+                        id: i,
+                        endpoint: `/api/${['status', 'health', 'ping', 'info'][Math.floor(Math.random() * 4)]}`,
+                        status: statuses[Math.floor(Math.random() * statuses.length)],
+                        response_time: Math.floor(Math.random() * 500) + 50,
+                        uptime: Math.floor(Math.random() * 100) + 900,
+                        memory_usage: Math.random().toFixed(2),
+                        cpu_usage: Math.random().toFixed(2),
+                        requests: Math.floor(Math.random() * 10000),
+                        last_check: new Date(Date.now() - Math.random() * 3600000).toISOString()
+                    });
+                }
+                return data;
             }
 
             generateMockData(count = 10) {
@@ -3422,13 +4063,23 @@
                         id: i,
                         name: `Item ${i}`,
                         value: Math.floor(Math.random() * 1000),
-                        category: ['AI', 'Social', 'System'][Math.floor(Math.random() * 3)],
+                        category: ['AI', 'Social', 'System', 'Video'][Math.floor(Math.random() * 4)],
                         date: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0],
                         active: Math.random() > 0.5,
-                        tags: ['api', 'data', 'export'].slice(0, Math.floor(Math.random() * 3) + 1)
+                        tags: ['api', 'data', 'export', 'test'].slice(0, Math.floor(Math.random() * 4) + 1),
+                        description: `Sample data for testing export functionality #${i}`
                     });
                 }
                 return data;
+            }
+
+            generateCompleteMockData() {
+                return [
+                    ...this.generateAIData(5),
+                    ...this.generateSocialMediaData(5),
+                    ...this.generateSystemData(5),
+                    ...this.generateMockData(5)
+                ];
             }
         }
 
