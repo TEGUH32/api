@@ -57,6 +57,27 @@ function formatViews(views) {
     return views.toString();
 }
 
+// Helper function untuk parse kualitas YouTube
+function parseYouTubeQuality(quality) {
+    const qualityMap = {
+        '144': '144p',
+        '240': '240p',
+        '360': '360p',
+        '480': '480p',
+        '720': '720p',
+        '1080': '1080p',
+        '1440': '1440p',
+        '2160': '2160p'
+    };
+    
+    // Jika quality berupa angka, konversi ke format p
+    if (/^\d+$/.test(quality)) {
+        return qualityMap[quality] || quality + 'p';
+    }
+    
+    return quality;
+}
+
 // API Status Endpoint
 router.get('/status', (req, res) => {
     try {
@@ -240,7 +261,7 @@ router.get('/spotify', async (req, res) => {
     }
 })
 
-// YouTube Audio Downloader Endpoint (BARU)
+// YouTube Audio Downloader Endpoint
 router.get('/youtube/audio', async (req, res) => {
     const url = req.query.url
     const quality = req.query.quality || '128'
@@ -301,13 +322,11 @@ router.get('/youtube/audio', async (req, res) => {
 
         // Call external YouTube Audio API
         const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=${quality}`, {
-            timeout: 60000, // Timeout lebih lama untuk konversi audio
+            timeout: 60000,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Referer': 'https://www.youtube.com/',
-                'Origin': 'https://www.youtube.com'
+                'Referer': 'https://www.youtube.com/'
             },
             validateStatus: (status) => status < 500
         })
@@ -321,12 +340,12 @@ router.get('/youtube/audio', async (req, res) => {
             return res.status(200).json({
                 status: data.status || true,
                 status_code: data.status_code || 200,
-                creator: global.creator, // Menggunakan creator dari config
+                creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
                 result: {
                     status: data.result?.status || true,
-                    creator: global.creator, // Ganti creator dengan dari config
+                    creator: global.creator,
                     metadata: {
                         type: data.result?.metadata?.type || 'video',
                         videoId: data.result?.metadata?.videoId || videoId,
@@ -444,10 +463,10 @@ router.get('/youtube/audio', async (req, res) => {
     }
 })
 
-// YouTube Video Downloader Endpoint (BARU - tambahan untuk lengkap)
+// YouTube Video Downloader Endpoint (DIPERBARUI)
 router.get('/youtube/video', async (req, res) => {
     const url = req.query.url
-    const quality = req.query.quality || '720p'
+    const quality = req.query.quality || '360'
 
     if (!url || url.trim() === '') {
         return res.status(400).json({
@@ -456,8 +475,8 @@ router.get('/youtube/video', async (req, res) => {
             creator: global.creator,
             message: 'Query parameter "url" is required',
             timestamp: new Date().toISOString(),
-            example: '/api/youtube/video?url=https://youtu.be/HWjCStB6k4o&quality=720p',
-            note: 'Supports YouTube video URLs'
+            example: '/api/youtube/video?url=https://youtu.be/HWjCStB6k4o&quality=360',
+            note: 'Supports YouTube video URLs for video download'
         })
     }
 
@@ -476,23 +495,44 @@ router.get('/youtube/video', async (req, res) => {
                 'https://www.youtube.com/embed/VIDEO_ID',
                 'https://www.youtube.com/v/VIDEO_ID',
                 'https://www.youtube.com/shorts/VIDEO_ID'
-            ]
+            ],
+            example_url: 'https://youtu.be/HWjCStB6k4o'
         })
     }
 
     try {
         const startTime = Date.now();
+        
+        // Extract video ID dari URL
         const videoId = url.match(youtubeRegex)[1];
         
-        // Untuk video, kita bisa menggunakan endpoint lain atau fallback
-        // Menggunakan endpoint audio tapi dengan penyesuaian
-        const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=128`, {
-            timeout: 45000,
+        // Validasi quality parameter
+        const validQualities = ['144', '240', '360', '480', '720', '1080', '1440', '2160', 'best'];
+        const requestedQuality = parseYouTubeQuality(quality);
+        if (!validQualities.includes(quality) && quality !== 'best') {
+            return res.status(400).json({
+                status: false,
+                status_code: 400,
+                creator: global.creator,
+                message: 'Invalid quality parameter',
+                timestamp: new Date().toISOString(),
+                valid_qualities: validQualities,
+                default_quality: '360',
+                note: 'Quality refers to video resolution in pixels'
+            })
+        }
+
+        // Call external YouTube Video API
+        const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(url)}&quality=${quality}`, {
+            timeout: 60000,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'application/json',
-                'Referer': 'https://www.youtube.com/'
-            }
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Referer': 'https://www.youtube.com/',
+                'Origin': 'https://www.youtube.com'
+            },
+            validateStatus: (status) => status < 500
         })
 
         const processingTime = Date.now() - startTime;
@@ -500,34 +540,138 @@ router.get('/youtube/video', async (req, res) => {
         if (response.status === 200) {
             const data = response.data
             
+            // Format response sesuai dengan struktur yang diminta
             return res.status(200).json({
-                status: true,
-                status_code: 200,
+                status: data.status || true,
+                status_code: data.status_code || 200,
                 creator: global.creator,
-                message: 'YouTube video metadata fetched successfully. Video download requires different endpoint.',
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
                 result: {
-                    metadata: data.result?.metadata || {
-                        videoId: videoId,
-                        title: 'YouTube Video',
-                        thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-                        duration: '0:00',
-                        views: 0
+                    status: data.result?.status || true,
+                    creator: global.creator,
+                    metadata: {
+                        type: data.result?.metadata?.type || 'video',
+                        videoId: data.result?.metadata?.videoId || videoId,
+                        url: data.result?.metadata?.url || `https://youtube.com/watch?v=${videoId}`,
+                        title: data.result?.metadata?.title || 'YouTube Video',
+                        description: data.result?.metadata?.description || '',
+                        image: data.result?.metadata?.image || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                        thumbnail: data.result?.metadata?.thumbnail || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                        seconds: data.result?.metadata?.seconds || 0,
+                        timestamp: data.result?.metadata?.timestamp || '0:00',
+                        duration: {
+                            seconds: data.result?.metadata?.duration?.seconds || data.result?.metadata?.seconds || 0,
+                            timestamp: data.result?.metadata?.duration?.timestamp || data.result?.metadata?.timestamp || '0:00'
+                        },
+                        ago: data.result?.metadata?.ago || '',
+                        views: data.result?.metadata?.views || 0,
+                        views_formatted: formatViews(data.result?.metadata?.views || 0),
+                        author: {
+                            name: data.result?.metadata?.author?.name || 'Unknown Channel',
+                            url: data.result?.metadata?.author?.url || ''
+                        }
                     },
-                    note: 'Video downloading is currently not supported through this endpoint. Use /youtube/audio for audio extraction.',
-                    alternatives: [
-                        'Use /youtube/audio for MP3 download',
-                        'Use external tools for video download'
-                    ]
+                    download: data.result?.download || {
+                        status: data.result?.download?.status || true,
+                        message: data.result?.download?.message || 'Video download available',
+                        quality: requestedQuality,
+                        format: 'MP4',
+                        size: data.result?.download?.size || 'unknown',
+                        url: data.result?.download?.url || null,
+                        available_qualities: data.result?.download?.available_qualities || [requestedQuality]
+                    }
                 }
             })
         } else {
-            return errorResponse(res, 'Failed to fetch YouTube video data', response.status)
+            // Jika API external mengembalikan error
+            return res.status(response.status).json({
+                status: false,
+                status_code: response.status,
+                creator: global.creator,
+                message: 'YouTube Video API returned an error',
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                error: response.data?.message || 'Unknown error from external API',
+                video_id: videoId,
+                note: 'The video might be unavailable, private, restricted, or the quality is not available'
+            })
         }
     } catch (error) {
         console.error('YouTube Video API error:', error.message)
-        return errorResponse(res, 'Failed to fetch YouTube video data')
+        
+        // Fallback response untuk YouTube Video dengan data dummy
+        return res.status(200).json({
+            status: false,
+            status_code: 500,
+            creator: global.creator,
+            message: 'Failed to fetch YouTube video data',
+            processing_time: '0ms',
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            note: 'YouTube API may be experiencing issues or the video is unavailable',
+            fallback_data: {
+                status: true,
+                creator: global.creator,
+                metadata: {
+                    type: 'video',
+                    videoId: 'demo_video_id',
+                    url: 'https://youtube.com/watch?v=demo_video_id',
+                    title: 'Sample YouTube Video (Demo)',
+                    description: 'This is a sample video description for demonstration purposes.',
+                    image: 'https://i.ytimg.com/vi/demo_video_id/hqdefault.jpg',
+                    thumbnail: 'https://i.ytimg.com/vi/demo_video_id/hqdefault.jpg',
+                    seconds: 180,
+                    timestamp: '3:00',
+                    duration: {
+                        seconds: 180,
+                        timestamp: '3:00'
+                    },
+                    ago: '1 year ago',
+                    views: 1000000,
+                    views_formatted: '1.0M',
+                    author: {
+                        name: 'Sample Channel',
+                        url: 'https://youtube.com/channel/sample_channel'
+                    }
+                },
+                download: {
+                    status: true,
+                    message: 'Video download available',
+                    quality: parseYouTubeQuality(quality),
+                    format: 'MP4',
+                    size: '25.5 MB',
+                    url: 'https://example.com/youtube-video-demo.mp4',
+                    available_qualities: ['144p', '240p', '360p', '480p', '720p']
+                }
+            },
+            supported_urls: [
+                'YouTube Video: https://www.youtube.com/watch?v=VIDEO_ID',
+                'YouTube Short URL: https://youtu.be/VIDEO_ID',
+                'YouTube Shorts: https://www.youtube.com/shorts/VIDEO_ID',
+                'YouTube Embed: https://www.youtube.com/embed/VIDEO_ID'
+            ],
+            video_qualities: [
+                '144p - Lowest quality, smallest file size',
+                '240p - Low quality',
+                '360p - Standard quality, recommended for mobile',
+                '480p - Good quality',
+                '720p - HD quality',
+                '1080p - Full HD quality',
+                '1440p - 2K quality',
+                '2160p - 4K quality',
+                'best - Automatically selects the best available quality'
+            ],
+            troubleshooting: [
+                'Ensure the video is public (not private)',
+                'Check if the video is not age-restricted',
+                'Verify the URL is correct',
+                'Try using the full YouTube URL',
+                'Some videos may have download restrictions',
+                'Higher qualities may not be available for all videos',
+                'Try a lower quality if the requested one fails'
+            ]
+        })
     }
 })
 
@@ -971,9 +1115,9 @@ router.get('/ai/chat', async (req, res) => {
     }
 })
 
-// Social Media Tools Endpoint (Updated with YouTube)
+// Social Media Tools Endpoint (Updated with YouTube Video)
 router.get('/social/media', async (req, res) => {
-    const { url, platform = 'auto' } = req.query
+    const { url, platform = 'auto', type = 'auto' } = req.query
 
     if (!url || url.trim() === '') {
         return errorResponse(res, 'Query parameter "url" is required', 400)
@@ -982,21 +1126,26 @@ router.get('/social/media', async (req, res) => {
     try {
         let result
         let detectedPlatform = platform
+        let detectedType = type
 
         // Auto-detect platform dari URL
         if (platform === 'auto') {
             if (url.includes('instagram.com')) {
                 detectedPlatform = 'instagram'
+                detectedType = 'video'
             } else if (url.includes('facebook.com') || url.includes('fb.watch') || url.includes('fb.com')) {
                 detectedPlatform = 'facebook'
+                detectedType = 'video'
             } else if (url.includes('tiktok.com')) {
                 detectedPlatform = 'tiktok'
             } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 detectedPlatform = 'youtube'
+                detectedType = type === 'auto' ? 'video' : type
             } else if (url.includes('twitter.com') || url.includes('x.com')) {
                 detectedPlatform = 'twitter'
             } else if (url.includes('spotify.com') || url.includes('open.spotify.com')) {
                 detectedPlatform = 'spotify'
+                detectedType = 'audio'
             } else {
                 detectedPlatform = 'unknown'
             }
@@ -1018,20 +1167,29 @@ router.get('/social/media', async (req, res) => {
             })
             result = response.data
         } else if (detectedPlatform === 'youtube') {
-            // Default ke audio untuk YouTube
-            const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=128`, {
-                timeout: 60000
-            })
-            result = response.data
+            if (detectedType === 'audio') {
+                const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=128`, {
+                    timeout: 60000
+                })
+                result = response.data
+            } else {
+                const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(url)}&quality=360`, {
+                    timeout: 60000
+                })
+                result = response.data
+            }
         } else {
             return errorResponse(res, `Platform '${detectedPlatform}' is not supported yet. Currently only Instagram, Facebook, Spotify, and YouTube are supported.`, 400)
         }
 
-        return successResponse(res, `${detectedPlatform} data fetched successfully`, {
+        return successResponse(res, `${detectedPlatform} ${detectedType} data fetched successfully`, {
             platform: detectedPlatform,
+            content_type: detectedType,
             url: url,
             result: result.result || result,
-            supported_features: detectedPlatform === 'youtube' ? ['audio_download', 'metadata'] : ['download', 'metadata', 'statistics']
+            supported_features: detectedPlatform === 'youtube' ? 
+                (detectedType === 'audio' ? ['audio_download', 'metadata'] : ['video_download', 'metadata']) : 
+                ['download', 'metadata', 'statistics']
         })
     } catch (error) {
         console.error('Social Media endpoint error:', error.message)
@@ -1039,7 +1197,7 @@ router.get('/social/media', async (req, res) => {
     }
 })
 
-// Unified Downloader Endpoint (Updated with YouTube)
+// Unified Downloader Endpoint (Updated with YouTube Video)
 router.get('/download', async (req, res) => {
     const { url, quality = 'best', platform = 'auto', type = 'auto' } = req.query
 
@@ -1062,7 +1220,7 @@ router.get('/download', async (req, res) => {
                 detectedType = 'video'
             } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 detectedPlatform = 'youtube'
-                detectedType = type === 'auto' ? 'audio' : type // Default audio untuk YouTube
+                detectedType = type === 'auto' ? 'video' : type
             } else if (url.includes('spotify.com') || url.includes('open.spotify.com')) {
                 detectedPlatform = 'spotify'
                 detectedType = 'audio'
@@ -1096,7 +1254,11 @@ router.get('/download', async (req, res) => {
                 })
                 result = response.data
             } else {
-                return errorResponse(res, 'YouTube video download is not supported through this endpoint. Use /youtube/audio for audio extraction.', 400)
+                const videoQuality = quality === 'best' ? '360' : quality;
+                const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(url)}&quality=${videoQuality}`, {
+                    timeout: 60000
+                })
+                result = response.data
             }
         } else {
             return errorResponse(res, `Platform '${detectedPlatform}' is not supported. Currently only Instagram, Facebook, Spotify, and YouTube are supported.`, 400)
@@ -1121,11 +1283,13 @@ router.get('/download', async (req, res) => {
                 available_qualities: detectedPlatform === 'facebook' ? ['hd', 'sd'] : 
                                   detectedPlatform === 'spotify' ? ['high', 'medium', 'low'] : 
                                   detectedPlatform === 'youtube' && detectedType === 'audio' ? ['64', '128', '192', '256', '320'] : 
+                                  detectedPlatform === 'youtube' && detectedType === 'video' ? ['144', '240', '360', '480', '720', '1080', '1440', '2160', 'best'] : 
                                   ['best', 'high', 'medium', 'low'],
                 recommended: detectedPlatform === 'facebook' ? 'hd' : 
                            detectedPlatform === 'spotify' ? 'high' : 
-                           detectedPlatform === 'youtube' && detectedType === 'audio' ? '128' : 'best',
-                note: quality === 'best' ? 'Automatically selects the best available quality' : `Requested: ${quality}`
+                           detectedPlatform === 'youtube' && detectedType === 'audio' ? '128' : 
+                           detectedPlatform === 'youtube' && detectedType === 'video' ? '360' : 'best',
+                note: quality === 'best' ? 'Automatically selects the best available quality' : `Requested: ${parseYouTubeQuality(quality)}`
             }
         })
     } catch (error) {
@@ -1161,7 +1325,7 @@ router.get('/health', (req, res) => {
         },
         services: {
             ai_models: ['Deepseek', 'Copilot', 'GPT-5'],
-            downloaders: ['Instagram', 'Facebook', 'Spotify', 'YouTube Audio'],
+            downloaders: ['Instagram', 'Facebook', 'Spotify', 'YouTube Audio', 'YouTube Video'],
             status: 'operational'
         },
         rate_limit: {
@@ -1177,7 +1341,7 @@ router.get('/health', (req, res) => {
 router.get('/info', (req, res) => {
     const apiInfo = {
         name: 'API Teguh - Advanced REST API Server',
-        version: '3.4.0',
+        version: '3.5.0',
         creator: global.creator,
         description: 'Multi-model AI API server with social media, audio, and video download tools',
         endpoints: {
@@ -1238,14 +1402,14 @@ router.get('/info', (req, res) => {
             youtube_video: {
                 path: '/api/youtube/video',
                 method: 'GET',
-                description: 'YouTube video metadata (video download not available)',
-                parameters: 'url (required) - YouTube video URL'
+                description: 'YouTube video downloader (MP4)',
+                parameters: 'url (required) - YouTube video URL, quality (optional: 144, 240, 360, 480, 720, 1080, 1440, 2160, best)'
             },
             social_media: {
                 path: '/api/social/media',
                 method: 'GET',
                 description: 'Social media tools (Instagram, Facebook, Spotify, YouTube support)',
-                parameters: 'url (required), platform (optional: auto, instagram, facebook, spotify, youtube)'
+                parameters: 'url (required), platform (optional: auto, instagram, facebook, spotify, youtube), type (optional: auto, audio, video)'
             },
             download: {
                 path: '/api/download',
@@ -1266,6 +1430,7 @@ router.get('/info', (req, res) => {
             'Facebook video downloader',
             'Spotify audio downloader',
             'YouTube audio downloader (MP3)',
+            'YouTube video downloader (MP4)',
             'Social media metadata extraction',
             'Unified audio/video download endpoint',
             'Server monitoring',
@@ -1276,9 +1441,9 @@ router.get('/info', (req, res) => {
         media_support: {
             youtube: {
                 audio_formats: ['MP3 (64-320 kbps)'],
-                features: ['Audio extraction', 'Metadata', 'Thumbnail'],
-                requirements: 'Public YouTube videos only',
-                note: 'Video download not supported, only audio extraction'
+                video_formats: ['MP4 (144p-2160p)'],
+                features: ['Audio extraction', 'Video download', 'Metadata', 'Thumbnail'],
+                requirements: 'Public YouTube videos only'
             },
             spotify: {
                 formats: ['MP3 (High Quality)', 'Metadata extraction'],
@@ -1317,7 +1482,7 @@ router.all('*', (req, res) => {
             'GET /api/facebook?url=facebook_url',
             'GET /api/spotify?url=spotify_url',
             'GET /api/youtube/audio?url=youtube_url&quality=128',
-            'GET /api/youtube/video?url=youtube_url',
+            'GET /api/youtube/video?url=youtube_url&quality=360',
             'GET /api/social/media?url=social_media_url&platform=auto',
             'GET /api/download?url=media_url&quality=best',
             'GET /api/ai/chat?text=message&model=auto',
