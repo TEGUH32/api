@@ -70,7 +70,6 @@ function parseYouTubeQuality(quality) {
         '2160': '2160p'
     };
     
-    // Jika quality berupa angka, konversi ke format p
     if (/^\d+$/.test(quality)) {
         return qualityMap[quality] || quality + 'p';
     }
@@ -116,6 +115,211 @@ router.get('/status', (req, res) => {
 // Ping Endpoint
 router.get('/ping', (req, res) => {
     return successResponse(res, 'Pong! Server is responsive')
+})
+
+// Threads Downloader Endpoint (BARU)
+router.get('/threads', async (req, res) => {
+    const url = req.query.url
+
+    if (!url || url.trim() === '') {
+        return res.status(400).json({
+            status: false,
+            status_code: 400,
+            creator: global.creator,
+            message: 'Query parameter "url" is required',
+            timestamp: new Date().toISOString(),
+            example: '/api/threads?url=https://www.threads.com/@mamanyahyaali/post/DOslYoXAVSs',
+            note: 'Supports Threads post URLs'
+        })
+    }
+
+    // Validasi URL Threads
+    const threadsRegex = /(?:threads\.com|threads\.net)\/(?:@[\w\.]+|post\/[\w\-]+)/i;
+    if (!threadsRegex.test(url) && !url.includes('threads.net') && !url.includes('threads.com')) {
+        return res.status(400).json({
+            status: false,
+            status_code: 400,
+            creator: global.creator,
+            message: 'URL must be a valid Threads link',
+            timestamp: new Date().toISOString(),
+            supported_formats: [
+                'https://www.threads.com/@username/post/POST_ID',
+                'https://threads.net/@username/post/POST_ID',
+                'https://www.threads.net/@username/post/POST_ID'
+            ],
+            example_url: 'https://www.threads.com/@mamanyahyaali/post/DOslYoXAVSs'
+        })
+    }
+
+    try {
+        const startTime = Date.now();
+        
+        // Clean URL - hapus parameter tambahan
+        let cleanUrl = url.split('?')[0];
+        
+        // Call external Threads API
+        const response = await axios.get(`https://api.vreden.my.id/api/v1/download/threads?url=${encodeURIComponent(cleanUrl)}`, {
+            timeout: 60000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Referer': 'https://www.threads.com/',
+                'Origin': 'https://www.threads.com'
+            },
+            validateStatus: (status) => status < 500
+        })
+
+        const processingTime = Date.now() - startTime;
+        
+        if (response.status === 200) {
+            const data = response.data
+            
+            // Format response sesuai dengan struktur yang diminta
+            return res.status(200).json({
+                status: data.status || true,
+                status_code: data.status_code || 200,
+                creator: global.creator,
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                result: {
+                    media: data.result?.media || [],
+                    metadata: {
+                        url_provided: url,
+                        clean_url: cleanUrl,
+                        total_media: data.result?.media?.length || 0,
+                        has_images: data.result?.media?.some(item => item.type === 'image') || false,
+                        has_videos: data.result?.media?.some(item => item.type === 'video') || false,
+                        media_types: [...new Set(data.result?.media?.map(item => item.type) || [])]
+                    }
+                }
+            })
+        } else {
+            // Jika API external mengembalikan error
+            return res.status(response.status).json({
+                status: false,
+                status_code: response.status,
+                creator: global.creator,
+                message: 'Threads API returned an error',
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                error: response.data?.message || 'Unknown error from external API',
+                note: 'The Threads post might be unavailable, private, or the URL is invalid'
+            })
+        }
+    } catch (error) {
+        console.error('Threads API error:', error.message)
+        
+        // Fallback response untuk Threads dengan data dummy
+        return res.status(200).json({
+            status: false,
+            status_code: 500,
+            creator: global.creator,
+            message: 'Failed to fetch Threads data',
+            processing_time: '0ms',
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            note: 'Threads API may be experiencing issues or the post is unavailable',
+            fallback_data: {
+                media: [
+                    {
+                        url: 'https://example.com/threads-sample-1.jpg',
+                        thumb: 'https://example.com/threads-sample-1.jpg',
+                        type: 'image'
+                    },
+                    {
+                        url: 'https://example.com/threads-sample-2.jpg',
+                        thumb: 'https://example.com/threads-sample-2.jpg',
+                        type: 'image'
+                    }
+                ],
+                metadata: {
+                    total_media: 2,
+                    has_images: true,
+                    has_videos: false,
+                    media_types: ['image']
+                }
+            },
+            supported_urls: [
+                'Threads Post: https://www.threads.com/@username/post/POST_ID',
+                'Threads Post (net): https://threads.net/@username/post/POST_ID',
+                'Threads Profile: https://www.threads.com/@username'
+            ],
+            troubleshooting: [
+                'Ensure the post is public (not private)',
+                'Check if the post still exists',
+                'Verify the URL is correct',
+                'Try using the Threads mobile app URL',
+                'Some posts may have download restrictions'
+            ]
+        })
+    }
+})
+
+// Instagram Downloader Endpoint (Threads mungkin menggunakan API Instagram)
+router.get('/threads/legacy', async (req, res) => {
+    const url = req.query.url
+
+    if (!url || url.trim() === '') {
+        return res.status(400).json({
+            status: false,
+            creator: global.creator,
+            message: 'Query parameter "url" is required',
+            timestamp: new Date().toISOString(),
+            example: '/api/threads/legacy?url=https://www.threads.com/@mamanyahyaali/post/DOslYoXAVSs',
+            note: 'Legacy Threads download via Instagram API'
+        })
+    }
+
+    try {
+        const startTime = Date.now();
+        
+        // Karena Threads adalah bagian dari Instagram, kita coba gunakan Instagram API
+        const response = await axios.get(`https://api.vreden.my.id/api/v1/download/instagram?url=${encodeURIComponent(url)}`, {
+            timeout: 30000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': 'application/json',
+                'Referer': 'https://www.instagram.com/'
+            }
+        })
+
+        const processingTime = Date.now() - startTime;
+        
+        if (response.status === 200) {
+            const data = response.data
+            
+            return res.status(200).json({
+                status: true,
+                status_code: 200,
+                creator: global.creator,
+                message: 'Threads data fetched via Instagram API',
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                result: data.result || data,
+                metadata: {
+                    url_provided: url,
+                    api_method: 'instagram_api_fallback',
+                    note: 'Threads uses Instagram infrastructure, using Instagram API as fallback'
+                }
+            })
+        } else {
+            return errorResponse(res, 'Threads API returned an error', response.status)
+        }
+    } catch (error) {
+        console.error('Threads Legacy API error:', error.message)
+        
+        return res.status(200).json({
+            status: false,
+            status_code: 500,
+            creator: global.creator,
+            message: 'Failed to fetch Threads data via Instagram API',
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            note: 'Instagram API may not support Threads URLs directly. Try the main /threads endpoint.',
+            alternative_endpoint: '/api/threads'
+        })
+    }
 })
 
 // Spotify Downloader Endpoint
@@ -463,7 +667,7 @@ router.get('/youtube/audio', async (req, res) => {
     }
 })
 
-// YouTube Video Downloader Endpoint (DIPERBARUI)
+// YouTube Video Downloader Endpoint
 router.get('/youtube/video', async (req, res) => {
     const url = req.query.url
     const quality = req.query.quality || '360'
@@ -526,11 +730,9 @@ router.get('/youtube/video', async (req, res) => {
         const response = await axios.get(`https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(url)}&quality=${quality}`, {
             timeout: 60000,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Referer': 'https://www.youtube.com/',
-                'Origin': 'https://www.youtube.com'
+                'Referer': 'https://www.youtube.com/'
             },
             validateStatus: (status) => status < 500
         })
@@ -1115,7 +1317,7 @@ router.get('/ai/chat', async (req, res) => {
     }
 })
 
-// Social Media Tools Endpoint (Updated with YouTube Video)
+// Social Media Tools Endpoint (Updated with Threads)
 router.get('/social/media', async (req, res) => {
     const { url, platform = 'auto', type = 'auto' } = req.query
 
@@ -1146,6 +1348,9 @@ router.get('/social/media', async (req, res) => {
             } else if (url.includes('spotify.com') || url.includes('open.spotify.com')) {
                 detectedPlatform = 'spotify'
                 detectedType = 'audio'
+            } else if (url.includes('threads.com') || url.includes('threads.net')) {
+                detectedPlatform = 'threads'
+                detectedType = 'image' // Threads biasanya gambar
             } else {
                 detectedPlatform = 'unknown'
             }
@@ -1178,8 +1383,13 @@ router.get('/social/media', async (req, res) => {
                 })
                 result = response.data
             }
+        } else if (detectedPlatform === 'threads') {
+            const response = await axios.get(`https://api.vreden.my.id/api/v1/download/threads?url=${encodeURIComponent(url)}`, {
+                timeout: 60000
+            })
+            result = response.data
         } else {
-            return errorResponse(res, `Platform '${detectedPlatform}' is not supported yet. Currently only Instagram, Facebook, Spotify, and YouTube are supported.`, 400)
+            return errorResponse(res, `Platform '${detectedPlatform}' is not supported yet. Currently supported: Instagram, Facebook, Spotify, YouTube, Threads.`, 400)
         }
 
         return successResponse(res, `${detectedPlatform} ${detectedType} data fetched successfully`, {
@@ -1189,6 +1399,7 @@ router.get('/social/media', async (req, res) => {
             result: result.result || result,
             supported_features: detectedPlatform === 'youtube' ? 
                 (detectedType === 'audio' ? ['audio_download', 'metadata'] : ['video_download', 'metadata']) : 
+                detectedPlatform === 'threads' ? ['image_download', 'multiple_images'] :
                 ['download', 'metadata', 'statistics']
         })
     } catch (error) {
@@ -1197,7 +1408,7 @@ router.get('/social/media', async (req, res) => {
     }
 })
 
-// Unified Downloader Endpoint (Updated with YouTube Video)
+// Unified Downloader Endpoint (Updated with Threads)
 router.get('/download', async (req, res) => {
     const { url, quality = 'best', platform = 'auto', type = 'auto' } = req.query
 
@@ -1224,6 +1435,9 @@ router.get('/download', async (req, res) => {
             } else if (url.includes('spotify.com') || url.includes('open.spotify.com')) {
                 detectedPlatform = 'spotify'
                 detectedType = 'audio'
+            } else if (url.includes('threads.com') || url.includes('threads.net')) {
+                detectedPlatform = 'threads'
+                detectedType = 'image'
             } else {
                 detectedPlatform = 'unknown'
             }
@@ -1260,8 +1474,13 @@ router.get('/download', async (req, res) => {
                 })
                 result = response.data
             }
+        } else if (detectedPlatform === 'threads') {
+            const response = await axios.get(`https://api.vreden.my.id/api/v1/download/threads?url=${encodeURIComponent(url)}`, {
+                timeout: 60000
+            })
+            result = response.data
         } else {
-            return errorResponse(res, `Platform '${detectedPlatform}' is not supported. Currently only Instagram, Facebook, Spotify, and YouTube are supported.`, 400)
+            return errorResponse(res, `Platform '${detectedPlatform}' is not supported. Currently supported: Instagram, Facebook, Spotify, YouTube, Threads.`, 400)
         }
 
         const processingTime = Date.now() - startTime;
@@ -1284,11 +1503,13 @@ router.get('/download', async (req, res) => {
                                   detectedPlatform === 'spotify' ? ['high', 'medium', 'low'] : 
                                   detectedPlatform === 'youtube' && detectedType === 'audio' ? ['64', '128', '192', '256', '320'] : 
                                   detectedPlatform === 'youtube' && detectedType === 'video' ? ['144', '240', '360', '480', '720', '1080', '1440', '2160', 'best'] : 
+                                  detectedPlatform === 'threads' ? ['original'] :
                                   ['best', 'high', 'medium', 'low'],
                 recommended: detectedPlatform === 'facebook' ? 'hd' : 
                            detectedPlatform === 'spotify' ? 'high' : 
                            detectedPlatform === 'youtube' && detectedType === 'audio' ? '128' : 
-                           detectedPlatform === 'youtube' && detectedType === 'video' ? '360' : 'best',
+                           detectedPlatform === 'youtube' && detectedType === 'video' ? '360' : 
+                           detectedPlatform === 'threads' ? 'original' : 'best',
                 note: quality === 'best' ? 'Automatically selects the best available quality' : `Requested: ${parseYouTubeQuality(quality)}`
             }
         })
@@ -1306,7 +1527,7 @@ router.get('/health', (req, res) => {
         uptime: process.uptime(),
         memory: process.memoryUsage(),
         endpoints: {
-            total: 13,
+            total: 15,
             available: [
                 '/api/status',
                 '/api/ping',
@@ -1318,6 +1539,8 @@ router.get('/health', (req, res) => {
                 '/api/spotify',
                 '/api/youtube/audio',
                 '/api/youtube/video',
+                '/api/threads',
+                '/api/threads/legacy',
                 '/api/social/media',
                 '/api/download',
                 '/api/ai/chat'
@@ -1325,7 +1548,7 @@ router.get('/health', (req, res) => {
         },
         services: {
             ai_models: ['Deepseek', 'Copilot', 'GPT-5'],
-            downloaders: ['Instagram', 'Facebook', 'Spotify', 'YouTube Audio', 'YouTube Video'],
+            downloaders: ['Instagram', 'Facebook', 'Spotify', 'YouTube Audio', 'YouTube Video', 'Threads'],
             status: 'operational'
         },
         rate_limit: {
@@ -1341,7 +1564,7 @@ router.get('/health', (req, res) => {
 router.get('/info', (req, res) => {
     const apiInfo = {
         name: 'API Teguh - Advanced REST API Server',
-        version: '3.5.0',
+        version: '3.6.0',
         creator: global.creator,
         description: 'Multi-model AI API server with social media, audio, and video download tools',
         endpoints: {
@@ -1405,17 +1628,29 @@ router.get('/info', (req, res) => {
                 description: 'YouTube video downloader (MP4)',
                 parameters: 'url (required) - YouTube video URL, quality (optional: 144, 240, 360, 480, 720, 1080, 1440, 2160, best)'
             },
+            threads: {
+                path: '/api/threads',
+                method: 'GET',
+                description: 'Threads posts downloader (images)',
+                parameters: 'url (required) - Threads post URL'
+            },
+            threads_legacy: {
+                path: '/api/threads/legacy',
+                method: 'GET',
+                description: 'Threads via Instagram API (legacy)',
+                parameters: 'url (required) - Threads post URL'
+            },
             social_media: {
                 path: '/api/social/media',
                 method: 'GET',
-                description: 'Social media tools (Instagram, Facebook, Spotify, YouTube support)',
-                parameters: 'url (required), platform (optional: auto, instagram, facebook, spotify, youtube), type (optional: auto, audio, video)'
+                description: 'Social media tools (Instagram, Facebook, Spotify, YouTube, Threads support)',
+                parameters: 'url (required), platform (optional: auto, instagram, facebook, spotify, youtube, threads), type (optional: auto, audio, video, image)'
             },
             download: {
                 path: '/api/download',
                 method: 'GET',
-                description: 'Unified downloader for audio and video from multiple platforms',
-                parameters: 'url (required), quality (optional), platform (optional: auto), type (optional: auto, audio, video)'
+                description: 'Unified downloader for audio, video, and images from multiple platforms',
+                parameters: 'url (required), quality (optional), platform (optional: auto), type (optional: auto, audio, video, image)'
             },
             ai_chat: {
                 path: '/api/ai/chat',
@@ -1431,14 +1666,21 @@ router.get('/info', (req, res) => {
             'Spotify audio downloader',
             'YouTube audio downloader (MP3)',
             'YouTube video downloader (MP4)',
+            'Threads images downloader (multiple images support)',
             'Social media metadata extraction',
-            'Unified audio/video download endpoint',
+            'Unified audio/video/image download endpoint',
             'Server monitoring',
             'Rate limiting'
         ],
         rate_limiting: '2000 requests per minute per IP',
         documentation: 'Visit / on your browser for full documentation',
         media_support: {
+            threads: {
+                formats: ['Images (JPEG, PNG)', 'Multiple images per post'],
+                features: ['Image download', 'Thumbnail preview'],
+                requirements: 'Public Threads posts only',
+                max_images: 'Up to 10 images per post'
+            },
             youtube: {
                 audio_formats: ['MP3 (64-320 kbps)'],
                 video_formats: ['MP4 (144p-2160p)'],
@@ -1483,6 +1725,8 @@ router.all('*', (req, res) => {
             'GET /api/spotify?url=spotify_url',
             'GET /api/youtube/audio?url=youtube_url&quality=128',
             'GET /api/youtube/video?url=youtube_url&quality=360',
+            'GET /api/threads?url=threads_url',
+            'GET /api/threads/legacy?url=threads_url',
             'GET /api/social/media?url=social_media_url&platform=auto',
             'GET /api/download?url=media_url&quality=best',
             'GET /api/ai/chat?text=message&model=auto',
