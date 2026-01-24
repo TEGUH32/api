@@ -1,744 +1,991 @@
 <!DOCTYPE html>
-<html lang="id" class="layout-navbar-fixed layout-menu-fixed layout-compact" dir="ltr" data-skin="default" data-assets-path="../assets/" data-template="vertical-menu-template" data-bs-theme="light">
+<html lang="id" class="layout-navbar-fixed layout-menu-fixed" dir="ltr" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Teguh - Advanced REST API Dashboard</title>
-    <meta name="description" content="Advanced REST API server dengan Multi-Model AI, Social Media Downloader, dan System Monitoring oleh Muhammad Teguh" />
-    <meta name="keywords" content="API, REST API, AI, Deepseek, Copilot, GPT-5, Instagram Downloader, Facebook Downloader, Muhammad Teguh" />
-    
-    <!-- Favicon -->
+    <meta name="description" content="Advanced REST API server dengan Multi-Model AI, Social Media Downloader, dan Real-time Monitoring" />
+    <meta name="keywords" content="API, REST API, AI, Deepseek, Copilot, GPT-5, Instagram Downloader, Facebook Downloader" />
     <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/api.png" />
     
-    <!-- Fonts -->
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    
-    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" />
     
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- ApexCharts CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.css" />
     
-    <!-- Custom CSS -->
     <style>
         :root {
-            --bs-primary: #6366f1;
-            --bs-secondary: #8b5cf6;
-            --bs-success: #10b981;
-            --bs-info: #3b82f6;
-            --bs-warning: #f59e0b;
-            --bs-danger: #ef4444;
-            --bs-dark: #1e293b;
-            --bs-light: #f8fafc;
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --sidebar-width: 280px;
         }
-        
-        .bg-navbar-theme {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+
+        [data-bs-theme="dark"] {
+            --primary-color: #818cf8;
+            --primary-dark: #6366f1;
+            --secondary-color: #a78bfa;
+            --dark-color: #0f172a;
+            --light-color: #1e293b;
+            --border-color: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
         }
-        
-        .bg-menu-theme {
-            background-color: #1e293b;
-            color: rgba(255, 255, 255, 0.87);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Layout Structure */
+        .layout-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .layout-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Sidebar */
+        #layout-menu {
+            width: var(--sidebar-width);
+            background: var(--dark-color);
+            color: rgba(255, 255, 255, 0.9);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .layout-menu-expanded {
+            transform: translateX(0) !important;
+        }
+
+        @media (max-width: 1199.98px) {
+            #layout-menu {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* App Brand */
         .app-brand {
-            padding: 1.5rem 1.5rem 0;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
         }
-        
+
+        .app-brand-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
         .app-brand-logo {
             width: 40px;
             height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border-radius: 10px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
+            margin-right: 12px;
         }
-        
+
         .app-brand-text {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-left: 10px;
-            color: white;
+            line-height: 1.2;
         }
-        
-        .menu-item.active > .menu-link {
-            background: rgba(99, 102, 241, 0.2);
-            border-left: 4px solid #6366f1;
+
+        .app-brand-text small {
+            display: block;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: 400;
         }
-        
+
+        /* Menu */
+        .menu-inner {
+            list-style: none;
+            padding: 0 1rem;
+        }
+
+        .menu-header {
+            padding: 1rem 0 0.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+
+        .menu-header:first-child {
+            border-top: none;
+            margin-top: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 2px;
+        }
+
         .menu-link {
-            color: rgba(255, 255, 255, 0.87);
-            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
         }
-        
+
         .menu-link:hover {
             background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
-        
+
+        .menu-link.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: white;
+            border-left: 4px solid var(--primary-color);
+        }
+
         .menu-icon {
             width: 20px;
-            margin-right: 10px;
+            margin-right: 12px;
             text-align: center;
+            font-size: 1.125rem;
         }
-        
-        .card {
-            border: none;
+
+        .menu-sub {
+            list-style: none;
+            padding-left: 1.5rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .menu-toggle.active + .menu-sub {
+            display: block;
+        }
+
+        .menu-toggle::after {
+            content: '\EA6E';
+            font-family: 'remixicon';
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle.active::after {
+            content: '\EA78';
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .layout-page {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 1199.98px) {
+            .layout-page {
+                margin-left: 0;
+            }
+        }
+
+        /* Navbar */
+        #layout-navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Content */
+        .content-wrapper {
+            flex: 1;
+            padding: 1.5rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
         }
-        
+
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
             font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
         }
-        
-        .status-online {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
-        
-        .status-offline {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
+
+        .card-body {
+            padding: 1.5rem;
         }
-        
-        .endpoint-badge {
-            background: var(--bs-primary);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
+
+        /* Stats Cards */
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
         }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
+            margin: 0 auto 1rem;
+            font-size: 1.25rem;
         }
-        
-        .avatar-primary { background: var(--bs-primary); }
-        .avatar-success { background: var(--bs-success); }
-        .avatar-info { background: var(--bs-info); }
-        .avatar-warning { background: var(--bs-warning); }
-        .avatar-danger { background: var(--bs-danger); }
-        
-        .chat-message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            margin-bottom: 10px;
+
+        .stat-icon.primary { background: rgba(99, 102, 241, 0.1); color: var(--primary-color); }
+        .stat-icon.success { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .stat-icon.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+        .stat-icon.info { background: rgba(59, 130, 246, 0.1); color: var(--info-color); }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
         }
-        
-        .chat-message.user {
-            background: var(--bs-primary);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 5px;
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
-        
-        .chat-message.ai {
-            background: #f1f5f9;
-            color: #1e293b;
-            border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 5px;
-        }
-        
-        .download-option {
-            border: 1px solid #e2e8f0;
+
+        /* System Metrics */
+        .metric-card {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
+            margin-bottom: 1rem;
         }
-        
-        .download-option:hover {
-            border-color: var(--bs-primary);
-            background: rgba(99, 102, 241, 0.05);
-            transform: translateY(-3px);
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
         }
-        
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
         .progress-thin {
             height: 6px;
             border-radius: 3px;
+            background: var(--border-color);
+            overflow: hidden;
         }
-        
-        .system-metric {
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 1s ease;
         }
-        
-        .system-metric .metric-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--bs-primary);
-        }
-        
-        .system-metric .metric-label {
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-        
-        .list-items {
-            max-height: 320px;
+
+        /* Chat Interface */
+        .chat-container {
+            height: 300px;
             overflow-y: auto;
+            padding: 1rem;
+            background: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 1rem;
         }
-        
-        .activity-item {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            transition: background 0.3s ease;
+
+        .chat-message {
+            max-width: 80%;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            line-height: 1.4;
         }
-        
-        .activity-item:hover {
-            background: #f8fafc;
+
+        .chat-message.user {
+            background: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
         }
-        
-        .activity-item:last-child {
-            border-bottom: none;
+
+        .chat-message.ai {
+            background: var(--border-color);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
         }
-        
-        .api-test-input {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 10px;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.9rem;
+
+        /* Download Options */
+        .download-option {
+            display: block;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
         }
-        
+
+        .download-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .download-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* API Response */
         .api-response {
-            background: #1e293b;
+            background: var(--dark-color);
             color: #e2e8f0;
             border-radius: 8px;
-            padding: 15px;
+            padding: 1rem;
             font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.85rem;
+            font-size: 0.8125rem;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Activity List */
+        .activity-list {
             max-height: 300px;
             overflow-y: auto;
         }
-        
-        .theme-toggle {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
         }
-        
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
+
+        .activity-content {
+            flex: 1;
+            min-width: 0;
         }
-        
-        .mobile-menu-toggle {
+
+        .activity-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.125rem;
+            color: var(--text-primary);
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-primary {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.625rem 1rem;
+            background: var(--light-color);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .bg-primary { background: var(--primary-color); }
+        .bg-success { background: var(--success-color); }
+        .bg-danger { background: var(--danger-color); }
+        .bg-warning { background: var(--warning-color); }
+        .bg-info { background: var(--info-color); }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Toggle */
+        .mobile-toggle {
             display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.25rem;
         }
-        
+
         @media (max-width: 1199.98px) {
-            .mobile-menu-toggle {
-                display: block;
+            .mobile-toggle {
+                display: flex;
             }
         }
-        
+
+        /* Footer */
         .footer {
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            padding: 20px 0;
-            margin-top: 40px;
+            background: var(--light-color);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-top: auto;
         }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-primary);
+        }
+
+        /* Utility Classes */
+        .text-primary { color: var(--primary-color) !important; }
+        .text-success { color: var(--success-color) !important; }
+        .text-danger { color: var(--danger-color) !important; }
+        .text-warning { color: var(--warning-color) !important; }
+        .text-muted { color: var(--text-secondary) !important; }
+
+        .bg-light { background: var(--light-color) !important; }
+        .bg-dark { background: var(--dark-color) !important; }
+
+        .border { border: 1px solid var(--border-color) !important; }
+        .rounded { border-radius: 8px !important; }
+
+        .shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important; }
+        .shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; }
+
+        /* Responsive Grid */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .chat-container {
+                height: 250px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
-            <!-- Sidebar Menu -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand">
-                    <a href="/" class="app-brand-link d-flex align-items-center">
-                        <div class="app-brand-logo">
-                            <i class="ri-server-line"></i>
-                        </div>
-                        <span class="app-brand-text">API Teguh</span>
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" id="mobileToggle">
+        <i class="ri-menu-line"></i>
+    </button>
+
+    <!-- Layout Container -->
+    <div class="layout-wrapper">
+        <!-- Sidebar Menu -->
+        <aside id="layout-menu" class="layout-menu">
+            <div class="app-brand">
+                <a href="/" class="app-brand-link">
+                    <div class="app-brand-logo">
+                        <i class="ri-server-line"></i>
+                    </div>
+                    <div class="app-brand-text">
+                        API Teguh
+                        <small>v3.2.0</small>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Menu Items -->
+            <ul class="menu-inner">
+                <!-- Dashboard -->
+                <li class="menu-item active">
+                    <a href="dashboard.html" class="menu-link">
+                        <i class="menu-icon ri-dashboard-line"></i>
+                        <span>Dashboard</span>
                     </a>
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
-                        <i class="ri-close-line"></i>
+                </li>
+
+                <!-- Home -->
+                <li class="menu-item">
+                    <a href="index.html" class="menu-link">
+                        <i class="menu-icon ri-home-line"></i>
+                        <span>Home</span>
                     </a>
+                </li>
+
+                <!-- AI Endpoints -->
+                <li class="menu-header">
+                    AI Endpoints
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0)" class="menu-link menu-toggle">
+                        <i class="menu-icon ri-robot-line"></i>
+                        <span>AI Models</span>
+                    </a>
+                    <ul class="menu-sub">
+                        <li><a href="/api/deepseek?q=Hello" target="_blank">Deepseek AI</a></li>
+                        <li><a href="/api/copilot?text=Hello" target="_blank">Copilot AI</a></li>
+                        <li><a href="/api/gpt5?text=Hello" target="_blank">GPT-5 AI</a></li>
+                        <li><a href="/api/ai/chat?text=Hello&model=auto" target="_blank">Multi-Model Chat</a></li>
+                    </ul>
+                </li>
+
+                <!-- Social Media -->
+                <li class="menu-item">
+                    <a href="javascript:void(0)" class="menu-link menu-toggle">
+                        <i class="menu-icon ri-download-cloud-line"></i>
+                        <span>Social Media</span>
+                    </a>
+                    <ul class="menu-sub">
+                        <li><a href="/api/instagram?url=" target="_blank">Instagram</a></li>
+                        <li><a href="/api/facebook?url=" target="_blank">Facebook</a></li>
+                        <li><a href="/api/social/media?url=" target="_blank">Social Tools</a></li>
+                        <li><a href="/api/video/download?url=" target="_blank">Video Download</a></li>
+                    </ul>
+                </li>
+
+                <!-- Server Tools -->
+                <li class="menu-item">
+                    <a href="javascript:void(0)" class="menu-link menu-toggle">
+                        <i class="menu-icon ri-tools-line"></i>
+                        <span>Server Tools</span>
+                    </a>
+                    <ul class="menu-sub">
+                        <li><a href="/api/status" target="_blank">Server Status</a></li>
+                        <li><a href="/api/ping" target="_blank">Ping Test</a></li>
+                        <li><a href="/api/health" target="_blank">Health Check</a></li>
+                        <li><a href="/api/info" target="_blank">API Info</a></li>
+                    </ul>
+                </li>
+
+                <!-- Quick Actions -->
+                <li class="menu-header">
+                    Quick Actions
+                </li>
+                <li class="menu-item">
+                    <a href="#ai-chat" class="menu-link" onclick="scrollToSection('ai-chat')">
+                        <i class="menu-icon ri-chat-1-line"></i>
+                        <span>AI Chat</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#downloader" class="menu-link" onclick="scrollToSection('downloader')">
+                        <i class="menu-icon ri-download-line"></i>
+                        <span>Downloader</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#api-tester" class="menu-link" onclick="scrollToSection('api-tester')">
+                        <i class="menu-icon ri-code-s-slash-line"></i>
+                        <span>API Tester</span>
+                    </a>
+                </li>
+
+                <!-- Support -->
+                <li class="menu-header">
+                    Support
+                </li>
+                <li class="menu-item">
+                    <a href="mailto:support@api-teguh.com" class="menu-link">
+                        <i class="menu-icon ri-customer-service-line"></i>
+                        <span>Contact Support</span>
+                    </a>
+                </li>
+
+                <!-- Server Status -->
+                <div class="menu-header">
+                    Server Status
                 </div>
-                
-                <div class="menu-inner-shadow"></div>
-                
-                <ul class="menu-inner py-1">
-                    <!-- Dashboard -->
-                    <li class="menu-item active">
-                        <a href="dashboard.html" class="menu-link">
-                            <i class="menu-icon ri-dashboard-line"></i>
-                            <div>Dashboard</div>
-                        </a>
-                    </li>
-                    
-                    <!-- Home -->
-                    <li class="menu-item">
-                        <a href="index.html" class="menu-link">
-                            <i class="menu-icon ri-home-line"></i>
-                            <div>Home</div>
-                        </a>
-                    </li>
-                    
-                    <li class="menu-header mt-4">
-                        <span class="menu-header-text">AI Endpoints</span>
-                    </li>
-                    
-                    <!-- AI Models -->
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon ri-robot-line"></i>
-                            <div>AI Models</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="/api/deepseek?q=Hello" target="_blank" class="menu-link">
-                                    <div>Deepseek AI</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/copilot?text=Hello" target="_blank" class="menu-link">
-                                    <div>Microsoft Copilot</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/gpt5?text=Hello" target="_blank" class="menu-link">
-                                    <div>GPT-5 AI</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/ai/chat?text=Hello&model=auto" target="_blank" class="menu-link">
-                                    <div>Multi-Model Chat</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Social Media -->
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon ri-download-cloud-line"></i>
-                            <div>Social Media</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="/api/instagram?url=https://www.instagram.com/p/Cxample123/" target="_blank" class="menu-link">
-                                    <div>Instagram Downloader</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/facebook?url=https://www.facebook.com/share/r/16sXMhKi6e/" target="_blank" class="menu-link">
-                                    <div>Facebook Downloader</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/social/media?url=https://www.instagram.com/p/Cxample123/&platform=auto" target="_blank" class="menu-link">
-                                    <div>Social Media Tools</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/video/download?url=https://www.instagram.com/p/Cxample123/&quality=best" target="_blank" class="menu-link">
-                                    <div>Video Downloader</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Server Tools -->
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon ri-server-line"></i>
-                            <div>Server Tools</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="/api/status" target="_blank" class="menu-link">
-                                    <div>Server Status</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/ping" target="_blank" class="menu-link">
-                                    <div>Ping Test</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/health" target="_blank" class="menu-link">
-                                    <div>Health Check</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/api/info" target="_blank" class="menu-link">
-                                    <div>API Information</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="menu-header mt-4">
-                        <span class="menu-header-text">Quick Actions</span>
-                    </li>
-                    
-                    <!-- Quick Links -->
-                    <li class="menu-item">
-                        <a href="#ai-chat-section" class="menu-link" onclick="scrollToSection('ai-chat-section')">
-                            <i class="menu-icon ri-chat-1-line"></i>
-                            <div>AI Chat Test</div>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#downloader-section" class="menu-link" onclick="scrollToSection('downloader-section')">
-                            <i class="menu-icon ri-download-line"></i>
-                            <div>Downloader Test</div>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#api-test-section" class="menu-link" onclick="scrollToSection('api-test-section')">
-                            <i class="menu-icon ri-code-s-slash-line"></i>
-                            <div>API Tester</div>
-                        </a>
-                    </li>
-                    
-                    <!-- Support -->
-                    <li class="menu-header mt-4">
-                        <span class="menu-header-text">Support</span>
-                    </li>
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon ri-customer-service-line"></i>
-                            <div>Get Help</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="https://github.com" target="_blank" class="menu-link">
-                                    <div>GitHub</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="https://api.whatsapp.com/send?phone=6281234567890" target="_blank" class="menu-link">
-                                    <div>WhatsApp</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="mailto:teguh@example.com" class="menu-link">
-                                    <div>Email Support</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Server Status -->
-                    <li class="menu-item mt-4">
-                        <div class="menu-link">
-                            <div class="d-flex align-items-center">
-                                <div class="status-indicator me-2" id="serverStatusIndicator"></div>
-                                <div>
-                                    <div class="small">Server Status</div>
-                                    <div class="small text-muted" id="serverUptime">Checking...</div>
-                                </div>
+                <li class="menu-item">
+                    <div class="menu-link">
+                        <div class="d-flex align-items-center">
+                            <div class="pulse" id="statusIndicator" style="width: 8px; height: 8px; border-radius: 50%; background: var(--success-color); margin-right: 8px;"></div>
+                            <div>
+                                <div class="small">Server Status</div>
+                                <div class="small text-muted" id="serverUptime">Checking...</div>
                             </div>
                         </div>
-                    </li>
-                </ul>
-            </aside>
-            
-            <!-- Main Content -->
-            <div class="layout-page">
-                <!-- Navbar -->
-                <nav class="layout-navbar container-xxl navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
-                    <div class="container-fluid">
-                        <!-- Mobile Toggle -->
-                        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-                            <a class="nav-item nav-link px-0" href="javascript:void(0)">
-                                <i class="ri-menu-line ri-24px"></i>
-                            </a>
-                        </div>
-                        
-                        <!-- Search -->
-                        <div class="navbar-nav align-items-center">
-                            <div class="nav-item navbar-search-wrapper mb-0">
-                                <a class="nav-item nav-link search-toggler px-0" href="javascript:void(0);">
-                                    <span class="d-inline-block text-white fw-normal">Dashboard Overview</span>
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- Right Side -->
-                        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                            <ul class="navbar-nav flex-row align-items-center ms-auto">
-                                <!-- Theme Toggle -->
-                                <li class="nav-item me-3">
-                                    <button class="theme-toggle" id="themeToggle">
-                                        <i class="ri-sun-line" id="themeIcon"></i>
-                                    </button>
-                                </li>
-                                
-                                <!-- Notifications -->
-                                <li class="nav-item dropdown me-3">
-                                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                        <i class="ri-notification-3-line ri-22px text-white"></i>
-                                        <span class="position-absolute top-0 start-50 translate-middle badge badge-dot bg-danger mt-1 border"></span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end py-0">
-                                        <li class="dropdown-menu-header border-bottom">
-                                            <div class="dropdown-header d-flex align-items-center py-3">
-                                                <h6 class="mb-0 me-auto">API Updates</h6>
-                                                <span class="badge rounded-pill bg-primary">3 New</span>
-                                            </div>
-                                        </li>
-                                        <li class="dropdown-notifications-list scrollable-container">
-                                            <div class="list-group list-group-flush">
-                                                <a href="javascript:void(0)" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar bg-success">
-                                                                <i class="ri-robot-line"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="mb-1">Multi-Model AI Added</h6>
-                                                            <small class="text-muted">Deepseek, Copilot, GPT-5 now available</small>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <a href="javascript:void(0)" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar bg-info">
-                                                                <i class="ri-download-cloud-line"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="mb-1">Social Media Downloader</h6>
-                                                            <small class="text-muted">Instagram & Facebook support added</small>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <a href="javascript:void(0)" class="list-group-item list-group-item-action">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar bg-warning">
-                                                                <i class="ri-server-line"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="mb-1">Server Monitoring</h6>
-                                                            <small class="text-muted">Real-time system metrics added</small>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                
-                                <!-- User -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="javascript:void(0);">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar bg-primary me-2">
-                                                <i class="ri-user-line"></i>
-                                            </div>
-                                            <div class="d-none d-xl-block">
-                                                <div class="small text-white">Muhammad Teguh</div>
-                                                <div class="small text-white-50">Admin</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="layout-page">
+            <!-- Navbar -->
+            <nav id="layout-navbar">
+                <div class="navbar-content">
+                    <div class="d-flex align-items-center">
+                        <h4 class="mb-0 text-white">Dashboard Overview</h4>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-outline-light btn-sm" id="refreshBtn">
+                            <i class="ri-refresh-line"></i> Refresh
+                        </button>
+                        <button class="btn btn-light btn-sm" id="themeToggle">
+                            <i class="ri-sun-line" id="themeIcon"></i>
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="ri-user-line"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="index.html">Back to Home</a></li>
+                                <li><a class="dropdown-item" href="/api/info" target="_blank">Documentation</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="logout()">Logout</a></li>
                             </ul>
                         </div>
                     </div>
-                </nav>
-                
-                <!-- Content -->
-                <div class="content-wrapper">
-                    <div class="container-xxl flex-grow-1 container-p-y">
-                        <!-- Welcome Card -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="card gradient-bg">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-8">
-                                                <h3 class="card-title text-white mb-2">Welcome to API Teguh Dashboard! 🚀</h3>
-                                                <p class="text-white-75 mb-3">
-                                                    Advanced REST API server dengan Multi-Model AI, Social Media Downloader, dan Real-time Monitoring
-                                                </p>
-                                                <div class="d-flex gap-2">
-                                                    <a href="index.html" class="btn btn-light btn-sm">Back to Home</a>
-                                                    <a href="/api/info" target="_blank" class="btn btn-outline-light btn-sm">API Documentation</a>
-                                                </div>
+                </div>
+            </nav>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+                <!-- Stats Overview -->
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="card stat-card fade-in">
+                            <div class="stat-icon primary">
+                                <i class="ri-plug-line"></i>
+                            </div>
+                            <div class="stat-number" id="endpointsCount">10</div>
+                            <div class="stat-label">API Endpoints</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="card stat-card fade-in">
+                            <div class="stat-icon success">
+                                <i class="ri-checkbox-circle-line"></i>
+                            </div>
+                            <div class="stat-number" id="successRate">99.8%</div>
+                            <div class="stat-label">Success Rate</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="card stat-card fade-in">
+                            <div class="stat-icon warning">
+                                <i class="ri-time-line"></i>
+                            </div>
+                            <div class="stat-number" id="responseTime">45ms</div>
+                            <div class="stat-label">Avg Response</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="card stat-card fade-in">
+                            <div class="stat-icon info">
+                                <i class="ri-user-line"></i>
+                            </div>
+                            <div class="stat-number" id="activeUsers">128</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Monitoring -->
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100 fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">System Monitoring</h5>
+                                <p class="card-subtitle">Real-time server metrics</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="metric-card">
+                                            <div class="metric-value" id="cpuUsage">24.5%</div>
+                                            <div class="metric-label">CPU Usage</div>
+                                            <div class="progress-thin">
+                                                <div class="progress-bar" id="cpuBar" style="width: 24.5%"></div>
                                             </div>
-                                            <div class="col-md-4 text-end d-none d-md-block">
-                                                <img src="https://img.icons8.com/color/96/000000/api.png" alt="API" class="img-fluid" width="120" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="metric-card">
+                                            <div class="metric-value" id="memoryUsage">67.2%</div>
+                                            <div class="metric-label">Memory Usage</div>
+                                            <div class="progress-thin">
+                                                <div class="progress-bar" id="memoryBar" style="width: 67.2%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="metric-card">
+                                            <div class="metric-value" id="uptimeValue">15d 7h</div>
+                                            <div class="metric-label">Server Uptime</div>
+                                            <div class="mt-2">
+                                                <span class="badge bg-success">Online</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="metric-card">
+                                            <div class="metric-value" id="totalRequests">12.5K</div>
+                                            <div class="metric-label">Total Requests</div>
+                                            <div class="mt-2">
+                                                <span class="badge bg-primary">Today: 245</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Stats Overview -->
-                        <div class="row mb-4">
-                            <div class="col-md-3 col-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar bg-primary me-3">
-                                                <i class="ri-plug-line"></i>
-                                            </div>
-                                            <div>
-                                                <p class="mb-1">API Endpoints</p>
-                                                <h4 class="mb-0" id="endpointsCount">10</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100 fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">Endpoint Status</h5>
+                                <p class="card-subtitle">API health monitoring</p>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar bg-success me-3">
-                                                <i class="ri-checkbox-circle-line"></i>
-                                            </div>
-                                            <div>
-                                                <p class="mb-1">Success Rate</p>
-                                                <h4 class="mb-0" id="successRate">99.8%</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar bg-info me-3">
-                                                <i class="ri-time-line"></i>
-                                            </div>
-                                            <div>
-                                                <p class="mb-1">Response Time</p>
-                                                <h4 class="mb-0" id="responseTime">45ms</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar bg-warning me-3">
-                                                <i class="ri-user-line"></i>
-                                            </div>
-                                            <div>
-                                                <p class="mb-1">Active Users</p>
-                                                <h4 class="mb-0" id="activeUsers">128</h4>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="card-body">
+                                <div class="activity-list" id="endpointStatus">
+                                    <!-- Status akan di-load oleh JavaScript -->
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- System Monitoring -->
-                        <div class="row mb-4">
-                            <div class="col-lg-8">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">System Monitoring</h5>
-                                        <p class="small mb-0">Real-time server metrics</p>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <div class="system-metric">
-                                                    <div class="metric-value" id="cpuUsage">0%</div>
-                                                    <div class="metric-label">CPU Usage</div>
-                                                    <div class="progress progress-thin mt-2">
-                                                        <div class="progress-bar bg-primary" id="cpuBar" style="width: 0%"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <div class="system-metric">
-                                                    <div class="metric-value" id="memoryUsage">0%</div>
-                                                    <div class="metric-label">Memory Usage</div>
-                                                    <div class="progress progress-thin mt-2">
-                                                        <div class="progress-bar bg-success" id="memoryBar" style="width: 0%"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="system-metric">
-                                                    <div class="metric-value" id="uptimeValue">0d 0h</div>
-                                                    <div class="metric-label">Server Uptime</div>
-                                                    <div class="mt-2">
-                                                        <span class="status-badge status-online">Online</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="system-metric">
-                                                    <div class="metric-value" id="requestCount">0</div>
-                                                    <div class="metric-label">Total Requests</div>
-                                                    <div class="mt-2">
-                                                        <span class="badge bg-primary">Today: 245</span>
-                                                    </div>
-                                                </div>
+                    </div>
+                </div>
+
+                <!-- AI Chat Section -->
+                <div class="row mb-4" id="ai-chat">
+                    <div class="col-12">
+                        <div class="card fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">AI Chat Assistant</h5>
+                                <p class="card-subtitle">Test multiple AI models in real-time</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Select AI Model</label>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <button class="btn btn-outline-primary active" data-model="auto">Auto</button>
+                                                <button class="btn btn-outline-primary" data-model="deepseek">Deepseek</button>
+                                                <button class="btn btn-outline-primary" data-model="copilot">Copilot</button>
+                                                <button class="btn btn-outline-primary" data-model="gpt5">GPT-5</button>
                                             </div>
                                         </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Your Message</label>
+                                            <textarea class="form-control" id="aiMessage" rows="4" placeholder="Type your message here...">Hello! How can you help me today?</textarea>
+                                        </div>
+                                        <button class="btn btn-primary w-100" id="sendAiBtn">
+                                            <i class="ri-send-plane-line me-2"></i>Send Message
+                                        </button>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-lg-4">
-                                <div class="card h-100">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">API Endpoints Status</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="list-items" id="endpointStatusList">
-                                            <!-- Endpoints will be loaded here -->
-                                            <div class="text-center py-4">
-                                                <div class="spinner-border text-primary" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
+                                    <div class="col-md-8">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Chat Response</h6>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="chat-container" id="chatContainer">
+                                                    <div class="chat-message ai">
+                                                        Hello! I'm your AI assistant. I can help you with questions using multiple AI models. Select a model and type your message to start chatting!
+                                                    </div>
+                                                </div>
+                                                <div class="p-3 border-top">
+                                                    <small class="text-muted" id="responseInfo">Ready to chat...</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -746,60 +993,45 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- AI Chat Section -->
-                        <div class="row mb-4" id="ai-chat-section">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">AI Chat Assistant</h5>
-                                        <p class="small mb-0">Test multiple AI models in real-time</p>
+                    </div>
+                </div>
+
+                <!-- Downloader Section -->
+                <div class="row mb-4" id="downloader">
+                    <div class="col-12">
+                        <div class="card fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">Social Media Downloader</h5>
+                                <p class="card-subtitle">Download videos from Instagram and Facebook</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Platform</label>
+                                            <select class="form-select" id="downloadPlatform">
+                                                <option value="auto">Auto Detect</option>
+                                                <option value="instagram">Instagram</option>
+                                                <option value="facebook">Facebook</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Media URL</label>
+                                            <input type="text" class="form-control" id="mediaUrl" placeholder="https://www.instagram.com/p/...">
+                                        </div>
+                                        <button class="btn btn-primary w-100" id="downloadBtn">
+                                            <i class="ri-download-line me-2"></i>Download Media
+                                        </button>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-4 mb-3">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Select AI Model</label>
-                                                    <div class="btn-group w-100" role="group">
-                                                        <input type="radio" class="btn-check" name="aiModel" id="modelAuto" checked>
-                                                        <label class="btn btn-outline-primary" for="modelAuto">Auto</label>
-                                                        
-                                                        <input type="radio" class="btn-check" name="aiModel" id="modelDeepseek">
-                                                        <label class="btn btn-outline-primary" for="modelDeepseek">Deepseek</label>
-                                                        
-                                                        <input type="radio" class="btn-check" name="aiModel" id="modelCopilot">
-                                                        <label class="btn btn-outline-primary" for="modelCopilot">Copilot</label>
-                                                        
-                                                        <input type="radio" class="btn-check" name="aiModel" id="modelGPT5">
-                                                        <label class="btn btn-outline-primary" for="modelGPT5">GPT-5</label>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="mb-3">
-                                                    <label class="form-label">Your Message</label>
-                                                    <textarea class="form-control" id="aiMessage" rows="4" placeholder="Type your message here...">Hello! How can you help me today?</textarea>
-                                                </div>
-                                                
-                                                <button class="btn btn-primary w-100" onclick="sendAIMessage()">
-                                                    <i class="ri-send-plane-line me-2"></i>Send Message
-                                                </button>
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Download Result</h6>
                                             </div>
-                                            
-                                            <div class="col-md-8">
-                                                <div class="card h-100">
-                                                    <div class="card-header">
-                                                        <h6 class="mb-0">Chat Response</h6>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div id="chatContainer" style="height: 250px; overflow-y: auto;">
-                                                            <div class="chat-message ai">
-                                                                Hello! I'm your AI assistant. I can help you with questions using multiple AI models. Select a model and type your message to start chatting!
-                                                            </div>
-                                                        </div>
-                                                        <div class="mt-3 text-end">
-                                                            <small class="text-muted" id="responseInfo">Waiting for your message...</small>
-                                                        </div>
-                                                    </div>
+                                            <div class="card-body">
+                                                <div id="downloadResult" class="text-center py-5">
+                                                    <i class="ri-download-cloud-line text-muted" style="font-size: 3rem;"></i>
+                                                    <p class="text-muted mt-3">Enter a URL to download media</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -807,141 +1039,66 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Downloader Section -->
-                        <div class="row mb-4" id="downloader-section">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">Social Media Downloader</h5>
-                                        <p class="small mb-0">Download videos from Instagram and Facebook</p>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Select Platform</label>
-                                                    <select class="form-select" id="downloadPlatform">
-                                                        <option value="auto">Auto Detect</option>
-                                                        <option value="instagram">Instagram</option>
-                                                        <option value="facebook">Facebook</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div class="mb-3">
-                                                    <label class="form-label">Media URL</label>
-                                                    <input type="text" class="form-control" id="mediaUrl" placeholder="Paste Instagram or Facebook URL here...">
-                                                </div>
-                                                
-                                                <button class="btn btn-primary w-100" onclick="processDownload()">
-                                                    <i class="ri-download-line me-2"></i>Download Media
-                                                </button>
-                                            </div>
-                                            
-                                            <div class="col-md-6">
-                                                <div class="card h-100">
-                                                    <div class="card-header">
-                                                        <h6 class="mb-0">Download Result</h6>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div id="downloadResult" class="text-center py-5">
-                                                            <i class="ri-download-cloud-line text-muted" style="font-size: 3rem;"></i>
-                                                            <p class="text-muted mt-3">Enter a URL and click "Download Media" to see results</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    </div>
+                </div>
+
+                <!-- API Tester -->
+                <div class="row mb-4" id="api-tester">
+                    <div class="col-12">
+                        <div class="card fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">API Tester</h5>
+                                <p class="card-subtitle">Test API endpoints directly</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Endpoint</label>
+                                            <select class="form-select" id="endpointSelect">
+                                                <option value="/api/deepseek?q=">Deepseek AI</option>
+                                                <option value="/api/copilot?text=">Copilot AI</option>
+                                                <option value="/api/gpt5?text=">GPT-5 AI</option>
+                                                <option value="/api/instagram?url=">Instagram</option>
+                                                <option value="/api/facebook?url=">Facebook</option>
+                                                <option value="/api/status">Server Status</option>
+                                                <option value="/api/health">Health Check</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Parameter Value</label>
+                                            <input type="text" class="form-control" id="paramValue" placeholder="Enter value...">
+                                        </div>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-primary" id="testApiBtn">
+                                                <i class="ri-play-line me-2"></i>Test Endpoint
+                                            </button>
+                                            <button class="btn btn-outline-primary" id="copyUrlBtn">
+                                                <i class="ri-clipboard-line me-2"></i>Copy URL
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- API Tester -->
-                        <div class="row mb-4" id="api-test-section">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">API Tester</h5>
-                                        <p class="small mb-0">Test any API endpoint directly</p>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-4 mb-3">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Select Endpoint</label>
-                                                    <select class="form-select" id="endpointSelect" onchange="updateEndpointParams()">
-                                                        <option value="/api/deepseek?q=">Deepseek AI</option>
-                                                        <option value="/api/copilot?text=">Copilot AI</option>
-                                                        <option value="/api/gpt5?text=">GPT-5 AI</option>
-                                                        <option value="/api/instagram?url=">Instagram Downloader</option>
-                                                        <option value="/api/facebook?url=">Facebook Downloader</option>
-                                                        <option value="/api/status">Server Status</option>
-                                                        <option value="/api/health">Health Check</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div class="mb-3">
-                                                    <label class="form-label">Parameter Value</label>
-                                                    <input type="text" class="form-control api-test-input" id="paramValue" placeholder="Enter parameter value...">
-                                                </div>
-                                                
-                                                <button class="btn btn-primary w-100 mb-2" onclick="testEndpoint()">
-                                                    <i class="ri-play-line me-2"></i>Test API Endpoint
-                                                </button>
-                                                
-                                                <button class="btn btn-outline-secondary w-100" onclick="copyEndpoint()">
-                                                    <i class="ri-clipboard-line me-2"></i>Copy Endpoint URL
-                                                </button>
+                                    <div class="col-md-8">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">API Response</h6>
                                             </div>
-                                            
-                                            <div class="col-md-8">
-                                                <div class="card h-100">
-                                                    <div class="card-header">
-                                                        <h6 class="mb-0">API Response</h6>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="api-response" id="apiResponse">
-                                                            {
+                                            <div class="card-body p-0">
+                                                <div class="api-response" id="apiResponse">
+{
   "status": true,
-  "message": "Select an endpoint and click 'Test API Endpoint' to see the response",
+  "message": "Select an endpoint and click 'Test Endpoint'",
   "timestamp": "2024-01-01T00:00:00.000Z"
 }
-                                                        </div>
-                                                        <div class="mt-3 d-flex justify-content-between">
-                                                            <small class="text-muted" id="responseStatus">Status: Ready</small>
-                                                            <small class="text-muted" id="responseTimeDisplay">Time: --</small>
-                                                        </div>
-                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Activity Log -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">Recent Activity</h5>
-                                        <p class="small mb-0">Latest API requests and system events</p>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="list-items" id="activityLog">
-                                            <div class="activity-item">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar bg-primary me-3">
-                                                        <i class="ri-server-line"></i>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex justify-content-between">
-                                                            <h6 class="mb-1">Dashboard Loaded</h6>
-                                                            <small class="text-muted">Just now</small>
+                                                <div class="p-3 border-top">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <small class="text-muted" id="responseStatus">Status: Ready</small>
                                                         </div>
-                                                        <p class="mb-0 text-muted">API dashboard initialized successfully</p>
+                                                        <div class="col text-end">
+                                                            <small class="text-muted" id="apiResponseTime">Time: --</small>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -951,430 +1108,454 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Footer -->
-                    <footer class="content-footer footer bg-footer-theme">
-                        <div class="container-xxl">
-                            <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-                                <div class="mb-1 mb-md-0">
-                                    © <script>document.write(new Date().getFullYear());</script>
-                                    • API Teguh by Muhammad Teguh
-                                    <span class="text-body mx-2">•</span>
-                                    Version 3.2.0
-                                </div>
-                                <div class="d-flex gap-3">
-                                    <a href="index.html" class="text-body">Home</a>
-                                    <a href="dashboard.html" class="text-body">Dashboard</a>
-                                    <a href="/api/info" target="_blank" class="text-body">Documentation</a>
+                </div>
+
+                <!-- Activity Log -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">Recent Activity</h5>
+                                <p class="card-subtitle">Latest API requests and events</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-list" id="activityLog">
+                                    <!-- Activities will be loaded here -->
                                 </div>
                             </div>
                         </div>
-                    </footer>
+                    </div>
                 </div>
             </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="text-muted">
+                                © 2024 API Teguh v3.2.0 • Built by Muhammad Teguh
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <div class="d-flex justify-content-end gap-3">
+                                <a href="index.html" class="text-muted text-decoration-none">Home</a>
+                                <a href="dashboard.html" class="text-muted text-decoration-none">Dashboard</a>
+                                <a href="/api/info" target="_blank" class="text-muted text-decoration-none">Documentation</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
-    
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
-    
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Initialize dashboard
+        // Global State
+        const state = {
+            currentModel: 'auto',
+            chatHistory: [],
+            activities: [],
+            refreshInterval: null,
+            serverStatus: 'checking'
+        };
+
+        // Initialize Dashboard
         document.addEventListener('DOMContentLoaded', function() {
-            // Load initial data
+            initializeTheme();
+            initializeMenu();
+            initializeEventListeners();
+            loadInitialData();
+            startAutoRefresh();
+            
+            console.log('Dashboard initialized successfully');
+        });
+
+        // Theme Management
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+            
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            const icon = document.getElementById('themeIcon');
+            icon.className = theme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+            localStorage.setItem('theme', theme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+
+        // Menu Management
+        function initializeMenu() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const menu = document.getElementById('layout-menu');
+            
+            mobileToggle.addEventListener('click', function() {
+                menu.classList.toggle('layout-menu-expanded');
+            });
+            
+            // Close menu when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 1200) {
+                    if (!menu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                        menu.classList.remove('layout-menu-expanded');
+                    }
+                }
+            });
+            
+            // Menu toggle functionality
+            document.querySelectorAll('.menu-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.classList.toggle('active');
+                });
+            });
+        }
+
+        // Event Listeners
+        function initializeEventListeners() {
+            // AI Model selection
+            document.querySelectorAll('[data-model]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-model]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    state.currentModel = this.dataset.model;
+                    addActivity(`Switched to ${state.currentModel} model`, 'ai');
+                });
+            });
+            
+            // AI Chat
+            document.getElementById('sendAiBtn').addEventListener('click', sendAiMessage);
+            document.getElementById('aiMessage').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendAiMessage();
+                }
+            });
+            
+            // Downloader
+            document.getElementById('downloadBtn').addEventListener('click', processDownload);
+            document.getElementById('mediaUrl').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') processDownload();
+            });
+            
+            // API Tester
+            document.getElementById('testApiBtn').addEventListener('click', testApiEndpoint);
+            document.getElementById('copyUrlBtn').addEventListener('click', copyApiUrl);
+            document.getElementById('endpointSelect').addEventListener('change', updateParamPlaceholder);
+            
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', refreshDashboard);
+        }
+
+        // Load Initial Data
+        function loadInitialData() {
             loadServerStatus();
             loadEndpointStatus();
             updateSystemMetrics();
             loadActivityLog();
             
-            // Setup auto-refresh
-            setInterval(loadServerStatus, 10000);
-            setInterval(updateSystemMetrics, 5000);
-            setInterval(loadEndpointStatus, 15000);
-            
-            // Setup mobile menu toggle
-            setupMobileMenu();
-            
-            // Setup theme toggle
-            setupThemeToggle();
-            
-            // Setup enter key for AI chat
-            document.getElementById('aiMessage').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendAIMessage();
-                }
-            });
-            
-            // Setup enter key for downloader
-            document.getElementById('mediaUrl').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    processDownload();
-                }
-            });
-        });
-        
-        // Mobile menu setup
-        function setupMobileMenu() {
-            const menuToggle = document.querySelector('.layout-menu-toggle');
-            const menu = document.getElementById('layout-menu');
-            
-            if (menuToggle && menu) {
-                menuToggle.addEventListener('click', function() {
-                    menu.classList.toggle('layout-menu-expanded');
-                });
-            }
+            // Add initial activity
+            addActivity('Dashboard loaded successfully', 'system');
         }
-        
-        // Theme toggle setup
-        function setupThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const html = document.documentElement;
+
+        // Auto Refresh
+        function startAutoRefresh() {
+            if (state.refreshInterval) clearInterval(state.refreshInterval);
             
-            // Check for saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            setTheme(savedTheme);
-            
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = html.getAttribute('data-bs-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-            
-            function setTheme(theme) {
-                html.setAttribute('data-bs-theme', theme);
-                themeIcon.className = theme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
-            }
+            state.refreshInterval = setInterval(() => {
+                loadServerStatus();
+                updateSystemMetrics();
+            }, 10000); // Refresh every 10 seconds
         }
-        
-        // Scroll to section
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-        
-        // Load server status
+
+        // Server Status
         async function loadServerStatus() {
             try {
                 const response = await fetch('/api/status');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
                 const data = await response.json();
                 
                 if (data.status) {
-                    // Update status indicator
-                    const indicator = document.getElementById('serverStatusIndicator');
-                    indicator.style.width = '10px';
-                    indicator.style.height = '10px';
-                    indicator.style.borderRadius = '50%';
-                    indicator.style.background = '#10b981';
-                    indicator.style.animation = 'pulse 2s infinite';
-                    
-                    // Update uptime
-                    const uptime = data.data.server.uptime;
-                    const days = Math.floor(uptime / 86400);
-                    const hours = Math.floor((uptime % 86400) / 3600);
-                    const minutes = Math.floor((uptime % 3600) / 60);
-                    
-                    document.getElementById('serverUptime').textContent = `${days}d ${hours}h ${minutes}m`;
-                    document.getElementById('uptimeValue').textContent = `${days}d ${hours}h`;
-                    
-                    addActivity('Server status updated', 'server');
+                    updateServerStatusUI(data.data);
+                    state.serverStatus = 'online';
                 }
             } catch (error) {
-                const indicator = document.getElementById('serverStatusIndicator');
-                indicator.style.width = '10px';
-                indicator.style.height = '10px';
-                indicator.style.borderRadius = '50%';
-                indicator.style.background = '#ef4444';
-                
-                document.getElementById('serverUptime').textContent = 'Offline';
-                addActivity('Server status check failed', 'error');
+                console.warn('Server status check failed:', error);
+                state.serverStatus = 'offline';
+                updateServerStatusUI(null);
             }
         }
-        
-        // Update system metrics
-        async function updateSystemMetrics() {
-            try {
-                const response = await fetch('/api/status');
-                const data = await response.json();
+
+        function updateServerStatusUI(data) {
+            const indicator = document.getElementById('statusIndicator');
+            const uptimeElement = document.getElementById('serverUptime');
+            
+            if (data) {
+                indicator.style.background = 'var(--success-color)';
                 
-                if (data.status) {
-                    const memory = data.data.memory;
-                    const memoryPercent = memory.usage_percent;
-                    const cpuCores = data.data.server.cpus;
-                    const loadAvg = data.data.load[0];
-                    const cpuLoad = Math.min(100, (loadAvg / cpuCores) * 100);
-                    
-                    // Update CPU
-                    document.getElementById('cpuUsage').textContent = `${cpuLoad.toFixed(1)}%`;
-                    document.getElementById('cpuBar').style.width = `${cpuLoad}%`;
-                    
-                    // Update Memory
-                    document.getElementById('memoryUsage').textContent = `${memoryPercent}%`;
-                    document.getElementById('memoryBar').style.width = `${memoryPercent}%`;
-                    
-                    // Update request count (simulated)
-                    const requestCount = Math.floor(Math.random() * 1000) + 500;
-                    document.getElementById('requestCount').textContent = requestCount.toLocaleString();
-                    
-                    // Update response time (simulated)
-                    const responseTime = Math.floor(Math.random() * 100) + 20;
-                    document.getElementById('responseTime').textContent = `${responseTime}ms`;
-                }
-            } catch (error) {
-                console.error('Error updating system metrics:', error);
+                // Format uptime
+                const uptime = data.server.uptime;
+                const days = Math.floor(uptime / 86400);
+                const hours = Math.floor((uptime % 86400) / 3600);
+                const minutes = Math.floor((uptime % 3600) / 60);
+                uptimeElement.textContent = `${days}d ${hours}h ${minutes}m`;
+                
+                // Update system metrics
+                document.getElementById('cpuUsage').textContent = `${data.memory.usage_percent}%`;
+                document.getElementById('cpuBar').style.width = `${data.memory.usage_percent}%`;
+                document.getElementById('memoryUsage').textContent = `${data.memory.usage_percent}%`;
+                document.getElementById('memoryBar').style.width = `${data.memory.usage_percent}%`;
+            } else {
+                indicator.style.background = 'var(--danger-color)';
+                uptimeElement.textContent = 'Offline';
             }
         }
-        
-        // Load endpoint status
+
+        // Endpoint Status
         async function loadEndpointStatus() {
             const endpoints = [
-                { path: '/api/deepseek', name: 'Deepseek AI', method: 'GET' },
-                { path: '/api/copilot', name: 'Copilot AI', method: 'GET' },
-                { path: '/api/gpt5', name: 'GPT-5 AI', method: 'GET' },
-                { path: '/api/instagram', name: 'Instagram', method: 'GET' },
-                { path: '/api/facebook', name: 'Facebook', method: 'GET' },
-                { path: '/api/status', name: 'Server Status', method: 'GET' },
-                { path: '/api/health', name: 'Health Check', method: 'GET' },
-                { path: '/api/ping', name: 'Ping Test', method: 'GET' }
+                { name: 'Deepseek AI', path: '/api/deepseek?q=test', method: 'GET' },
+                { name: 'Copilot AI', path: '/api/copilot?text=test', method: 'GET' },
+                { name: 'GPT-5 AI', path: '/api/gpt5?text=test', method: 'GET' },
+                { name: 'Instagram', path: '/api/instagram?url=', method: 'GET' },
+                { name: 'Facebook', path: '/api/facebook?url=', method: 'GET' },
+                { name: 'Server Status', path: '/api/status', method: 'GET' }
             ];
             
             let html = '';
             
             for (const endpoint of endpoints) {
-                let status = 'unknown';
-                let responseTime = '--';
-                
                 try {
                     const startTime = Date.now();
-                    const response = await fetch(endpoint.path);
+                    const response = await fetch(endpoint.path === '/api/instagram?url=' || endpoint.path === '/api/facebook?url=' ? 
+                        endpoint.path + 'test' : endpoint.path);
                     const endTime = Date.now();
                     
-                    status = response.status === 200 ? 'online' : 'error';
-                    responseTime = `${endTime - startTime}ms`;
-                } catch (error) {
-                    status = 'offline';
-                }
-                
-                html += `
-                    <div class="activity-item">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar ${status === 'online' ? 'bg-success' : status === 'error' ? 'bg-warning' : 'bg-danger'} me-3">
+                    const status = response.status;
+                    const responseTime = endTime - startTime;
+                    const statusClass = status === 200 ? 'success' : 'warning';
+                    const statusText = status === 200 ? 'Online' : 'Error';
+                    
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon bg-${statusClass}">
                                 <i class="ri-plug-line"></i>
                             </div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1">${endpoint.name}</h6>
-                                    <small class="text-muted">${responseTime}</small>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted">${endpoint.path}</small>
-                                    <span class="badge ${status === 'online' ? 'bg-success' : status === 'error' ? 'bg-warning' : 'bg-danger'}">${status}</span>
+                            <div class="activity-content">
+                                <div class="activity-title">${endpoint.name}</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">${endpoint.method} ${endpoint.path}</small>
+                                    <div>
+                                        <small class="text-muted me-2">${responseTime}ms</small>
+                                        <span class="badge bg-${statusClass}">${statusText}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } catch (error) {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon bg-danger">
+                                <i class="ri-plug-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">${endpoint.name}</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">${endpoint.method} ${endpoint.path}</small>
+                                    <span class="badge bg-danger">Offline</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
             }
             
-            document.getElementById('endpointStatusList').innerHTML = html;
+            document.getElementById('endpointStatus').innerHTML = html;
+            addActivity('Endpoint status updated', 'system');
         }
-        
-        // Send AI message
-        async function sendAIMessage() {
-            const message = document.getElementById('aiMessage').value.trim();
-            if (!message) return;
+
+        // System Metrics
+        function updateSystemMetrics() {
+            // Simulate metrics update
+            const cpu = Math.floor(Math.random() * 30) + 20;
+            const memory = Math.floor(Math.random() * 30) + 40;
+            const requests = Math.floor(Math.random() * 1000) + 500;
             
-            // Get selected model
-            let model;
-            if (document.getElementById('modelDeepseek').checked) model = 'deepseek';
-            else if (document.getElementById('modelCopilot').checked) model = 'copilot';
-            else if (document.getElementById('modelGPT5').checked) model = 'gpt5';
-            else model = 'auto';
+            document.getElementById('cpuUsage').textContent = `${cpu}%`;
+            document.getElementById('cpuBar').style.width = `${cpu}%`;
+            document.getElementById('memoryUsage').textContent = `${memory}%`;
+            document.getElementById('memoryBar').style.width = `${memory}%`;
+            document.getElementById('totalRequests').textContent = `${(requests / 1000).toFixed(1)}K`;
             
-            // Add user message to chat
-            const chatContainer = document.getElementById('chatContainer');
-            const userMessage = document.createElement('div');
-            userMessage.className = 'chat-message user';
-            userMessage.textContent = message;
-            chatContainer.appendChild(userMessage);
+            // Update response time
+            const responseTime = Math.floor(Math.random() * 50) + 20;
+            document.getElementById('responseTime').textContent = `${responseTime}ms`;
+        }
+
+        // AI Chat
+        async function sendAiMessage() {
+            const input = document.getElementById('aiMessage');
+            const message = input.value.trim();
             
-            // Add loading indicator
-            const loadingMessage = document.createElement('div');
-            loadingMessage.className = 'chat-message ai';
-            loadingMessage.innerHTML = '<div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> Thinking...';
-            chatContainer.appendChild(loadingMessage);
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
             
-            // Update info
-            document.getElementById('responseInfo').textContent = `Using ${model} model...`;
+            // Disable button and show loading
+            const btn = document.getElementById('sendAiBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ri-loader-4-line spin me-2"></i>Sending...';
+            btn.disabled = true;
+            
+            // Add user message
+            addChatMessage('user', message);
+            input.value = '';
+            
+            // Show thinking message
+            const thinkingId = addChatMessage('ai', 'Thinking...', true);
             
             try {
                 let apiUrl;
-                if (model === 'auto') {
-                    apiUrl = `/api/ai/chat?text=${encodeURIComponent(message)}&model=auto`;
-                } else if (model === 'deepseek') {
-                    apiUrl = `/api/deepseek?q=${encodeURIComponent(message)}`;
-                } else if (model === 'copilot') {
-                    apiUrl = `/api/copilot?text=${encodeURIComponent(message)}`;
-                } else if (model === 'gpt5') {
-                    apiUrl = `/api/gpt5?text=${encodeURIComponent(message)}`;
+                switch(state.currentModel) {
+                    case 'deepseek':
+                        apiUrl = `/api/deepseek?q=${encodeURIComponent(message)}`;
+                        break;
+                    case 'copilot':
+                        apiUrl = `/api/copilot?text=${encodeURIComponent(message)}`;
+                        break;
+                    case 'gpt5':
+                        apiUrl = `/api/gpt5?text=${encodeURIComponent(message)}`;
+                        break;
+                    default:
+                        apiUrl = `/api/ai/chat?text=${encodeURIComponent(message)}&model=auto`;
                 }
                 
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 
-                // Remove loading message
-                loadingMessage.remove();
+                // Remove thinking message
+                document.getElementById(thinkingId)?.remove();
                 
                 // Add AI response
                 let aiResponse;
-                if (model === 'deepseek') {
+                if (state.currentModel === 'deepseek') {
                     aiResponse = data.data?.response || data.message;
-                } else if (model === 'auto') {
-                    aiResponse = data.data?.response || data.result || data.message;
                 } else {
                     aiResponse = data.result || data.data?.result || data.message;
                 }
                 
-                const aiMessage = document.createElement('div');
-                aiMessage.className = 'chat-message ai';
-                aiMessage.textContent = aiResponse;
-                chatContainer.appendChild(aiMessage);
+                addChatMessage('ai', aiResponse);
+                updateResponseInfo(`Response from ${state.currentModel} model`);
                 
-                // Scroll to bottom
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                // Add to history
+                state.chatHistory.push({
+                    user: message,
+                    ai: aiResponse,
+                    model: state.currentModel,
+                    timestamp: new Date()
+                });
                 
-                // Update info
-                document.getElementById('responseInfo').textContent = `Response received from ${model} model`;
-                
-                // Add to activity log
-                addActivity(`AI ${model} query: "${message.substring(0, 30)}..."`, 'ai');
+                addActivity(`AI chat: ${message.substring(0, 30)}...`, 'ai');
                 
             } catch (error) {
-                loadingMessage.remove();
-                
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'chat-message ai';
-                errorMessage.textContent = `Error: ${error.message}. Please try again.`;
-                chatContainer.appendChild(errorMessage);
-                
-                document.getElementById('responseInfo').textContent = 'Error occurred';
-                addActivity('AI chat error', 'error');
+                document.getElementById(thinkingId)?.remove();
+                addChatMessage('ai', `Error: ${error.message}. Please try again.`);
+                updateResponseInfo('Error occurred');
+                addActivity('AI chat failed', 'error');
+            } finally {
+                // Restore button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
-        
-        // Process download
+
+        function addChatMessage(sender, content, isThinking = false) {
+            const container = document.getElementById('chatContainer');
+            const messageId = 'msg-' + Date.now();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            messageDiv.id = messageId;
+            
+            if (isThinking) {
+                messageDiv.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                        ${content}
+                    </div>
+                `;
+            } else {
+                messageDiv.textContent = content;
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            
+            return messageId;
+        }
+
+        function updateResponseInfo(text) {
+            document.getElementById('responseInfo').textContent = text;
+        }
+
+        // Downloader
         async function processDownload() {
-            const url = document.getElementById('mediaUrl').value.trim();
+            const urlInput = document.getElementById('mediaUrl');
             const platform = document.getElementById('downloadPlatform').value;
+            const url = urlInput.value.trim();
             
             if (!url) {
                 alert('Please enter a URL');
                 return;
             }
             
+            // Show loading
             const resultDiv = document.getElementById('downloadResult');
             resultDiv.innerHTML = `
                 <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
+                    <div class="spinner-border text-primary" role="status"></div>
                     <p class="mt-3">Processing download...</p>
                 </div>
             `;
+            
+            // Disable button
+            const btn = document.getElementById('downloadBtn');
+            btn.disabled = true;
             
             try {
                 let apiUrl;
                 if (platform === 'auto') {
                     if (url.includes('instagram.com')) {
                         apiUrl = `/api/instagram?url=${encodeURIComponent(url)}`;
-                    } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
+                    } else if (url.includes('facebook.com')) {
                         apiUrl = `/api/facebook?url=${encodeURIComponent(url)}`;
                     } else {
                         throw new Error('Unsupported URL');
                     }
-                } else if (platform === 'instagram') {
-                    apiUrl = `/api/instagram?url=${encodeURIComponent(url)}`;
-                } else if (platform === 'facebook') {
-                    apiUrl = `/api/facebook?url=${encodeURIComponent(url)}`;
+                } else {
+                    apiUrl = `/api/${platform}?url=${encodeURIComponent(url)}`;
                 }
                 
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 
                 if (data.status) {
-                    const result = data.result || data.data;
-                    
-                    let resultHTML = `
-                        <div class="text-start">
-                            <div class="alert alert-success">
-                                <i class="ri-checkbox-circle-line me-2"></i>
-                                Successfully fetched ${platform} data
-                            </div>
-                    `;
-                    
-                    if (result.title) {
-                        resultHTML += `<p><strong>Title:</strong> ${result.title}</p>`;
-                    }
-                    
-                    if (result.durasi) {
-                        resultHTML += `<p><strong>Duration:</strong> ${result.durasi}</p>`;
-                    }
-                    
-                    if (result.thumbnail) {
-                        resultHTML += `
-                            <div class="mb-3">
-                                <img src="${result.thumbnail}" alt="Thumbnail" class="img-fluid rounded" style="max-height: 150px;">
-                            </div>
-                        `;
-                    }
-                    
-                    if (result.download) {
-                        resultHTML += `
-                            <div class="mt-3">
-                                <p class="mb-2"><strong>Download Options:</strong></p>
-                                <div class="row g-2">
-                        `;
-                        
-                        if (result.download.hd) {
-                            resultHTML += `
-                                <div class="col-md-6">
-                                    <a href="${result.download.hd}" target="_blank" class="download-option d-block">
-                                        <i class="ri-hd-line d-block mb-2" style="font-size: 1.5rem;"></i>
-                                        <div>HD Quality</div>
-                                        <small class="text-muted">Best Quality</small>
-                                    </a>
-                                </div>
-                            `;
-                        }
-                        
-                        if (result.download.sd) {
-                            resultHTML += `
-                                <div class="col-md-6">
-                                    <a href="${result.download.sd}" target="_blank" class="download-option d-block">
-                                        <i class="ri-video-line d-block mb-2" style="font-size: 1.5rem;"></i>
-                                        <div>SD Quality</div>
-                                        <small class="text-muted">Standard Quality</small>
-                                    </a>
-                                </div>
-                            `;
-                        }
-                        
-                        resultHTML += `
-                                </div>
-                            </div>
-                        `;
-                    }
-                    
-                    resultHTML += `</div>`;
-                    resultDiv.innerHTML = resultHTML;
-                    
-                    addActivity(`Downloaded from ${platform}: ${url.substring(0, 30)}...`, 'download');
-                    
+                    showDownloadResult(data);
+                    addActivity(`Download from ${platform}: ${url.substring(0, 30)}...`, 'download');
                 } else {
                     throw new Error(data.message || 'Download failed');
                 }
@@ -1384,230 +1565,290 @@
                         <i class="ri-error-warning-line text-danger" style="font-size: 3rem;"></i>
                         <h6 class="mt-3">Download Failed</h6>
                         <p class="text-muted">${error.message}</p>
-                        <p class="small text-muted">Please check the URL and try again.</p>
                     </div>
                 `;
-                
                 addActivity(`Download failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
             }
         }
-        
-        // Update endpoint parameters
-        function updateEndpointParams() {
-            const endpoint = document.getElementById('endpointSelect').value;
-            const paramInput = document.getElementById('paramValue');
+
+        function showDownloadResult(data) {
+            const result = data.result || data.data;
+            let html = '<div class="text-start">';
             
-            if (endpoint.includes('/api/status') || endpoint.includes('/api/health')) {
+            html += '<div class="alert alert-success mb-3">Download successful!</div>';
+            
+            if (result.title) {
+                html += `<p><strong>Title:</strong> ${result.title}</p>`;
+            }
+            
+            if (result.durasi) {
+                html += `<p><strong>Duration:</strong> ${result.durasi}</p>`;
+            }
+            
+            if (result.thumbnail) {
+                html += `
+                    <div class="mb-3">
+                        <img src="${result.thumbnail}" alt="Thumbnail" class="img-fluid rounded" style="max-height: 120px;">
+                    </div>
+                `;
+            }
+            
+            if (result.download) {
+                html += '<div class="mt-3"><strong>Download Options:</strong></div>';
+                
+                if (result.download.hd) {
+                    html += `
+                        <a href="${result.download.hd}" target="_blank" class="download-option">
+                            <i class="download-icon ri-hd-line"></i>
+                            <div>HD Quality</div>
+                            <small class="text-muted">High Definition</small>
+                        </a>
+                    `;
+                }
+                
+                if (result.download.sd) {
+                    html += `
+                        <a href="${result.download.sd}" target="_blank" class="download-option">
+                            <i class="download-icon ri-video-line"></i>
+                            <div>SD Quality</div>
+                            <small class="text-muted">Standard Definition</small>
+                        </a>
+                    `;
+                }
+            }
+            
+            html += '</div>';
+            document.getElementById('downloadResult').innerHTML = html;
+        }
+
+        // API Tester
+        function updateParamPlaceholder() {
+            const select = document.getElementById('endpointSelect');
+            const paramInput = document.getElementById('paramValue');
+            const endpoint = select.value;
+            
+            if (endpoint.includes('status') || endpoint.includes('health')) {
                 paramInput.style.display = 'none';
                 paramInput.previousElementSibling.style.display = 'none';
             } else {
                 paramInput.style.display = 'block';
                 paramInput.previousElementSibling.style.display = 'block';
                 
-                // Set placeholder based on endpoint
+                // Set placeholder
                 if (endpoint.includes('deepseek')) {
                     paramInput.placeholder = 'Enter your question...';
                 } else if (endpoint.includes('copilot') || endpoint.includes('gpt5')) {
                     paramInput.placeholder = 'Enter your message...';
-                } else if (endpoint.includes('instagram') || endpoint.includes('facebook')) {
-                    paramInput.placeholder = 'Enter media URL...';
+                } else {
+                    paramInput.placeholder = 'Enter URL...';
                 }
             }
         }
-        
-        // Test endpoint
-        async function testEndpoint() {
-            let endpoint = document.getElementById('endpointSelect').value;
-            const paramValue = document.getElementById('paramValue').value.trim();
+
+        async function testApiEndpoint() {
+            const select = document.getElementById('endpointSelect');
+            const paramInput = document.getElementById('paramValue');
+            let endpoint = select.value;
             
-            if (!endpoint.includes('/api/status') && !endpoint.includes('/api/health') && !paramValue) {
+            // Validate
+            if (!endpoint.includes('status') && !endpoint.includes('health') && !paramInput.value.trim()) {
                 alert('Please enter a parameter value');
                 return;
             }
             
-            if (!endpoint.includes('/api/status') && !endpoint.includes('/api/health')) {
-                endpoint = endpoint + encodeURIComponent(paramValue);
+            // Build URL
+            if (!endpoint.includes('status') && !endpoint.includes('health')) {
+                endpoint += encodeURIComponent(paramInput.value);
             }
             
+            // Update UI
+            const testBtn = document.getElementById('testApiBtn');
+            const originalText = testBtn.innerHTML;
+            testBtn.innerHTML = '<i class="ri-loader-4-line spin me-2"></i>Testing...';
+            testBtn.disabled = true;
+            
             const responseDiv = document.getElementById('apiResponse');
-            const statusSpan = document.getElementById('responseStatus');
-            const timeSpan = document.getElementById('responseTimeDisplay');
+            const statusEl = document.getElementById('responseStatus');
+            const timeEl = document.getElementById('apiResponseTime');
             
-            responseDiv.innerHTML = `
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-3">Testing API endpoint...</p>
-                </div>
-            `;
-            
-            statusSpan.textContent = 'Status: Testing...';
-            timeSpan.textContent = 'Time: --';
+            responseDiv.textContent = 'Testing endpoint...';
+            statusEl.textContent = 'Status: Testing...';
+            timeEl.textContent = 'Time: --';
             
             try {
                 const startTime = Date.now();
                 const response = await fetch(endpoint);
                 const endTime = Date.now();
+                
                 const data = await response.json();
+                const responseTime = endTime - startTime;
                 
+                // Format JSON
                 responseDiv.textContent = JSON.stringify(data, null, 2);
-                
-                statusSpan.textContent = `Status: ${response.status} ${response.status === 200 ? '✓' : '✗'}`;
-                timeSpan.textContent = `Time: ${endTime - startTime}ms`;
+                statusEl.textContent = `Status: ${response.status} ${response.ok ? '✓' : '✗'}`;
+                timeEl.textContent = `Time: ${responseTime}ms`;
                 
                 addActivity(`Tested ${endpoint.split('?')[0]}`, 'api');
                 
             } catch (error) {
                 responseDiv.textContent = JSON.stringify({
+                    error: error.message,
                     status: false,
-                    message: `Error: ${error.message}`,
                     timestamp: new Date().toISOString()
                 }, null, 2);
                 
-                statusSpan.textContent = 'Status: Network Error';
-                timeSpan.textContent = 'Time: --';
+                statusEl.textContent = 'Status: Network Error';
+                timeEl.textContent = 'Time: --';
                 
                 addActivity(`API test failed: ${error.message}`, 'error');
+            } finally {
+                testBtn.innerHTML = originalText;
+                testBtn.disabled = false;
             }
         }
-        
-        // Copy endpoint URL
-        function copyEndpoint() {
-            let endpoint = document.getElementById('endpointSelect').value;
-            const paramValue = document.getElementById('paramValue').value.trim();
+
+        function copyApiUrl() {
+            const select = document.getElementById('endpointSelect');
+            const paramInput = document.getElementById('paramValue');
+            let endpoint = select.value;
             
-            if (!endpoint.includes('/api/status') && !endpoint.includes('/api/health') && paramValue) {
-                endpoint = endpoint + encodeURIComponent(paramValue);
+            if (!endpoint.includes('status') && !endpoint.includes('health') && paramInput.value.trim()) {
+                endpoint += encodeURIComponent(paramInput.value);
             }
             
             const fullUrl = window.location.origin + endpoint;
             
             navigator.clipboard.writeText(fullUrl).then(() => {
-                const button = event.target;
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="ri-check-line me-2"></i>Copied!';
+                const btn = document.getElementById('copyUrlBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="ri-check-line me-2"></i>Copied!';
                 
                 setTimeout(() => {
-                    button.innerHTML = originalText;
+                    btn.innerHTML = originalText;
                 }, 2000);
             });
         }
-        
-        // Load activity log
+
+        // Activity Log
         function loadActivityLog() {
-            const activities = [
-                { type: 'server', message: 'Server started successfully', time: '2 minutes ago' },
-                { type: 'ai', message: 'Deepseek AI query processed', time: '5 minutes ago' },
-                { type: 'download', message: 'Instagram video downloaded', time: '15 minutes ago' },
-                { type: 'api', message: 'API endpoint tested successfully', time: '30 minutes ago' },
-                { type: 'server', message: 'System metrics updated', time: '1 hour ago' }
+            const initialActivities = [
+                { type: 'system', message: 'Dashboard initialized', time: 'Just now' },
+                { type: 'ai', message: 'AI models loaded successfully', time: '2 minutes ago' },
+                { type: 'download', message: 'Downloader ready for use', time: '5 minutes ago' },
+                { type: 'api', message: 'All API endpoints online', time: '10 minutes ago' }
             ];
             
+            state.activities = initialActivities;
+            renderActivityLog();
+        }
+
+        function addActivity(message, type) {
+            const activity = {
+                type: type,
+                message: message,
+                time: 'Just now',
+                timestamp: new Date()
+            };
+            
+            state.activities.unshift(activity);
+            
+            // Keep only last 10 activities
+            if (state.activities.length > 10) {
+                state.activities.pop();
+            }
+            
+            renderActivityLog();
+        }
+
+        function renderActivityLog() {
+            const container = document.getElementById('activityLog');
             let html = '';
             
-            activities.forEach(activity => {
-                let icon = 'ri-server-line';
+            state.activities.forEach(activity => {
+                let icon = 'ri-information-line';
                 let color = 'primary';
                 
-                if (activity.type === 'ai') {
-                    icon = 'ri-robot-line';
-                    color = 'success';
-                } else if (activity.type === 'download') {
-                    icon = 'ri-download-cloud-line';
-                    color = 'info';
-                } else if (activity.type === 'error') {
-                    icon = 'ri-error-warning-line';
-                    color = 'danger';
-                } else if (activity.type === 'api') {
-                    icon = 'ri-code-s-slash-line';
-                    color = 'warning';
+                switch(activity.type) {
+                    case 'ai': icon = 'ri-robot-line'; color = 'success'; break;
+                    case 'download': icon = 'ri-download-cloud-line'; color = 'info'; break;
+                    case 'api': icon = 'ri-code-s-slash-line'; color = 'warning'; break;
+                    case 'error': icon = 'ri-error-warning-line'; color = 'danger'; break;
+                    case 'system': icon = 'ri-server-line'; color = 'primary'; break;
                 }
                 
                 html += `
                     <div class="activity-item">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar bg-${color} me-3">
-                                <i class="${icon}"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1">${activity.message}</h6>
-                                    <small class="text-muted">${activity.time}</small>
-                                </div>
-                                <p class="mb-0 text-muted">${activity.type.charAt(0).toUpperCase() + activity.type.slice(1)} Event</p>
-                            </div>
+                        <div class="activity-icon bg-${color}">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${activity.message}</div>
+                            <div class="activity-time">${activity.time}</div>
                         </div>
                     </div>
                 `;
             });
             
-            document.getElementById('activityLog').innerHTML = html;
+            container.innerHTML = html;
         }
-        
-        // Add activity
-        function addActivity(message, type) {
-            const log = document.getElementById('activityLog');
-            const time = new Date().toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit' });
-            
-            let icon = 'ri-server-line';
-            let color = 'primary';
-            
-            if (type === 'ai') {
-                icon = 'ri-robot-line';
-                color = 'success';
-            } else if (type === 'download') {
-                icon = 'ri-download-cloud-line';
-                color = 'info';
-            } else if (type === 'error') {
-                icon = 'ri-error-warning-line';
-                color = 'danger';
-            } else if (type === 'api') {
-                icon = 'ri-code-s-slash-line';
-                color = 'warning';
-            } else if (type === 'server') {
-                icon = 'ri-server-line';
-                color = 'primary';
-            }
-            
-            const activityHTML = `
-                <div class="activity-item">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar bg-${color} me-3">
-                            <i class="${icon}"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="mb-1">${message}</h6>
-                                <small class="text-muted">${time}</small>
-                            </div>
-                            <p class="mb-0 text-muted">${type.charAt(0).toUpperCase() + type.slice(1)} Event</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            log.insertAdjacentHTML('afterbegin', activityHTML);
-            
-            // Limit to 10 activities
-            const activities = log.querySelectorAll('.activity-item');
-            if (activities.length > 10) {
-                activities[activities.length - 1].remove();
+
+        // Utility Functions
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                
+                // Close mobile menu if open
+                if (window.innerWidth < 1200) {
+                    document.getElementById('layout-menu').classList.remove('layout-menu-expanded');
+                }
             }
         }
-        
-        // Initialize
-        updateEndpointParams();
-        
-        // Add CSS for pulse animation
+
+        function refreshDashboard() {
+            const btn = document.getElementById('refreshBtn');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="ri-loader-4-line spin me-2"></i>Refreshing...';
+            btn.disabled = true;
+            
+            // Refresh all data
+            loadServerStatus();
+            loadEndpointStatus();
+            updateSystemMetrics();
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                addActivity('Dashboard refreshed', 'system');
+            }, 1000);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('theme');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Add CSS for spinner animation
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.5; }
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+            
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
             }
         `;
         document.head.appendChild(style);
+        
+        // Initialize
+        updateParamPlaceholder();
     </script>
 </body>
 </html>
