@@ -77,6 +77,160 @@ router.get('/ping', (req, res) => {
     return successResponse(res, 'Pong! Server is responsive')
 })
 
+// Spotify Downloader Endpoint (BARU)
+router.get('/spotify', async (req, res) => {
+    const url = req.query.url
+    const quality = req.query.quality || 'high'
+
+    if (!url || url.trim() === '') {
+        return res.status(400).json({
+            status: false,
+            status_code: 400,
+            creator: global.creator,
+            message: 'Query parameter "url" is required',
+            timestamp: new Date().toISOString(),
+            example: '/api/spotify?url=https://open.spotify.com/track/3k68kVFWTTBP0Jb4LOzCax',
+            note: 'Supports Spotify track URLs only'
+        })
+    }
+
+    // Validasi URL Spotify
+    if (!url.includes('open.spotify.com/track/') && !url.includes('spotify.com/track/')) {
+        return res.status(400).json({
+            status: false,
+            status_code: 400,
+            creator: global.creator,
+            message: 'URL must be a valid Spotify track link',
+            timestamp: new Date().toISOString(),
+            supported_formats: [
+                'https://open.spotify.com/track/{track_id}',
+                'https://spotify.com/track/{track_id}',
+                'https://open.spotify.com/track/{track_id}?si=xxxx'
+            ],
+            example_url: 'https://open.spotify.com/track/3k68kVFWTTBP0Jb4LOzCax'
+        })
+    }
+
+    try {
+        const startTime = Date.now();
+        
+        // Extract track ID dari URL
+        let trackId = '';
+        const trackMatch = url.match(/track\/([a-zA-Z0-9]+)/);
+        if (trackMatch && trackMatch[1]) {
+            trackId = trackMatch[1];
+        } else {
+            return res.status(400).json({
+                status: false,
+                status_code: 400,
+                creator: global.creator,
+                message: 'Invalid Spotify track URL',
+                timestamp: new Date().toISOString()
+            })
+        }
+
+        // Call external Spotify API
+        const response = await axios.get(`https://api.vreden.my.id/api/v1/download/spotify?url=${encodeURIComponent(url)}`, {
+            timeout: 45000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Referer': 'https://open.spotify.com/',
+                'Origin': 'https://open.spotify.com'
+            },
+            validateStatus: (status) => status < 500
+        })
+
+        const processingTime = Date.now() - startTime;
+        
+        if (response.status === 200) {
+            const data = response.data
+            
+            // Format response sesuai dengan struktur yang diminta
+            return res.status(200).json({
+                status: data.status || true,
+                status_code: data.status_code || 200,
+                creator: global.creator, // Menggunakan creator dari config
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                result: {
+                    id: data.result?.id || trackId,
+                    title: data.result?.title || 'Unknown Track',
+                    artists: data.result?.artists || 'Unknown Artist',
+                    album: data.result?.album || 'Unknown Album',
+                    cover_url: data.result?.cover_url || 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/800px-Spotify_logo_without_text.svg.png',
+                    duration_ms: data.result?.duration_ms || 0,
+                    release_date: data.result?.release_date || 'Unknown',
+                    download: data.result?.download || `https://api.fabdl.com/spotify/download-mp3/${trackId}`,
+                    metadata: {
+                        url_provided: url,
+                        quality_requested: quality,
+                        track_id: trackId,
+                        duration_formatted: formatDuration(data.result?.duration_ms || 0)
+                    }
+                }
+            })
+        } else {
+            // Jika API external mengembalikan error
+            return res.status(response.status).json({
+                status: false,
+                status_code: response.status,
+                creator: global.creator,
+                message: 'Spotify API returned an error',
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                error: response.data?.message || 'Unknown error from external API',
+                track_id: trackId,
+                note: 'The track might be unavailable or the API is down'
+            })
+        }
+    } catch (error) {
+        console.error('Spotify API error:', error.message)
+        
+        // Fallback response untuk Spotify dengan data dummy
+        return res.status(200).json({
+            status: false,
+            status_code: 500,
+            creator: global.creator,
+            message: 'Failed to fetch Spotify data',
+            processing_time: '0ms',
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            note: 'Spotify API may be experiencing issues or the track is unavailable',
+            fallback_data: {
+                id: 'demo_track_id',
+                title: 'Sample Track (Demo)',
+                artists: 'Sample Artist',
+                album: 'Sample Album',
+                cover_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/800px-Spotify_logo_without_text.svg.png',
+                duration_ms: 180000,
+                release_date: '2023-01-01',
+                download: 'https://example.com/spotify-demo.mp3'
+            },
+            supported_urls: [
+                'Spotify Track: https://open.spotify.com/track/TRACK_ID',
+                'Spotify Track with SI: https://open.spotify.com/track/TRACK_ID?si=xxxx'
+            ],
+            troubleshooting: [
+                'Ensure the track is available on Spotify',
+                'Check if the track is not region-locked',
+                'Verify the URL is correct',
+                'Try using only the track ID portion'
+            ]
+        })
+    }
+})
+
+// Helper function untuk format durasi
+function formatDuration(ms) {
+    if (!ms) return '0:00';
+    
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
 // Deepseek AI Endpoint
 router.get('/deepseek', async (req, res) => {
     const q = req.query.q
@@ -341,7 +495,7 @@ router.get('/instagram', async (req, res) => {
     }
 })
 
-// Facebook Downloader Endpoint (BARU)
+// Facebook Downloader Endpoint
 router.get('/facebook', async (req, res) => {
     const url = req.query.url
 
@@ -379,16 +533,13 @@ router.get('/facebook', async (req, res) => {
         
         // Call external Facebook API
         const response = await axios.get(`https://api.vreden.my.id/api/v1/download/facebook?url=${encodeURIComponent(url)}`, {
-            timeout: 45000, // Timeout lebih lama untuk video besar
+            timeout: 45000,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Referer': 'https://www.facebook.com/',
-                'Origin': 'https://www.facebook.com',
-                'DNT': '1'
+                'Referer': 'https://www.facebook.com/'
             },
-            validateStatus: (status) => status < 500 // Accept all status codes less than 500
+            validateStatus: (status) => status < 500
         })
 
         const processingTime = Date.now() - startTime;
@@ -400,7 +551,7 @@ router.get('/facebook', async (req, res) => {
             return res.status(200).json({
                 status: data.status || true,
                 status_code: data.status_code || 200,
-                creator: data.creator || global.creator,
+                creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
                 result: {
@@ -520,7 +671,7 @@ router.get('/ai/chat', async (req, res) => {
     }
 })
 
-// Social Media Tools Endpoint
+// Social Media Tools Endpoint (Updated with Spotify)
 router.get('/social/media', async (req, res) => {
     const { url, platform = 'auto' } = req.query
 
@@ -544,6 +695,8 @@ router.get('/social/media', async (req, res) => {
                 detectedPlatform = 'youtube'
             } else if (url.includes('twitter.com') || url.includes('x.com')) {
                 detectedPlatform = 'twitter'
+            } else if (url.includes('spotify.com') || url.includes('open.spotify.com')) {
+                detectedPlatform = 'spotify'
             } else {
                 detectedPlatform = 'unknown'
             }
@@ -559,8 +712,13 @@ router.get('/social/media', async (req, res) => {
                 timeout: 45000
             })
             result = response.data
+        } else if (detectedPlatform === 'spotify') {
+            const response = await axios.get(`https://api.vreden.my.id/api/v1/download/spotify?url=${encodeURIComponent(url)}`, {
+                timeout: 45000
+            })
+            result = response.data
         } else {
-            return errorResponse(res, `Platform '${detectedPlatform}' is not supported yet. Currently only Instagram and Facebook are supported.`, 400)
+            return errorResponse(res, `Platform '${detectedPlatform}' is not supported yet. Currently only Instagram, Facebook, and Spotify are supported.`, 400)
         }
 
         return successResponse(res, `${detectedPlatform} data fetched successfully`, {
@@ -575,9 +733,9 @@ router.get('/social/media', async (req, res) => {
     }
 })
 
-// Video Downloader Endpoint (Unified - BARU)
-router.get('/video/download', async (req, res) => {
-    const { url, quality = 'best', platform = 'auto' } = req.query
+// Video & Audio Downloader Endpoint (Unified - Updated with Spotify)
+router.get('/download', async (req, res) => {
+    const { url, quality = 'best', platform = 'auto', type = 'auto' } = req.query
 
     if (!url || url.trim() === '') {
         return errorResponse(res, 'Query parameter "url" is required', 400)
@@ -586,15 +744,22 @@ router.get('/video/download', async (req, res) => {
     try {
         let result
         let detectedPlatform = platform
+        let detectedType = type
 
         // Auto-detect platform dari URL
         if (platform === 'auto') {
             if (url.includes('instagram.com')) {
                 detectedPlatform = 'instagram'
+                detectedType = 'video'
             } else if (url.includes('facebook.com') || url.includes('fb.watch') || url.includes('fb.com')) {
                 detectedPlatform = 'facebook'
+                detectedType = 'video'
             } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 detectedPlatform = 'youtube'
+                detectedType = 'video'
+            } else if (url.includes('spotify.com') || url.includes('open.spotify.com')) {
+                detectedPlatform = 'spotify'
+                detectedType = 'audio'
             } else {
                 detectedPlatform = 'unknown'
             }
@@ -612,8 +777,13 @@ router.get('/video/download', async (req, res) => {
                 timeout: 45000
             })
             result = response.data
+        } else if (detectedPlatform === 'spotify') {
+            const response = await axios.get(`https://api.vreden.my.id/api/v1/download/spotify?url=${encodeURIComponent(url)}`, {
+                timeout: 45000
+            })
+            result = response.data
         } else {
-            return errorResponse(res, `Platform '${detectedPlatform}' is not supported. Currently only Instagram and Facebook are supported.`, 400)
+            return errorResponse(res, `Platform '${detectedPlatform}' is not supported. Currently only Instagram, Facebook, and Spotify are supported.`, 400)
         }
 
         const processingTime = Date.now() - startTime;
@@ -623,26 +793,30 @@ router.get('/video/download', async (req, res) => {
             status: true,
             status_code: 200,
             creator: global.creator,
-            message: `${detectedPlatform} video data fetched successfully`,
+            message: `${detectedPlatform} ${detectedType} data fetched successfully`,
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
             platform: detectedPlatform,
+            content_type: detectedType,
             url: url,
             quality_requested: quality,
             result: result.result || result,
             download_options: {
-                available_qualities: detectedPlatform === 'facebook' ? ['hd', 'sd'] : ['best', 'high', 'medium', 'low'],
-                recommended: detectedPlatform === 'facebook' ? 'hd' : 'best',
+                available_qualities: detectedPlatform === 'facebook' ? ['hd', 'sd'] : 
+                                  detectedPlatform === 'spotify' ? ['high', 'medium', 'low'] : 
+                                  ['best', 'high', 'medium', 'low'],
+                recommended: detectedPlatform === 'facebook' ? 'hd' : 
+                           detectedPlatform === 'spotify' ? 'high' : 'best',
                 note: quality === 'best' ? 'Automatically selects the best available quality' : `Requested: ${quality}`
             }
         })
     } catch (error) {
-        console.error('Video Download endpoint error:', error.message)
-        return errorResponse(res, `Failed to fetch video data from ${platform}`)
+        console.error('Download endpoint error:', error.message)
+        return errorResponse(res, `Failed to fetch data from ${platform}`)
     }
 })
 
-// Health Check Endpoint
+// Health Check Endpoint (Updated)
 router.get('/health', (req, res) => {
     const healthData = {
         status: 'healthy',
@@ -650,7 +824,7 @@ router.get('/health', (req, res) => {
         uptime: process.uptime(),
         memory: process.memoryUsage(),
         endpoints: {
-            total: 10,
+            total: 11,
             available: [
                 '/api/status',
                 '/api/ping',
@@ -659,10 +833,16 @@ router.get('/health', (req, res) => {
                 '/api/gpt5',
                 '/api/instagram',
                 '/api/facebook',
+                '/api/spotify',
                 '/api/social/media',
-                '/api/video/download',
+                '/api/download',
                 '/api/ai/chat'
             ]
+        },
+        services: {
+            ai_models: ['Deepseek', 'Copilot', 'GPT-5'],
+            downloaders: ['Instagram', 'Facebook', 'Spotify'],
+            status: 'operational'
         },
         rate_limit: {
             window: '1 minute',
@@ -673,13 +853,13 @@ router.get('/health', (req, res) => {
     return res.status(200).json(healthData)
 })
 
-// API Information Endpoint
+// API Information Endpoint (Updated)
 router.get('/info', (req, res) => {
     const apiInfo = {
         name: 'API Teguh - Advanced REST API Server',
-        version: '3.2.0',
+        version: '3.3.0',
         creator: global.creator,
-        description: 'Multi-model AI API server with social media and video download tools',
+        description: 'Multi-model AI API server with social media, audio, and video download tools',
         endpoints: {
             status: {
                 path: '/api/status',
@@ -723,17 +903,23 @@ router.get('/info', (req, res) => {
                 description: 'Facebook video downloader',
                 parameters: 'url (required) - Facebook video URL'
             },
+            spotify: {
+                path: '/api/spotify',
+                method: 'GET',
+                description: 'Spotify track downloader and metadata',
+                parameters: 'url (required) - Spotify track URL, quality (optional: high, medium, low)'
+            },
             social_media: {
                 path: '/api/social/media',
                 method: 'GET',
-                description: 'Social media tools (Instagram & Facebook support)',
-                parameters: 'url (required), platform (optional: auto, instagram, facebook)'
+                description: 'Social media tools (Instagram, Facebook, Spotify support)',
+                parameters: 'url (required), platform (optional: auto, instagram, facebook, spotify)'
             },
-            video_download: {
-                path: '/api/video/download',
+            download: {
+                path: '/api/download',
                 method: 'GET',
-                description: 'Unified video downloader for multiple platforms',
-                parameters: 'url (required), quality (optional: best, hd, sd), platform (optional: auto, instagram, facebook)'
+                description: 'Unified downloader for audio and video from multiple platforms',
+                parameters: 'url (required), quality (optional), platform (optional: auto), type (optional: auto, audio, video)'
             },
             ai_chat: {
                 path: '/api/ai/chat',
@@ -746,14 +932,20 @@ router.get('/info', (req, res) => {
             'AI Chat with multiple models (Deepseek, Copilot, GPT-5)',
             'Instagram video/photo downloader',
             'Facebook video downloader',
+            'Spotify audio downloader',
             'Social media metadata extraction',
-            'Unified video download endpoint',
+            'Unified audio/video download endpoint',
             'Server monitoring',
             'Rate limiting'
         ],
         rate_limiting: '2000 requests per minute per IP',
         documentation: 'Visit / on your browser for full documentation',
-        video_support: {
+        media_support: {
+            spotify: {
+                formats: ['MP3 (High Quality)', 'Metadata extraction'],
+                features: ['Track info', 'Album art', 'Artist info', 'Duration'],
+                requirements: 'Public Spotify tracks only'
+            },
             facebook: {
                 formats: ['HD (720p+)', 'SD (360p+)'],
                 max_duration: 'No limit',
@@ -784,8 +976,9 @@ router.all('*', (req, res) => {
             'GET /api/gpt5?text=your_message',
             'GET /api/instagram?url=instagram_url',
             'GET /api/facebook?url=facebook_url',
+            'GET /api/spotify?url=spotify_url',
             'GET /api/social/media?url=social_media_url&platform=auto',
-            'GET /api/video/download?url=video_url&quality=best',
+            'GET /api/download?url=media_url&quality=best',
             'GET /api/ai/chat?text=message&model=auto',
             'GET /api/health',
             'GET /api/info'
