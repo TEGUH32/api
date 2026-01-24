@@ -9,6 +9,7 @@
     <title>API Teguh | Auto-Detect REST API</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -168,6 +169,16 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #0da375);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #e68a00);
+            color: white;
         }
 
         /* Hero Section */
@@ -384,6 +395,82 @@
             overflow: auto;
         }
 
+        /* Export Controls */
+        .export-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            background: var(--light);
+            border: 1px solid var(--light-2);
+            color: var(--dark-2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: var(--light-2);
+        }
+
+        .export-btn.csv {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .export-btn.excel {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .export-btn.json {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Data Table */
+        .data-table-container {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .data-table th {
+            background: var(--light);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--light-2);
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--light-2);
+            color: var(--dark-2);
+        }
+
+        .data-table tr:hover {
+            background: var(--light);
+        }
+
         /* Endpoints */
         .endpoints-grid {
             display: grid;
@@ -549,6 +636,30 @@
             margin: 0 auto 1.5rem;
         }
 
+        /* Data Management */
+        .data-management {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            margin-top: 2rem;
+        }
+
+        .data-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .data-preview {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            max-height: 300px;
+            overflow: auto;
+        }
+
         /* Footer */
         .footer {
             background: var(--dark);
@@ -630,6 +741,10 @@
             .section {
                 padding: 3rem 0;
             }
+            
+            .data-actions {
+                flex-direction: column;
+            }
         }
 
         /* Animations */
@@ -658,7 +773,7 @@
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#endpoints" class="nav-link">Endpoints</a>
                 <a href="#console" class="nav-link">API Console</a>
-                <a href="#features" class="nav-link">Features</a>
+                <a href="#data" class="nav-link">Data Export</a>
                 <a href="#dashboard" class="nav-link">Dashboard</a>
                 <a href="#console" class="btn btn-primary">
                     <i class="fas fa-terminal"></i> Try API
@@ -677,18 +792,18 @@
                     <span>Auto-Detect API Platform</span>
                 </div>
                 
-                <h1 class="hero-title">Smart REST API<br>With Auto-Discovery</h1>
+                <h1 class="hero-title">Smart REST API<br>With Data Export</h1>
                 
                 <p style="color: var(--dark-2); font-size: 1.25rem; margin-bottom: 2rem; max-width: 800px;">
-                    All API endpoints are automatically detected from your server. No manual updates needed.
+                    Auto-detect API endpoints with powerful CSV/Excel export capabilities for bulk data processing.
                 </p>
                 
                 <div class="flex gap-3" style="display: flex; gap: 1rem;">
                     <a href="#console" class="btn btn-primary">
                         <i class="fas fa-terminal"></i> Try API Console
                     </a>
-                    <a href="#endpoints" class="btn" style="background: transparent; border: 2px solid var(--primary); color: var(--primary);">
-                        <i class="fas fa-code"></i> View Auto-Detected Endpoints
+                    <a href="#data" class="btn btn-success">
+                        <i class="fas fa-file-export"></i> Export Data
                     </a>
                 </div>
                 
@@ -719,7 +834,7 @@
         <div class="container">
             <h2 class="section-title">Smart Features</h2>
             <p class="section-subtitle">
-                Advanced features powered by automatic detection technology
+                Advanced features with built-in data export capabilities
             </p>
             
             <div class="features-grid">
@@ -733,18 +848,18 @@
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
+                        <i class="fas fa-file-excel"></i>
                     </div>
-                    <h3 style="margin-bottom: 1rem;">Parameter Intelligence</h3>
-                    <p style="color: var(--dark-2);">Smart parameter detection and auto-fill for all endpoints</p>
+                    <h3 style="margin-bottom: 1rem;">Excel/CSV Export</h3>
+                    <p style="color: var(--dark-2);">Export API responses to CSV and Excel formats for bulk data processing</p>
                 </div>
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
+                        <i class="fas fa-database"></i>
                     </div>
-                    <h3 style="margin-bottom: 1rem;">Real-time Updates</h3>
-                    <p style="color: var(--dark-2);">Live updates when new endpoints are added to the server</p>
+                    <h3 style="margin-bottom: 1rem;">Data Management</h3>
+                    <p style="color: var(--dark-2);">Manage and export large datasets with intelligent formatting</p>
                 </div>
             </div>
         </div>
@@ -781,6 +896,7 @@
                     <div class="console-tabs">
                         <button class="console-tab active" data-tab="simple">Simple</button>
                         <button class="console-tab" data-tab="advanced">Advanced</button>
+                        <button class="console-tab" data-tab="export">Export</button>
                     </div>
                 </div>
                 
@@ -795,7 +911,6 @@
                         </div>
                         
                         <div class="form-group" id="paramsContainer">
-                            <!-- Parameters will be auto-generated here -->
                             <div style="color: var(--dark-2); text-align: center; padding: 1rem;">
                                 Select an endpoint to see its parameters
                             </div>
@@ -832,6 +947,57 @@
                         </div>
                     </div>
                     
+                    <!-- Export Tab -->
+                    <div class="tab-content" id="exportTab" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Endpoint for Data Export</label>
+                            <select class="form-control" id="exportEndpointSelect">
+                                <option value="">Select endpoint with data...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Export Format</label>
+                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="exportFormat" value="csv" checked>
+                                    <span>CSV (Comma Separated Values)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="exportFormat" value="excel">
+                                    <span>Excel (.xlsx)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Export Options</label>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="includeTimestamp" checked>
+                                    <span>Include Timestamp</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="formatNumbers" checked>
+                                    <span>Format Numbers</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="autoHeaders" checked>
+                                    <span>Auto Headers</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="export-controls">
+                            <button class="btn btn-success" id="exportData">
+                                <i class="fas fa-file-export"></i> Export Data
+                            </button>
+                            <button class="btn" style="background: transparent; border: 2px solid var(--light-2); color: var(--dark-2);" id="previewExport">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                    
                     <!-- Response Area -->
                     <div class="response-container" style="margin-top: 1.5rem;">
                         <div class="response-header">
@@ -847,12 +1013,59 @@
         </div>
     </section>
 
+    <!-- Data Export Section -->
+    <section id="data" class="section" style="background: var(--light);">
+        <div class="container">
+            <h2 class="section-title">Data Export & Management</h2>
+            <p class="section-subtitle">
+                Export API responses to CSV, Excel, and JSON formats for bulk data processing
+            </p>
+            
+            <div class="data-management fade-in">
+                <div class="data-actions">
+                    <button class="btn btn-success" id="exportAllEndpoints">
+                        <i class="fas fa-download"></i> Export All Endpoints
+                    </button>
+                    <button class="btn btn-primary" id="exportResponseData">
+                        <i class="fas fa-file-export"></i> Export Current Response
+                    </button>
+                    <button class="btn btn-warning" id="batchExport">
+                        <i class="fas fa-tasks"></i> Batch Export
+                    </button>
+                </div>
+                
+                <div class="data-table-container" id="dataPreview">
+                    <h4 style="margin-bottom: 1rem;">Data Preview</h4>
+                    <div style="color: var(--dark-2); text-align: center; padding: 2rem;">
+                        <i class="fas fa-database" style="font-size: 3rem; color: var(--light-2);"></i>
+                        <p style="margin-top: 1rem;">No data to preview. Make an API request first.</p>
+                    </div>
+                </div>
+                
+                <div class="export-controls" style="margin-top: 1.5rem;">
+                    <button class="export-btn csv" id="exportCSV">
+                        <i class="fas fa-file-csv"></i> Download CSV
+                    </button>
+                    <button class="export-btn excel" id="exportExcel">
+                        <i class="fas fa-file-excel"></i> Download Excel
+                    </button>
+                    <button class="export-btn json" id="exportJSON">
+                        <i class="fas fa-file-code"></i> Download JSON
+                    </button>
+                    <button class="export-btn" id="clearData">
+                        <i class="fas fa-trash"></i> Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Dashboard -->
-    <section id="dashboard" class="section" style="background: var(--light);">
+    <section id="dashboard" class="section">
         <div class="container">
             <h2 class="section-title">Smart Dashboard</h2>
             <p class="section-subtitle">
-                Real-time monitoring with auto-detected metrics
+                Real-time monitoring with export statistics
             </p>
             
             <div class="dashboard-grid">
@@ -881,19 +1094,31 @@
                 </div>
                 
                 <div class="metric-card">
-                    <h4>Detected Endpoints</h4>
-                    <div class="metric-value" id="detectedEndpoints">0</div>
+                    <h4>Data Exports</h4>
+                    <div class="metric-value" id="exportCount">0</div>
                     <div class="metric-progress">
-                        <div class="progress-bar" id="endpointsBar" style="width: 0%"></div>
+                        <div class="progress-bar" id="exportsBar" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
             
             <div style="background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 2rem;">
-                <h4>Auto-Detection Status</h4>
-                <div id="detectionStatus" style="color: var(--dark-2); padding: 1rem 0; text-align: center;">
-                    <div class="loading" style="width: 20px; height: 20px; margin: 0 auto;"></div>
-                    <p style="margin-top: 0.5rem;">Detecting server configuration...</p>
+                <h4>Export Statistics</h4>
+                <div id="exportStats" style="color: var(--dark-2); padding: 1rem 0;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--dark-2);">CSV Exports</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);" id="csvCount">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--dark-2);">Excel Exports</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);" id="excelCount">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--dark-2);">Total Data</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);" id="totalData">0 rows</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -911,7 +1136,7 @@
                         <span style="font-size: 1.25rem; font-weight: 700; color: white;">API Teguh</span>
                     </div>
                     <p style="color: rgba(255, 255, 255, 0.7);">
-                        Smart REST API with auto-detection technology
+                        Smart REST API with auto-detection and data export
                     </p>
                 </div>
                 
@@ -920,18 +1145,18 @@
                     <div class="footer-links">
                         <a href="#home" class="footer-link">Home</a>
                         <a href="#endpoints" class="footer-link">Auto-Detected Endpoints</a>
-                        <a href="#console" class="footer-link">Smart Console</a>
+                        <a href="#data" class="footer-link">Data Export</a>
                         <a href="#dashboard" class="footer-link">Dashboard</a>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 class="footer-title">API Categories</h4>
+                    <h4 class="footer-title">Export Formats</h4>
                     <div class="footer-links">
-                        <a href="#endpoints" class="footer-link">AI Endpoints</a>
-                        <a href="#endpoints" class="footer-link">Social Media</a>
-                        <a href="#endpoints" class="footer-link">System Tools</a>
-                        <a href="#endpoints" class="footer-link">Utilities</a>
+                        <a href="#data" class="footer-link">CSV Export</a>
+                        <a href="#data" class="footer-link">Excel Export</a>
+                        <a href="#data" class="footer-link">JSON Export</a>
+                        <a href="#data" class="footer-link">Batch Export</a>
                     </div>
                 </div>
                 
@@ -941,13 +1166,13 @@
                         <div>Status: <span id="footerStatus" style="color: var(--success);">● Online</span></div>
                         <div>Uptime: <span id="footerUptime">00:00:00</span></div>
                         <div>Endpoints: <span id="footerEndpoints">0</span></div>
-                        <div>Requests: <span id="footerRequests">0</span></div>
+                        <div>Exports: <span id="footerExports">0</span></div>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 API Teguh. Auto-Detection Technology Enabled.</p>
+                <p>&copy; 2024 API Teguh. Auto-Detection & Data Export Technology.</p>
             </div>
         </div>
     </footer>
@@ -959,8 +1184,12 @@
             categories: {},
             recentRequests: [],
             requestCount: 0,
+            exportCount: 0,
+            csvExports: 0,
+            excelExports: 0,
+            currentData: null,
+            collectedData: [],
             serverStartTime: Date.now(),
-            detectionStatus: 'initializing',
             autoRefreshInterval: null
         };
 
@@ -968,6 +1197,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initNavigation();
             initApiConsole();
+            initDataExport();
             startAutoDetection();
             initDashboard();
             updateUptime();
@@ -1011,15 +1241,12 @@
 
         async function detectEndpoints() {
             try {
-                updateDetectionStatus('detecting', 'Detecting API endpoints...');
-                
                 // Try to get API info first
                 const response = await fetch('/api/info');
                 if (response.ok) {
                     const data = await response.json();
                     if (data.status && data.data?.endpoints) {
                         processApiInfo(data.data.endpoints);
-                        updateDetectionStatus('success', `Detected ${state.endpoints.length} endpoints`);
                         return;
                     }
                 }
@@ -1029,7 +1256,6 @@
                 
             } catch (error) {
                 console.error('Detection failed:', error);
-                updateDetectionStatus('error', 'Failed to detect endpoints. Using fallback.');
                 await detectCommonEndpoints();
             }
         }
@@ -1050,7 +1276,11 @@
                     method: endpoint.method || 'GET',
                     description: endpoint.description || 'API endpoint',
                     parameters: endpoint.parameters || 'none',
-                    category: determineCategory(endpoint.path, endpoint.description)
+                    category: determineCategory(endpoint.path, endpoint.description),
+                    hasData: endpoint.description?.toLowerCase().includes('data') || 
+                             endpoint.path.includes('data') ||
+                             endpoint.path.includes('instagram') ||
+                             endpoint.path.includes('social')
                 };
                 
                 state.endpoints.push(endpointObj);
@@ -1062,16 +1292,16 @@
 
         async function detectCommonEndpoints() {
             const commonEndpoints = [
-                { path: '/api/status', method: 'GET', description: 'Server status information', category: 'system' },
-                { path: '/api/ping', method: 'GET', description: 'Ping test endpoint', category: 'system' },
-                { path: '/api/deepseek', method: 'GET', description: 'DeepSeek AI chat', parameters: 'q (required)', category: 'ai' },
-                { path: '/api/copilot', method: 'GET', description: 'Microsoft Copilot AI', parameters: 'text (required)', category: 'ai' },
-                { path: '/api/gpt5', method: 'GET', description: 'GPT-5 AI model', parameters: 'text (required)', category: 'ai' },
-                { path: '/api/instagram', method: 'GET', description: 'Instagram downloader', parameters: 'url (required)', category: 'social' },
-                { path: '/api/social/media', method: 'GET', description: 'Social media tools', parameters: 'url (required)', category: 'social' },
-                { path: '/api/ai/chat', method: 'GET', description: 'Multi-model AI chat', parameters: 'text (required), model (optional)', category: 'ai' },
-                { path: '/api/health', method: 'GET', description: 'Health check endpoint', category: 'system' },
-                { path: '/api/info', method: 'GET', description: 'API information', category: 'system' }
+                { path: '/api/status', method: 'GET', description: 'Server status information', category: 'system', hasData: true },
+                { path: '/api/ping', method: 'GET', description: 'Ping test endpoint', category: 'system', hasData: false },
+                { path: '/api/deepseek', method: 'GET', description: 'DeepSeek AI chat', parameters: 'q (required)', category: 'ai', hasData: true },
+                { path: '/api/copilot', method: 'GET', description: 'Microsoft Copilot AI', parameters: 'text (required)', category: 'ai', hasData: true },
+                { path: '/api/gpt5', method: 'GET', description: 'GPT-5 AI model', parameters: 'text (required)', category: 'ai', hasData: true },
+                { path: '/api/instagram', method: 'GET', description: 'Instagram downloader', parameters: 'url (required)', category: 'social', hasData: true },
+                { path: '/api/social/media', method: 'GET', description: 'Social media tools', parameters: 'url (required)', category: 'social', hasData: true },
+                { path: '/api/ai/chat', method: 'GET', description: 'Multi-model AI chat', parameters: 'text (required), model (optional)', category: 'ai', hasData: true },
+                { path: '/api/health', method: 'GET', description: 'Health check endpoint', category: 'system', hasData: true },
+                { path: '/api/info', method: 'GET', description: 'API information', category: 'system', hasData: true }
             ];
 
             // Test each endpoint
@@ -1091,7 +1321,6 @@
             }
 
             updateUI();
-            updateDetectionStatus('success', `Detected ${state.endpoints.length} endpoints (fallback mode)`);
         }
 
         function determineCategory(path, description) {
@@ -1140,6 +1369,7 @@
         function updateUI() {
             renderEndpoints();
             populateEndpointSelect();
+            populateExportEndpointSelect();
             updateStats();
         }
 
@@ -1156,7 +1386,6 @@
                 return;
             }
 
-            // Render by categories
             let html = '';
             
             Object.entries(state.categories).forEach(([category, endpoints]) => {
@@ -1175,6 +1404,7 @@
                                         ${endpoint.method}
                                     </span>
                                     <span class="endpoint-path">${endpoint.path}</span>
+                                    ${endpoint.hasData ? '<span style="font-size: 0.75rem; color: var(--success);"><i class="fas fa-database"></i> Data</span>' : ''}
                                 </div>
                                 <p class="endpoint-description">${endpoint.description}</p>
                                 <div>
@@ -1210,6 +1440,20 @@
             select.addEventListener('change', (e) => {
                 loadEndpointParams(e.target.value);
             });
+        }
+
+        function populateExportEndpointSelect() {
+            const select = document.getElementById('exportEndpointSelect');
+            const dataEndpoints = state.endpoints.filter(ep => ep.hasData);
+            
+            select.innerHTML = `
+                <option value="">Select endpoint with data...</option>
+                ${dataEndpoints.map(endpoint => `
+                    <option value="${endpoint.path}">
+                        ${endpoint.path} - ${endpoint.description}
+                    </option>
+                `).join('')}
+            `;
         }
 
         function loadEndpointParams(endpointPath) {
@@ -1364,6 +1608,10 @@
                 // Parse response
                 const data = await response.json();
                 responseBody.textContent = JSON.stringify(data, null, 2);
+                
+                // Store current data for export
+                state.currentData = data;
+                updateDataPreview(data);
 
                 // Update stats
                 updateRequestStats(responseTime);
@@ -1383,6 +1631,410 @@
             document.getElementById('responseStatus').textContent = 'Ready';
             document.getElementById('responseStatus').className = 'response-status';
             document.getElementById('responseBody').textContent = '{\n  "message": "Select an auto-detected endpoint and click \'Send Request\'"\n}';
+        }
+
+        // Data Export Functions
+        function initDataExport() {
+            document.getElementById('exportData').addEventListener('click', exportSelectedData);
+            document.getElementById('previewExport').addEventListener('click', previewExportData);
+            document.getElementById('exportAllEndpoints').addEventListener('click', exportAllEndpoints);
+            document.getElementById('exportResponseData').addEventListener('click', exportResponseData);
+            document.getElementById('batchExport').addEventListener('click', batchExport);
+            document.getElementById('exportCSV').addEventListener('click', () => exportData('csv'));
+            document.getElementById('exportExcel').addEventListener('click', () => exportData('excel'));
+            document.getElementById('exportJSON').addEventListener('click', () => exportData('json'));
+            document.getElementById('clearData').addEventListener('click', clearData);
+        }
+
+        function updateDataPreview(data) {
+            const container = document.getElementById('dataPreview');
+            
+            // Try to extract tabular data
+            const tableData = extractTableData(data);
+            
+            if (tableData.rows.length > 0) {
+                let html = '<h4 style="margin-bottom: 1rem;">Data Preview (' + tableData.rows.length + ' rows)</h4>';
+                html += '<div style="overflow-x: auto;">';
+                html += '<table class="data-table">';
+                html += '<thead><tr>';
+                tableData.headers.forEach(header => {
+                    html += `<th>${header}</th>`;
+                });
+                html += '</tr></thead>';
+                html += '<tbody>';
+                tableData.rows.slice(0, 10).forEach(row => {
+                    html += '<tr>';
+                    tableData.headers.forEach(header => {
+                        html += `<td>${row[header] || ''}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody>';
+                html += '</table>';
+                
+                if (tableData.rows.length > 10) {
+                    html += `<p style="color: var(--dark-2); margin-top: 1rem; text-align: center;">Showing 10 of ${tableData.rows.length} rows</p>`;
+                }
+                
+                html += '</div>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `
+                    <h4 style="margin-bottom: 1rem;">Data Structure</h4>
+                    <div class="data-preview">
+                        <pre style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--dark-2);">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        function extractTableData(data) {
+            const result = {
+                headers: [],
+                rows: []
+            };
+
+            // Try to find array data
+            let dataArray = [];
+            
+            if (Array.isArray(data)) {
+                dataArray = data;
+            } else if (data.data && Array.isArray(data.data)) {
+                dataArray = data.data;
+            } else if (data.result && Array.isArray(data.result)) {
+                dataArray = data.result;
+            } else if (data.result?.data && Array.isArray(data.result.data)) {
+                dataArray = data.result.data;
+            }
+
+            if (dataArray.length > 0) {
+                // Extract headers from first object
+                const firstRow = dataArray[0];
+                if (typeof firstRow === 'object') {
+                    result.headers = Object.keys(firstRow);
+                    result.rows = dataArray.map(row => {
+                        const processedRow = {};
+                        result.headers.forEach(header => {
+                            processedRow[header] = typeof row[header] === 'object' ? 
+                                JSON.stringify(row[header]) : 
+                                String(row[header] || '');
+                        });
+                        return processedRow;
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        async function exportSelectedData() {
+            const endpointSelect = document.getElementById('exportEndpointSelect');
+            const endpointPath = endpointSelect.value;
+            
+            if (!endpointPath) {
+                showNotification('Please select an endpoint for export', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(endpointPath);
+                const data = await response.json();
+                
+                if (data.status) {
+                    state.currentData = data;
+                    updateDataPreview(data);
+                    showNotification('Data ready for export', 'success');
+                }
+            } catch (error) {
+                showNotification('Failed to fetch data for export', 'error');
+            }
+        }
+
+        function previewExportData() {
+            if (!state.currentData) {
+                showNotification('No data to preview', 'error');
+                return;
+            }
+            
+            const format = document.querySelector('input[name="exportFormat"]:checked').value;
+            showNotification(`Previewing data in ${format.toUpperCase()} format`, 'info');
+        }
+
+        async function exportAllEndpoints() {
+            showNotification('Starting batch export of all endpoints...', 'info');
+            
+            const exportPromises = state.endpoints
+                .filter(ep => ep.hasData)
+                .map(async endpoint => {
+                    try {
+                        const response = await fetch(endpoint.path);
+                        const data = await response.json();
+                        return {
+                            endpoint: endpoint.path,
+                            data: data
+                        };
+                    } catch (error) {
+                        return {
+                            endpoint: endpoint.path,
+                            error: error.message
+                        };
+                    }
+                });
+
+            const results = await Promise.all(exportPromises);
+            state.collectedData = results;
+            
+            // Create combined data
+            const combinedData = results.map(result => ({
+                endpoint: result.endpoint,
+                status: result.error ? 'error' : 'success',
+                timestamp: new Date().toISOString(),
+                ...(result.error ? { error: result.error } : { data: result.data })
+            }));
+
+            exportCombinedData(combinedData, 'all_endpoints_export');
+            showNotification(`Exported ${results.length} endpoints`, 'success');
+        }
+
+        function exportResponseData() {
+            if (!state.currentData) {
+                showNotification('No response data to export', 'error');
+                return;
+            }
+
+            const format = document.querySelector('input[name="exportFormat"]:checked').value;
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const filename = `api_response_${timestamp}`;
+            
+            exportData(format, filename);
+        }
+
+        async function batchExport() {
+            showNotification('Preparing batch export...', 'info');
+            
+            // Get selected endpoints with data
+            const dataEndpoints = state.endpoints.filter(ep => ep.hasData);
+            const batchSize = 3; // Process 3 at a time to avoid overwhelming
+            
+            for (let i = 0; i < dataEndpoints.length; i += batchSize) {
+                const batch = dataEndpoints.slice(i, i + batchSize);
+                
+                const batchPromises = batch.map(async endpoint => {
+                    try {
+                        const response = await fetch(endpoint.path);
+                        return await response.json();
+                    } catch (error) {
+                        return { error: error.message };
+                    }
+                });
+
+                const batchResults = await Promise.all(batchPromises);
+                
+                // Process each result
+                batchResults.forEach((result, index) => {
+                    if (result && !result.error) {
+                        const endpoint = batch[index];
+                        const filename = `batch_${endpoint.path.replace(/\//g, '_')}_${Date.now()}`;
+                        exportSingleData(result, filename);
+                    }
+                });
+
+                showNotification(`Processed batch ${Math.floor(i/batchSize) + 1} of ${Math.ceil(dataEndpoints.length/batchSize)}`, 'info');
+            }
+            
+            showNotification('Batch export completed', 'success');
+        }
+
+        function exportData(format = 'csv', customFilename = null) {
+            if (!state.currentData) {
+                showNotification('No data to export', 'error');
+                return;
+            }
+
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const filename = customFilename || `api_data_${timestamp}`;
+            
+            switch (format) {
+                case 'csv':
+                    exportToCSV(state.currentData, filename);
+                    state.csvExports++;
+                    break;
+                case 'excel':
+                    exportToExcel(state.currentData, filename);
+                    state.excelExports++;
+                    break;
+                case 'json':
+                    exportToJSON(state.currentData, filename);
+                    break;
+            }
+
+            state.exportCount++;
+            updateExportStats();
+            showNotification(`Data exported as ${format.toUpperCase()}`, 'success');
+        }
+
+        function exportToCSV(data, filename) {
+            const tableData = extractTableData(data);
+            
+            if (tableData.rows.length === 0) {
+                // If no tabular data, export as simple CSV
+                const csvContent = convertToCSV(data);
+                downloadFile(csvContent, `${filename}.csv`, 'text/csv');
+                return;
+            }
+
+            // Create CSV from table data
+            let csvContent = tableData.headers.join(',') + '\n';
+            
+            tableData.rows.forEach(row => {
+                const rowValues = tableData.headers.map(header => {
+                    const value = row[header] || '';
+                    // Escape quotes and wrap in quotes if contains comma or quote
+                    const escapedValue = String(value).replace(/"/g, '""');
+                    return escapedValue.includes(',') || escapedValue.includes('"') ? 
+                        `"${escapedValue}"` : escapedValue;
+                });
+                csvContent += rowValues.join(',') + '\n';
+            });
+
+            downloadFile(csvContent, `${filename}.csv`, 'text/csv');
+        }
+
+        function convertToCSV(obj) {
+            const flattenObject = (obj, prefix = '') => {
+                return Object.keys(obj).reduce((acc, k) => {
+                    const pre = prefix.length ? prefix + '.' : '';
+                    if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+                        Object.assign(acc, flattenObject(obj[k], pre + k));
+                    } else {
+                        acc[pre + k] = obj[k];
+                    }
+                    return acc;
+                }, {});
+            };
+
+            const flatObj = flattenObject(obj);
+            const headers = Object.keys(flatObj);
+            const values = headers.map(header => {
+                const value = flatObj[header];
+                if (typeof value === 'object') {
+                    return JSON.stringify(value);
+                }
+                return value;
+            });
+
+            return headers.join(',') + '\n' + values.join(',');
+        }
+
+        function exportToExcel(data, filename) {
+            try {
+                // Create workbook
+                const wb = XLSX.utils.book_new();
+                
+                // Try to extract tabular data
+                const tableData = extractTableData(data);
+                
+                if (tableData.rows.length > 0) {
+                    // Create worksheet from table data
+                    const ws = XLSX.utils.json_to_sheet(tableData.rows, { header: tableData.headers });
+                    XLSX.utils.book_append_sheet(wb, ws, 'Data');
+                } else {
+                    // Create worksheet from flattened data
+                    const flatData = flattenData(data);
+                    const ws = XLSX.utils.json_to_sheet(flatData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Data');
+                }
+
+                // Add metadata sheet
+                const metadata = [{
+                    'Export Date': new Date().toLocaleString(),
+                    'Total Records': tableData.rows.length || 'N/A',
+                    'Data Source': 'API Teguh',
+                    'Endpoint': window.location.pathname
+                }];
+                const metaWs = XLSX.utils.json_to_sheet(metadata);
+                XLSX.utils.book_append_sheet(wb, metaWs, 'Metadata');
+
+                // Generate Excel file
+                XLSX.writeFile(wb, `${filename}.xlsx`);
+                
+            } catch (error) {
+                console.error('Excel export error:', error);
+                showNotification('Excel export failed', 'error');
+            }
+        }
+
+        function flattenData(data, prefix = '') {
+            if (Array.isArray(data)) {
+                return data.map((item, index) => flattenData(item, `${prefix}[${index}]`));
+            } else if (typeof data === 'object' && data !== null) {
+                return Object.keys(data).reduce((acc, key) => {
+                    const newPrefix = prefix ? `${prefix}.${key}` : key;
+                    if (typeof data[key] === 'object' && data[key] !== null) {
+                        Object.assign(acc, flattenData(data[key], newPrefix));
+                    } else {
+                        acc[newPrefix] = data[key];
+                    }
+                    return acc;
+                }, {});
+            }
+            return { [prefix]: data };
+        }
+
+        function exportToJSON(data, filename) {
+            const jsonContent = JSON.stringify(data, null, 2);
+            downloadFile(jsonContent, `${filename}.json`, 'application/json');
+        }
+
+        function exportCombinedData(dataArray, filename) {
+            const combined = {
+                export_timestamp: new Date().toISOString(),
+                total_endpoints: dataArray.length,
+                data: dataArray
+            };
+            
+            exportToJSON(combined, filename);
+        }
+
+        function exportSingleData(data, filename) {
+            const format = document.querySelector('input[name="exportFormat"]:checked').value;
+            
+            switch (format) {
+                case 'csv':
+                    exportToCSV(data, filename);
+                    break;
+                case 'excel':
+                    exportToExcel(data, filename);
+                    break;
+                case 'json':
+                    exportToJSON(data, filename);
+                    break;
+            }
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearData() {
+            state.currentData = null;
+            state.collectedData = [];
+            document.getElementById('dataPreview').innerHTML = `
+                <h4 style="margin-bottom: 1rem;">Data Preview</h4>
+                <div style="color: var(--dark-2); text-align: center; padding: 2rem;">
+                    <i class="fas fa-database" style="font-size: 3rem; color: var(--light-2);"></i>
+                    <p style="margin-top: 1rem;">No data to preview. Make an API request first.</p>
+                </div>
+            `;
+            showNotification('Data cleared', 'info');
         }
 
         // Dashboard
@@ -1428,6 +2080,26 @@
             document.getElementById('responseTime').textContent = `${responseTime}ms`;
         }
 
+        function updateExportStats() {
+            document.getElementById('exportCount').textContent = state.exportCount;
+            document.getElementById('csvCount').textContent = state.csvExports;
+            document.getElementById('excelCount').textContent = state.excelExports;
+            document.getElementById('footerExports').textContent = state.exportCount;
+            
+            // Calculate total data rows
+            let totalRows = 0;
+            if (state.currentData) {
+                const tableData = extractTableData(state.currentData);
+                totalRows = tableData.rows.length;
+            }
+            document.getElementById('totalData').textContent = `${totalRows} rows`;
+            
+            // Update exports progress bar
+            const exportsBar = document.getElementById('exportsBar');
+            const barWidth = Math.min(state.exportCount / 10 * 100, 100);
+            exportsBar.style.width = `${barWidth}%`;
+        }
+
         function updateStats() {
             const endpointCount = state.endpoints.length;
             document.getElementById('endpointCount').textContent = endpointCount;
@@ -1438,23 +2110,8 @@
             const endpointsBar = document.getElementById('endpointsBar');
             const barWidth = Math.min(endpointCount / 20 * 100, 100);
             endpointsBar.style.width = `${barWidth}%`;
-        }
-
-        function updateDetectionStatus(status, message) {
-            state.detectionStatus = status;
-            const container = document.getElementById('detectionStatus');
             
-            const icons = {
-                detecting: '<div class="loading" style="width: 20px; height: 20px; margin: 0 auto;"></div>',
-                success: '<i class="fas fa-check-circle" style="color: var(--success); font-size: 1.5rem;"></i>',
-                error: '<i class="fas fa-exclamation-circle" style="color: var(--error); font-size: 1.5rem;"></i>'
-            };
-            
-            container.innerHTML = `
-                ${icons[status] || icons.detecting}
-                <p style="margin-top: 0.5rem;">${message}</p>
-                ${status === 'success' ? `<p style="font-size: 0.875rem; color: var(--dark-2); margin-top: 0.25rem;">Auto-refresh every 30 seconds</p>` : ''}
-            `;
+            updateExportStats();
         }
 
         // Uptime Counter
@@ -1487,13 +2144,14 @@
                 box-shadow: var(--shadow-lg);
                 z-index: 9999;
                 animation: slideIn 0.3s ease-out;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
             `;
             
             notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                    <span>${message}</span>
-                </div>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
             `;
             
             document.body.appendChild(notification);
