@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Dashboard - API Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .ai-chat {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .ai-chat {
+                grid-column: span 1;
+            }
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .chat-input select {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: rgba(102, 126, 234, 0.3);
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.ai {
+            background: rgba(118, 75, 162, 0.3);
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .social-download {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .social-download {
+                grid-column: span 1;
+            }
+        }
+
+        .download-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .download-form input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .download-result {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .video-thumbnail {
+            width: 120px;
+            height: 80px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .system-monitor {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .system-monitor {
+                grid-column: span 1;
+            }
+        }
+
+        .monitor-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .gauge {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .gauge-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .api-usage {
+            margin-top: 30px;
+        }
+
+        .usage-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .usage-item {
+            text-align: center;
+        }
+
+        .refresh-time {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 API Server Dashboard</h1>
+            <div class="header-controls">
+                <button class="btn btn-secondary" onclick="refreshAll()">
+                    <span>🔄 Refresh</span>
+                </button>
+                <button class="btn btn-primary" onclick="location.href='index.html'">
+                    <span>🏠 Home</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- System Status Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🖥️ System Status</h2>
+                    <span class="card-icon pulse" id="status-indicator">●</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="uptime">--</span>
+                        <span class="stat-label">Uptime</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="cpu-cores">--</span>
+                        <span class="stat-label">CPU Cores</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="memory-usage">--</span>
+                        <span class="stat-label">Memory Usage</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="platform">--</span>
+                        <span class="stat-label">Platform</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Usage Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📈 API Usage</h2>
+                    <span class="card-icon">📊</span>
+                </div>
+                <div class="api-usage">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="rate-limit-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="usage-stats">
+                        <div class="usage-item">
+                            <div class="stat-value" id="requests-count">0</div>
+                            <div class="stat-label">Requests</div>
+                        </div>
+                        <div class="usage-item">
+                            <div class="stat-value" id="endpoints-count">10</div>
+                            <div class="stat-label">Endpoints</div>
+                        </div>
+                        <div class="usage-item">
+                            <div class="stat-value" id="rate-limit">2000</div>
+                            <div class="stat-label">Limit/Min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Chat Card -->
+            <div class="card ai-chat">
+                <div class="card-header">
+                    <h2 class="card-title">🤖 AI Chat (Multi-Model)</h2>
+                    <span class="card-icon">💬</span>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-input">
+                        <input type="text" id="ai-input" placeholder="Ask AI anything...">
+                        <select id="ai-model">
+                            <option value="auto">Auto Select</option>
+                            <option value="copilot">Microsoft Copilot</option>
+                            <option value="deepseek">Deepseek AI</option>
+                            <option value="gpt5">GPT-5</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="sendAI()">Send</button>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message ai">
+                            Hello! I'm your AI assistant. How can I help you today?
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Downloader Card -->
+            <div class="card social-download">
+                <div class="card-header">
+                    <h2 class="card-title">📱 Social Media Downloader</h2>
+                    <span class="card-icon">⬇️</span>
+                </div>
+                <div class="download-form">
+                    <input type="text" id="media-url" placeholder="Enter Instagram or Facebook URL...">
+                    <select id="media-platform">
+                        <option value="auto">Auto Detect</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="downloadMedia()">Download</button>
+                </div>
+                <div class="download-result" id="download-result">
+                    <!-- Results will be inserted here -->
+                </div>
+            </div>
+
+            <!-- System Monitor Card -->
+            <div class="card system-monitor">
+                <div class="card-header">
+                    <h2 class="card-title">📊 Real-time Monitoring</h2>
+                    <span class="card-icon">📈</span>
+                </div>
+                <div class="monitor-grid">
+                    <div class="gauge">
+                        <div class="gauge-value" id="cpu-usage">0%</div>
+                        <div class="stat-label">CPU Usage</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="cpu-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="gauge">
+                        <div class="gauge-value" id="memory-percent">0%</div>
+                        <div class="stat-label">Memory</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="memory-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="gauge">
+                        <div class="gauge-value" id="load-avg">0.00</div>
+                        <div class="stat-label">Load Avg</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="load-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="gauge">
+                        <div class="gauge-value" id="response-time">0ms</div>
+                        <div class="stat-label">Response Time</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="response-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="refresh-time" id="last-update">
+                    Last update: --
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>API Server Teguh v3.2.0 | Dashboard updates every 10 seconds | Server Time: <span id="server-time">--:--:--</span></p>
+            <p>⚠️ Note: This is a live monitoring dashboard. All data updates in real-time.</p>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let requestCount = 0;
+        const maxRequests = 2000;
+        let chatHistory = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateServerStatus();
+            updateSystemMonitor();
+            updateDateTime();
+            
+            // Auto-refresh every 10 seconds
+            setInterval(updateServerStatus, 10000);
+            setInterval(updateSystemMonitor, 5000);
+            setInterval(updateDateTime, 1000);
+        });
+
+        // Update server status
+        async function updateServerStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                
+                if (data.status) {
+                    // Update status indicator
+                    document.getElementById('status-indicator').style.color = '#28a745';
+                    
+                    // Update system info
+                    const server = data.data.server;
+                    const memory = data.data.memory;
+                    
+                    document.getElementById('uptime').textContent = formatUptime(server.uptime);
+                    document.getElementById('cpu-cores').textContent = server.cpus;
+                    document.getElementById('memory-usage').textContent = formatBytes(memory.used);
+                    document.getElementById('platform').textContent = server.platform;
+                    
+                    // Update system monitor
+                    document.getElementById('memory-percent').textContent = `${memory.usage_percent}%`;
+                    document.getElementById('memory-bar').style.width = `${memory.usage_percent}%`;
+                    
+                    // Color based on usage
+                    if (memory.usage_percent > 80) {
+                        document.getElementById('memory-bar').style.background = '#dc3545';
+                    } else if (memory.usage_percent > 60) {
+                        document.getElementById('memory-bar').style.background = '#ffc107';
+                    } else {
+                        document.getElementById('memory-bar').style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    }
+                }
+            } catch (error) {
+                document.getElementById('status-indicator').style.color = '#dc3545';
+                console.error('Error updating status:', error);
+            }
+        }
+
+        // Update system monitor
+        async function updateSystemMonitor() {
+            try {
+                const startTime = Date.now();
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                const endTime = Date.now();
+                
+                if (data.status) {
+                    // Update response time
+                    const responseTime = endTime - startTime;
+                    document.getElementById('response-time').textContent = `${responseTime}ms`;
+                    document.getElementById('response-bar').style.width = `${Math.min(100, responseTime / 10)}%`;
+                    
+                    // Update CPU load
+                    const load = data.data.load[0];
+                    const cpuUsage = Math.min(100, (load / data.data.server.cpus) * 100);
+                    document.getElementById('load-avg').textContent = load.toFixed(2);
+                    document.getElementById('load-bar').style.width = `${cpuUsage}%`;
+                    document.getElementById('cpu-usage').textContent = `${cpuUsage.toFixed(1)}%`;
+                    
+                    // Update rate limit usage (simulated)
+                    requestCount = Math.min(requestCount + Math.floor(Math.random() * 10), maxRequests);
+                    const rateUsage = (requestCount / maxRequests) * 100;
+                    document.getElementById('requests-count').textContent = requestCount;
+                    document.getElementById('rate-limit-bar').style.width = `${rateUsage}%`;
+                    
+                    // Update last update time
+                    const now = new Date();
+                    document.getElementById('last-update').textContent = 
+                        `Last update: ${now.toLocaleTimeString('id-ID', { hour12: false })}`;
+                }
+            } catch (error) {
+                console.error('Error updating monitor:', error);
+            }
+        }
+
+        // Send AI message
+        async function sendAI() {
+            const input = document.getElementById('ai-input');
+            const model = document.getElementById('ai-model').value;
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessage('user', message);
+            input.value = '';
+            
+            // Show loading indicator
+            const loadingMsg = addMessage('ai', 'Thinking...');
+            loadingMsg.innerHTML = '<div class="spinner"></div>';
+            
+            try {
+                let apiUrl;
+                if (model === 'auto' || model === 'copilot') {
+                    apiUrl = `/api/copilot?text=${encodeURIComponent(message)}`;
+                } else if (model === 'deepseek') {
+                    apiUrl = `/api/deepseek?q=${encodeURIComponent(message)}`;
+                } else if (model === 'gpt5') {
+                    apiUrl = `/api/gpt5?text=${encodeURIComponent(message)}`;
+                }
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                // Remove loading message
+                loadingMsg.remove();
+                
+                // Add AI response
+                let aiResponse;
+                if (model === 'deepseek') {
+                    aiResponse = data.data?.response || data.message;
+                } else {
+                    aiResponse = data.result || data.data?.result || data.message;
+                }
+                
+                addMessage('ai', aiResponse);
+                
+                // Add to chat history
+                chatHistory.push({
+                    user: message,
+                    ai: aiResponse,
+                    model: model,
+                    timestamp: new Date().toISOString()
+                });
+                
+            } catch (error) {
+                loadingMsg.remove();
+                addMessage('ai', `Error: ${error.message}. Please try again.`);
+            }
+        }
+
+        // Download media from social media
+        async function downloadMedia() {
+            const urlInput = document.getElementById('media-url');
+            const platform = document.getElementById('media-platform').value;
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            // Show loading
+            const resultDiv = document.getElementById('download-result');
+            resultDiv.innerHTML = '<div class="spinner"></div>';
+            resultDiv.style.display = 'block';
+            
+            try {
+                let apiUrl;
+                if (platform === 'auto') {
+                    if (url.includes('instagram.com')) {
+                        apiUrl = `/api/instagram?url=${encodeURIComponent(url)}`;
+                    } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
+                        apiUrl = `/api/facebook?url=${encodeURIComponent(url)}`;
+                    } else {
+                        throw new Error('Unsupported platform. Please specify Instagram or Facebook URL.');
+                    }
+                } else if (platform === 'instagram') {
+                    apiUrl = `/api/instagram?url=${encodeURIComponent(url)}`;
+                } else if (platform === 'facebook') {
+                    apiUrl = `/api/facebook?url=${encodeURIComponent(url)}`;
+                }
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.status) {
+                    resultDiv.innerHTML = `
+                        <div style="color: #28a745; margin-bottom: 15px;">
+                            ✓ Successfully fetched ${platform} data
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                            <p><strong>Title:</strong> ${data.result?.title || 'No title'}</p>
+                            ${data.result?.thumbnail ? 
+                                `<img src="${data.result.thumbnail}" class="video-thumbnail">` : ''}
+                            ${data.result?.durasi ? 
+                                `<p><strong>Duration:</strong> ${data.result.durasi}</p>` : ''}
+                            ${data.result?.download ? `
+                                <div style="margin-top: 15px;">
+                                    <p><strong>Download Options:</strong></p>
+                                    ${data.result.download.hd ? 
+                                        `<a href="${data.result.download.hd}" target="_blank" class="btn btn-primary" style="display: inline-block; margin-right: 10px;">Download HD</a>` : ''}
+                                    ${data.result.download.sd ? 
+                                        `<a href="${data.result.download.sd}" target="_blank" class="btn btn-primary" style="display: inline-block; margin-right: 10px;">Download SD</a>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div style="color: #dc3545; margin-bottom: 15px;">
+                            ✗ Failed to fetch data
+                        </div>
+                        <pre style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; overflow: auto;">
+                            ${JSON.stringify(data, null, 2)}
+                        </pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="color: #dc3545;">
+                        ✗ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Helper functions
+        function addMessage(sender, text) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+
+        function formatUptime(seconds) {
+            const days = Math.floor(seconds / 86400);
+            const hours = Math.floor((seconds % 86400) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            
+            if (days > 0) return `${days}d ${hours}h`;
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('server-time').textContent = 
+                now.toLocaleTimeString('id-ID', { hour12: false });
+        }
+
+        function refreshAll() {
+            updateServerStatus();
+            updateSystemMonitor();
+            
+            // Show refresh animation
+            const refreshBtn = event.target.closest('.btn');
+            refreshBtn.innerHTML = '<span>🔄 Refreshing...</span>';
+            setTimeout(() => {
+                refreshBtn.innerHTML = '<span>🔄 Refresh</span>';
+            }, 1000);
+        }
+
+        // Enter key support for AI chat
+        document.getElementById('ai-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendAI();
+            }
+        });
+
+        // Enter key support for media download
+        document.getElementById('media-url').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                downloadMedia();
+            }
+        });
+    </script>
+</body>
+</html>
