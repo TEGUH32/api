@@ -2,75 +2,160 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Teguh - Professional REST API Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>API Teguh | Professional REST API Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <style>
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --primary-light: #3b82f6;
             --secondary: #7c3aed;
+            --accent: #0ea5e9;
             --dark: #0f172a;
+            --dark-2: #1e293b;
             --light: #f8fafc;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
+            --light-2: #e2e8f0;
             --success: #10b981;
             --warning: #f59e0b;
             --error: #ef4444;
             --info: #3b82f6;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --surface: #ffffff;
+            --surface-dark: #1e293b;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             --radius-sm: 0.375rem;
             --radius: 0.5rem;
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-full: 9999px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         html {
             scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             line-height: 1.6;
             color: var(--dark);
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
             min-height: 100vh;
             overflow-x: hidden;
+            touch-action: manipulation;
         }
 
+        /* Container System */
         .container {
+            width: 100%;
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 1rem;
         }
 
-        /* Header & Navigation */
+        @media (min-width: 640px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+
+        /* Grid System */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.25rem; }
+        h5 { font-size: 1.125rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-mono {
+            font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        }
+
+        /* Navigation */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             z-index: 1000;
             padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.75rem 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-lg);
         }
 
         .nav-container {
@@ -84,45 +169,47 @@
             align-items: center;
             gap: 0.75rem;
             text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
         }
 
         .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
             width: 2.5rem;
             height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
             font-size: 1.25rem;
         }
 
-        .logo-text {
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark);
             font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius);
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
             align-items: center;
+            gap: 2rem;
         }
 
         .nav-link {
-            color: var(--gray-700);
+            color: var(--dark-2);
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.95rem;
             transition: color 0.2s;
             position: relative;
             padding: 0.5rem 0;
-        }
-
-        .nav-link:hover {
-            color: var(--primary);
         }
 
         .nav-link::after {
@@ -136,7 +223,8 @@
             transition: width 0.3s;
         }
 
-        .nav-link:hover::after {
+        .nav-link:hover::after,
+        .nav-link.active::after {
             width: 100%;
         }
 
@@ -144,48 +232,68 @@
             color: var(--primary);
         }
 
-        .nav-link.active::after {
-            width: 100%;
-        }
-
-        .cta-button {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
             padding: 0.75rem 1.5rem;
             border-radius: var(--radius);
-            text-decoration: none;
             font-weight: 600;
+            text-decoration: none;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            font-size: 0.95rem;
         }
 
-        .cta-button:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
         }
 
-        /* Hero Section */
-        .hero {
-            padding: 5rem 0;
-            position: relative;
-            overflow: hidden;
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
         }
 
-        .hero::before {
-            content: '';
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 5rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        .hero-bg {
             position: absolute;
             top: -50%;
             right: -20%;
-            width: 60%;
+            width: 80%;
             height: 200%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.05) 70%, transparent 100%);
-            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.05) 50%, transparent 70%);
+            pointer-events: none;
         }
 
         .hero-content {
-            max-width: 48rem;
             position: relative;
+            z-index: 1;
         }
 
         .hero-badge {
@@ -195,99 +303,65 @@
             background: rgba(37, 99, 235, 0.1);
             color: var(--primary);
             padding: 0.5rem 1rem;
-            border-radius: 2rem;
+            border-radius: var(--radius-full);
             font-size: 0.875rem;
             font-weight: 500;
             margin-bottom: 1.5rem;
-        }
-
-        .hero-badge i {
-            font-size: 0.75rem;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--dark), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--gray-600);
-            margin-bottom: 2rem;
-            line-height: 1.7;
+            backdrop-filter: blur(10px);
         }
 
         .hero-stats {
             display: flex;
             gap: 2rem;
             margin-top: 3rem;
+            flex-wrap: wrap;
         }
 
-        .stat-item {
+        .stat {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary);
+            line-height: 1;
         }
 
         .stat-label {
             font-size: 0.875rem;
-            color: var(--gray-500);
-            margin-top: 0.25rem;
+            color: var(--dark-2);
+            margin-top: 0.5rem;
         }
 
-        /* Features Section */
-        .section {
-            padding: 5rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--gray-600);
-            font-size: 1.125rem;
-            max-width: 48rem;
-            margin: 0 auto 3rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius-lg);
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
             box-shadow: var(--shadow);
             transition: all 0.3s;
-            border: 1px solid var(--gray-200);
+            border: 1px solid var(--light-2);
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
+        .card:hover {
+            transform: translateY(-4px);
             box-shadow: var(--shadow-xl);
         }
 
-        .feature-icon {
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-2);
+        }
+
+        .card-icon {
             width: 3rem;
             height: 3rem;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -297,52 +371,16 @@
             justify-content: center;
             color: white;
             font-size: 1.25rem;
-            margin-bottom: 1.5rem;
         }
 
-        .feature-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .feature-description {
-            color: var(--gray-600);
-            line-height: 1.7;
-        }
-
-        /* API Documentation */
-        .api-section {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 3rem;
-            margin-bottom: 3rem;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--gray-200);
-        }
-
-        .api-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid var(--gray-100);
-        }
-
-        .api-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-
-        .api-method {
-            padding: 0.375rem 1rem;
+        /* API Methods */
+        .method-badge {
+            padding: 0.25rem 0.75rem;
             border-radius: var(--radius-sm);
             font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
+            display: inline-block;
         }
 
         .method-get {
@@ -357,309 +395,269 @@
             border: 1px solid #bfdbfe;
         }
 
-        .api-details {
-            display: grid;
-            gap: 1.5rem;
+        .method-put {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
         }
 
-        .api-path {
-            background: var(--gray-50);
-            padding: 1rem;
-            border-radius: var(--radius);
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--gray-800);
-            border: 1px solid var(--gray-200);
-            word-break: break-all;
-        }
-
-        .api-parameters, .api-response {
-            background: var(--gray-50);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--gray-200);
-        }
-
-        .api-subtitle {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .parameter-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .parameter-table th {
-            text-align: left;
-            padding: 0.75rem;
-            background: var(--gray-100);
-            color: var(--gray-700);
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .parameter-table td {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--gray-200);
-            font-size: 0.875rem;
-        }
-
-        .parameter-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .parameter-required {
-            color: var(--error);
-            font-weight: 600;
-        }
-
-        .parameter-optional {
-            color: var(--warning);
-            font-weight: 600;
-        }
-
-        .response-example {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.6;
-        }
-
-        .json-key {
-            color: #9cdcfe;
-        }
-
-        .json-string {
-            color: #ce9178;
-        }
-
-        .json-number {
-            color: #b5cea8;
-        }
-
-        .json-boolean {
-            color: #569cd6;
-        }
-
-        /* Server Dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .metric-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--gray-200);
-        }
-
-        .metric-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .metric-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            background: var(--primary-light);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .metric-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .metric-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-desc {
-            color: var(--gray-500);
-            font-size: 0.875rem;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: var(--gray-200);
-            border-radius: 3px;
-            margin-top: 1rem;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 3px;
-            transition: width 0.3s;
+        .method-delete {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
         }
 
         /* API Console */
         .console-container {
-            background: white;
+            background: var(--surface);
             border-radius: var(--radius-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--light-2);
+            margin-bottom: 2rem;
         }
 
         .console-header {
+            background: var(--dark-2);
+            color: white;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
         }
 
-        .console-controls {
+        .console-tabs {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem;
+            border-radius: var(--radius);
         }
 
-        .console-select {
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius);
-            font-family: 'Inter', sans-serif;
+        .console-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.875rem;
             font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .console-tab.active {
             background: white;
             color: var(--dark);
-            min-width: 120px;
         }
 
-        .console-input {
-            flex: 1;
-            min-width: 300px;
+        .console-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-2);
+        }
+
+        .form-control {
+            width: 100%;
             padding: 0.75rem 1rem;
-            border: 1px solid var(--gray-300);
+            border: 1px solid var(--light-2);
             border-radius: var(--radius);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.875rem;
+            background: var(--light);
+            transition: all 0.2s;
         }
 
-        .console-input:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .console-response {
-            background: #f8fafc;
-            border: 1px solid var(--gray-200);
+        .form-row {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Response Area */
+        .response-container {
+            margin-top: 2rem;
             border-radius: var(--radius);
             overflow: hidden;
+            border: 1px solid var(--light-2);
         }
 
         .response-header {
-            background: var(--gray-50);
+            background: var(--light);
             padding: 1rem;
-            border-bottom: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--light-2);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .response-status {
-            padding: 0.375rem 0.75rem;
+            padding: 0.25rem 0.75rem;
             border-radius: var(--radius-sm);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
             font-weight: 600;
         }
 
-        .status-success {
+        .status-2xx {
             background: #d1fae5;
             color: #065f46;
         }
 
-        .status-error {
+        .status-4xx {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-5xx {
             background: #fee2e2;
             color: #991b1b;
         }
 
         .response-body {
-            padding: 1.5rem;
+            padding: 1rem;
+            background: #1e1e1e;
+            color: #d4d4d4;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.875rem;
             line-height: 1.6;
             max-height: 400px;
-            overflow-y: auto;
+            overflow: auto;
+        }
+
+        /* API Endpoints */
+        .endpoints-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .endpoint-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .endpoint-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--dark);
+            word-break: break-all;
+        }
+
+        .endpoint-description {
+            color: var(--dark-2);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .endpoint-params {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .param-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--light);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--dark-2);
+        }
+
+        /* Dashboard */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .metric-progress {
+            height: 6px;
+            background: var(--light-2);
+            border-radius: 3px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+            transition: width 0.3s;
         }
 
         /* Footer */
         .footer {
             background: var(--dark);
             color: white;
-            padding: 4rem 0 2rem;
-            margin-top: 5rem;
+            padding: 3rem 0;
+            margin-top: 4rem;
         }
 
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
+            gap: 2rem;
         }
 
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-logo-icon {
-            background: white;
-            color: var(--primary);
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-
-        .footer-logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .footer-section h4 {
             color: white;
-        }
-
-        .footer-description {
-            color: var(--gray-400);
-            line-height: 1.7;
-        }
-
-        .footer-title {
-            font-size: 1rem;
-            font-weight: 600;
             margin-bottom: 1.5rem;
-            color: white;
         }
 
         .footer-links {
@@ -669,7 +667,7 @@
         }
 
         .footer-link {
-            color: var(--gray-400);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: color 0.2s;
         }
@@ -681,823 +679,1310 @@
         .footer-bottom {
             text-align: center;
             padding-top: 2rem;
-            border-top: 1px solid var(--gray-800);
-            color: var(--gray-400);
-            font-size: 0.875rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
         }
 
-        /* Responsive Design */
+        /* Mobile Menu */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
+            .mobile-menu-btn {
+                display: block;
             }
-            
+
             .nav-links {
-                display: none;
-            }
-            
-            .container {
-                padding: 0 1rem;
-            }
-            
-            .api-section {
-                padding: 1.5rem;
-            }
-            
-            .console-input {
-                min-width: 100%;
-            }
-            
-            .hero-stats {
+                position: fixed;
+                top: 4rem;
+                left: 0;
+                right: 0;
+                background: white;
                 flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-xl);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .hero {
+                padding: 6rem 0 3rem;
+            }
+
+            .hero-stats {
                 gap: 1rem;
             }
-        }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .stat-number {
+                font-size: 1.5rem;
             }
         }
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--light-2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--gray-100);
-            border-radius: 4px;
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(120%);
+            transition: transform 0.3s;
+            z-index: 2000;
+            max-width: 400px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--gray-400);
-            border-radius: 4px;
+        .toast.show {
+            transform: translateX(0);
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gray-500);
+        .toast-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--error);
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .p-2 { padding: 1rem; }
+        .p-3 { padding: 1.5rem; }
+        .p-4 { padding: 2rem; }
+        .hidden { display: none; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+
+        /* Hide scrollbar but keep functionality */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Prevent text selection on interactive elements */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Smooth transitions */
+        .transition-all {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="container nav-container">
             <a href="#" class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-code"></i>
                 </div>
-                <span class="logo-text">API Teguh</span>
+                <span class="text-gradient">API Teguh</span>
             </a>
-            
-            <div class="nav-links">
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="nav-links" id="navLinks">
                 <a href="#home" class="nav-link active">Home</a>
-                <a href="#documentation" class="nav-link">Documentation</a>
-                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#endpoints" class="nav-link">Endpoints</a>
                 <a href="#console" class="nav-link">API Console</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="#get-started" class="cta-button">Get Started</a>
+                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#documentation" class="nav-link">Docs</a>
+                <a href="#get-started" class="btn btn-primary btn-sm">
+                    <i class="fas fa-rocket"></i> Get Started
+                </a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <div class="hero-bg"></div>
         <div class="container">
-            <div class="hero-content fade-in-up">
+            <div class="hero-content">
                 <div class="hero-badge">
-                    <i class="fas fa-rocket"></i>
-                    <span>Professional REST API Services</span>
+                    <i class="fas fa-bolt"></i>
+                    <span>Professional REST API Platform</span>
                 </div>
                 
-                <h1 class="hero-title">
-                    Build Amazing Applications
-                    <br>With Our Powerful API
-                </h1>
+                <h1 class="text-gradient">Build Amazing Apps<br>With Powerful API</h1>
                 
-                <p class="hero-subtitle">
-                    API Teguh provides robust, scalable, and secure REST API solutions with 
-                    AI integration, real-time monitoring, and enterprise-grade performance.
-                    Start building with our comprehensive API suite today.
+                <p class="text-mono mb-4" style="color: var(--dark-2); font-size: 1.25rem;">
+                    <span id="typing-text"></span><span class="blinking-cursor">|</span>
                 </p>
                 
-                <div class="hero-actions">
-                    <a href="#get-started" class="cta-button" style="margin-right: 1rem;">
-                        <i class="fas fa-play"></i> Get Started Free
+                <p style="color: var(--dark-2); font-size: 1.125rem; max-width: 800px;">
+                    API Teguh provides enterprise-grade REST API services with real-time monitoring, 
+                    AI integration, and scalable infrastructure. Start building in minutes.
+                </p>
+                
+                <div class="flex gap-3 mt-4">
+                    <a href="#console" class="btn btn-primary">
+                        <i class="fas fa-terminal"></i> Try API Console
                     </a>
-                    <a href="#documentation" class="cta-button" style="background: transparent; border: 2px solid var(--primary); color: var(--primary);">
+                    <a href="#documentation" class="btn btn-outline">
                         <i class="fas fa-book"></i> View Documentation
                     </a>
                 </div>
                 
                 <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="uptime-count">00:00:00</span>
-                        <span class="stat-label">Server Uptime</span>
+                    <div class="stat">
+                        <div class="stat-number" id="uptime">00:00:00</div>
+                        <div class="stat-label">Server Uptime</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-number">99.9%</span>
-                        <span class="stat-label">Availability</span>
+                    <div class="stat">
+                        <div class="stat-number" id="responseTime">0ms</div>
+                        <div class="stat-label">Avg Response</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="request-count">0</span>
-                        <span class="stat-label">Requests Today</span>
+                    <div class="stat">
+                        <div class="stat-number" id="requestCount">0</div>
+                        <div class="stat-label">Today's Requests</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="endpointCount">0</div>
+                        <div class="stat-label">API Endpoints</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="section">
+    <!-- Features -->
+    <section id="features" class="section p-4">
         <div class="container">
-            <h2 class="section-title">Why Choose API Teguh</h2>
-            <p class="section-subtitle">
-                Enterprise-grade features designed for developers who demand reliability, 
-                performance, and ease of use.
+            <h2 class="text-center text-gradient">Why Choose API Teguh</h2>
+            <p class="text-center mb-4" style="color: var(--dark-2); max-width: 800px; margin: 0 auto;">
+                Enterprise-grade features designed for developers who demand reliability, performance, and ease of use.
             </p>
             
-            <div class="features-grid">
-                <div class="feature-card fade-in-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3 class="feature-title">High Performance</h3>
-                    <p class="feature-description">
-                        Optimized for speed with response times under 100ms. Built on Node.js 
-                        with efficient caching and load balancing.
-                    </p>
-                </div>
-                
-                <div class="feature-card fade-in-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-title">Enterprise Security</h3>
-                    <p class="feature-description">
-                        Advanced rate limiting, API key authentication, SSL encryption, 
-                        and DDoS protection to keep your data secure.
-                    </p>
-                </div>
-                
-                <div class="feature-card fade-in-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3 class="feature-title">AI Integration</h3>
-                    <p class="feature-description">
-                        Built-in AI capabilities with multiple models including DeepSeek 
-                        and Microsoft Copilot for intelligent applications.
-                    </p>
-                </div>
-                
-                <div class="feature-card fade-in-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3 class="feature-title">Real-time Analytics</h3>
-                    <p class="feature-description">
-                        Comprehensive monitoring dashboard with real-time metrics, 
-                        usage statistics, and performance insights.
-                    </p>
-                </div>
-                
-                <div class="feature-card fade-in-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3 class="feature-title">Developer Friendly</h3>
-                    <p class="feature-description">
-                        Clean RESTful design, comprehensive documentation, SDKs for 
-                        popular languages, and excellent developer support.
-                    </p>
-                </div>
-                
-                <div class="feature-card fade-in-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-infinity"></i>
-                    </div>
-                    <h3 class="feature-title">Scalable Infrastructure</h3>
-                    <p class="feature-description">
-                        Auto-scaling architecture that grows with your needs. 
-                        Handle from 1 to 1 million requests without performance degradation.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- API Documentation -->
-    <section id="documentation" class="section">
-        <div class="container">
-            <h2 class="section-title">API Documentation</h2>
-            <p class="section-subtitle">
-                Complete reference for all available endpoints. Integrate with our API in minutes.
-            </p>
-            
-            <!-- Status Endpoint -->
-            <div class="api-section fade-in-up">
-                <div class="api-header">
-                    <h3 class="api-title">Server Status</h3>
-                    <span class="api-method method-get">GET</span>
-                </div>
-                <div class="api-details">
-                    <div class="api-path">GET /api/status</div>
-                    <div class="api-parameters">
-                        <h4 class="api-subtitle">
-                            <i class="fas fa-list"></i> Parameters
-                        </h4>
-                        <table class="parameter-table">
-                            <thead>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>No parameters required</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="api-response">
-                        <h4 class="api-subtitle">
-                            <i class="fas fa-code"></i> Response Example
-                        </h4>
-                        <pre class="response-example"><code>{
-  <span class="json-key">"status"</span>: <span class="json-boolean">true</span>,
-  <span class="json-key">"creator"</span>: <span class="json-string">"API Teguh"</span>,
-  <span class="json-key">"message"</span>: <span class="json-string">"Server is running normally"</span>,
-  <span class="json-key">"data"</span>: {
-    <span class="json-key">"server"</span>: {
-      <span class="json-key">"platform"</span>: <span class="json-string">"linux"</span>,
-      <span class="json-key">"uptime"</span>: <span class="json-number">123456</span>,
-      <span class="json-key">"hostname"</span>: <span class="json-string">"api-teguh-server"</span>
-    },
-    <span class="json-key">"memory"</span>: {
-      <span class="json-key">"total"</span>: <span class="json-number">8589934592</span>,
-      <span class="json-key">"used"</span>: <span class="json-number">2147483648</span>,
-      <span class="json-key">"usage_percent"</span>: <span class="json-number">25.00</span>
-    }
-  }
-}</code></pre>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- AI Chat Endpoint -->
-            <div class="api-section fade-in-up">
-                <div class="api-header">
-                    <h3 class="api-title">AI Chat Completion</h3>
-                    <span class="api-method method-get">GET</span>
-                </div>
-                <div class="api-details">
-                    <div class="api-path">GET /api/ai/chat?text=Hello&model=auto</div>
-                    <div class="api-parameters">
-                        <h4 class="api-subtitle">
-                            <i class="fas fa-list"></i> Parameters
-                        </h4>
-                        <table class="parameter-table">
-                            <thead>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Type</th>
-                                    <th>Required</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>text</td>
-                                    <td>string</td>
-                                    <td><span class="parameter-required">Required</span></td>
-                                    <td>The message to send to the AI</td>
-                                </tr>
-                                <tr>
-                                    <td>model</td>
-                                    <td>string</td>
-                                    <td><span class="parameter-optional">Optional</span></td>
-                                    <td>AI model to use: auto, copilot, deepseek</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="api-response">
-                        <h4 class="api-subtitle">
-                            <i class="fas fa-code"></i> Response Example
-                        </h4>
-                        <pre class="response-example"><code>{
-  <span class="json-key">"status"</span>: <span class="json-boolean">true</span>,
-  <span class="json-key">"creator"</span>: <span class="json-string">"API Teguh"</span>,
-  <span class="json-key">"message"</span>: <span class="json-string">"copilot AI response successful"</span>,
-  <span class="json-key">"data"</span>: {
-    <span class="json-key">"model"</span>: <span class="json-string">"copilot"</span>,
-    <span class="json-key">"query"</span>: <span class="json-string">"Hello"</span>,
-    <span class="json-key">"response"</span>: <span class="json-string">"Hello! How can I assist you today?"</span>,
-    <span class="json-key">"source"</span>: <span class="json-string">"microsoft-copilot"</span>
-  }
-}</code></pre>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- More endpoints would go here... -->
-        </div>
-    </section>
-
-    <!-- Server Dashboard -->
-    <section id="dashboard" class="section">
-        <div class="container">
-            <h2 class="section-title">Server Dashboard</h2>
-            <p class="section-subtitle">
-                Real-time monitoring and analytics for your API usage and server performance.
-            </p>
-            
-            <div class="dashboard-grid">
-                <div class="metric-card fade-in-up">
-                    <div class="metric-header">
-                        <div class="metric-icon">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <h3 class="metric-title">Server Status</h3>
-                    </div>
-                    <div class="metric-value" id="server-status-text">Online</div>
-                    <div class="metric-desc" id="server-uptime-text">Uptime: 00:00:00</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="server-health-bar" style="width: 100%"></div>
-                    </div>
-                </div>
-                
-                <div class="metric-card fade-in-up">
-                    <div class="metric-header">
-                        <div class="metric-icon">
-                            <i class="fas fa-memory"></i>
-                        </div>
-                        <h3 class="metric-title">Memory Usage</h3>
-                    </div>
-                    <div class="metric-value" id="memory-usage-text">0%</div>
-                    <div class="metric-desc" id="memory-details">0 MB / 0 MB</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="memory-bar" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <div class="metric-card fade-in-up">
-                    <div class="metric-header">
-                        <div class="metric-icon">
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
                             <i class="fas fa-bolt"></i>
                         </div>
-                        <h3 class="metric-title">Response Time</h3>
+                        <h4>High Performance</h4>
                     </div>
-                    <div class="metric-value" id="response-time-text">0ms</div>
-                    <div class="metric-desc">Average API response time</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="response-bar" style="width: 0%"></div>
-                    </div>
+                    <p>Optimized for speed with response times under 100ms. Built on Node.js with efficient caching.</p>
                 </div>
                 
-                <div class="metric-card fade-in-up">
-                    <div class="metric-header">
-                        <div class="metric-icon">
-                            <i class="fas fa-chart-bar"></i>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
-                        <h3 class="metric-title">Requests Today</h3>
+                        <h4>Enterprise Security</h4>
                     </div>
-                    <div class="metric-value" id="requests-today">0</div>
-                    <div class="metric-desc">Total API requests made today</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="requests-bar" style="width: 0%"></div>
+                    <p>Advanced rate limiting, API key authentication, SSL encryption, and DDoS protection.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>AI Integration</h4>
                     </div>
+                    <p>Built-in AI capabilities with multiple models including DeepSeek and Microsoft Copilot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Endpoints -->
+    <section id="endpoints" class="section p-4" style="background: var(--light);">
+        <div class="container">
+            <h2 class="text-center text-gradient">Available API Endpoints</h2>
+            <p class="text-center mb-4" style="color: var(--dark-2);">
+                Automatically detected endpoints from your API server
+            </p>
+            
+            <div class="endpoints-container" id="endpointsContainer">
+                <!-- Endpoints will be auto-populated here -->
+                <div class="text-center">
+                    <div class="loading" style="width: 40px; height: 40px;"></div>
+                    <p class="mt-2">Detecting API endpoints...</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- API Console -->
-    <section id="console" class="section">
+    <section id="console" class="section p-4">
         <div class="container">
-            <h2 class="section-title">API Testing Console</h2>
-            <p class="section-subtitle">
-                Test our API endpoints directly from your browser. No setup required.
+            <h2 class="text-center text-gradient">API Testing Console</h2>
+            <p class="text-center mb-4" style="color: var(--dark-2);">
+                Test any endpoint with real-time response preview
             </p>
             
-            <div class="console-container fade-in-up">
+            <div class="console-container">
                 <div class="console-header">
-                    <h3>Live API Tester</h3>
-                    <button id="reset-console" class="cta-button" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                </div>
-                
-                <div class="console-controls">
-                    <select class="console-select" id="endpoint-select">
-                        <option value="/api/status">Server Status</option>
-                        <option value="/api/ping">Ping Test</option>
-                        <option value="/api/deepseek?q=Hello">DeepSeek AI</option>
-                        <option value="/api/copilot?text=Hello">Copilot AI</option>
-                        <option value="/api/ai/chat?text=Hello&model=auto">AI Chat</option>
-                        <option value="/api/health">Health Check</option>
-                        <option value="/api/info">API Info</option>
-                    </select>
-                    
-                    <input type="text" class="console-input" id="endpoint-input" placeholder="/api/status" value="/api/status">
-                    
-                    <button id="send-request" class="cta-button">
-                        <i class="fas fa-play"></i> Send Request
-                    </button>
-                </div>
-                
-                <div class="console-response">
-                    <div class="response-header">
-                        <div>Response</div>
-                        <div class="response-status status-success" id="response-status">200 OK</div>
+                    <h4 style="color: white; margin: 0;">API Request Builder</h4>
+                    <div class="console-tabs">
+                        <button class="console-tab active" data-tab="simple">Simple</button>
+                        <button class="console-tab" data-tab="advanced">Advanced</button>
+                        <button class="console-tab" data-tab="json">JSON</button>
                     </div>
-                    <pre class="response-body" id="response-body">{
-  "message": "Select an endpoint and click 'Send Request' to test"
+                </div>
+                
+                <div class="console-body">
+                    <!-- Simple Tab -->
+                    <div class="tab-content" id="simpleTab">
+                        <div class="form-group">
+                            <label class="form-label">Select Endpoint</label>
+                            <select class="form-control" id="endpointSelect">
+                                <option value="">Select an endpoint...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="paramsContainer">
+                            <!-- Parameters will be dynamically added here -->
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button class="btn btn-primary" id="sendRequest">
+                                <i class="fas fa-paper-plane"></i> Send Request
+                            </button>
+                            <button class="btn btn-outline" id="clearRequest">
+                                <i class="fas fa-redo"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Tab -->
+                    <div class="tab-content hidden" id="advancedTab">
+                        <div class="form-row">
+                            <select class="form-control" id="methodSelect">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="PATCH">PATCH</option>
+                            </select>
+                            <input type="text" class="form-control" id="customEndpoint" placeholder="/api/endpoint">
+                            <button class="btn btn-primary" id="sendCustomRequest">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                        
+                        <div class="form-group mt-3">
+                            <label class="form-label">Request Body (JSON)</label>
+                            <textarea class="form-control" id="requestBody" rows="6" placeholder='{
+  "key": "value"
+}'></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Headers</label>
+                            <textarea class="form-control" id="requestHeaders" rows="3" placeholder='Content-Type: application/json
+Authorization: Bearer token'></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- JSON Tab -->
+                    <div class="tab-content hidden" id="jsonTab">
+                        <div class="form-group">
+                            <label class="form-label">Raw Request (cURL format)</label>
+                            <textarea class="form-control" id="curlRequest" rows="8" readonly></textarea>
+                        </div>
+                        <button class="btn btn-outline" id="copyCurl">
+                            <i class="fas fa-copy"></i> Copy cURL
+                        </button>
+                    </div>
+                    
+                    <!-- Response Area -->
+                    <div class="response-container mt-4">
+                        <div class="response-header">
+                            <span>Response</span>
+                            <div class="response-status" id="responseStatus">Ready</div>
+                        </div>
+                        <pre class="response-body" id="responseBody">{
+  "message": "Select an endpoint and click 'Send Request'"
 }</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="section p-4" style="background: var(--light);">
+        <div class="container">
+            <h2 class="text-center text-gradient">Server Dashboard</h2>
+            <p class="text-center mb-4" style="color: var(--dark-2);">
+                Real-time monitoring and analytics
+            </p>
+            
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h4>Server Status</h4>
+                    <div class="metric-value" id="serverStatus">Online</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar" id="healthBar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Memory Usage</h4>
+                    <div class="metric-value" id="memoryUsage">0%</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar" id="memoryBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>CPU Load</h4>
+                    <div class="metric-value" id="cpuLoad">0%</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar" id="cpuBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Active Connections</h4>
+                    <div class="metric-value" id="activeConnections">0</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <h4>Recent Requests</h4>
+                <div id="recentRequests" class="text-center p-3" style="color: var(--dark-2);">
+                    No requests yet. Start testing the API!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation -->
+    <section id="documentation" class="section p-4">
+        <div class="container">
+            <h2 class="text-center text-gradient">API Documentation</h2>
+            <p class="text-center mb-4" style="color: var(--dark-2);">
+                Complete API reference and integration guide
+            </p>
+            
+            <div class="grid grid-2">
+                <div class="card">
+                    <h4>Getting Started</h4>
+                    <p>Start using API Teguh in minutes:</p>
+                    <ol class="mt-2" style="padding-left: 1.5rem;">
+                        <li>Explore available endpoints</li>
+                        <li>Test with API Console</li>
+                        <li>Integrate into your app</li>
+                        <li>Monitor with Dashboard</li>
+                    </ol>
+                </div>
+                
+                <div class="card">
+                    <h4>Authentication</h4>
+                    <p>Currently using rate limiting per IP (2000 requests/minute).</p>
+                    <div class="method-badge method-get mt-2">GET</div>
+                    <code class="text-mono mt-1" style="display: block; font-size: 0.875rem;">
+                        curl -X GET "https://your-domain.com/api/status"
+                    </code>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="footer">
+    <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div>
-                    <div class="footer-logo">
-                        <div class="footer-logo-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <span class="footer-logo-text">API Teguh</span>
-                    </div>
-                    <p class="footer-description">
-                        Professional REST API services providing robust, scalable, 
-                        and secure solutions for modern applications.
+                    <h4>API Teguh</h4>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 1rem;">
+                        Professional REST API services with enterprise-grade features.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="footer-title">Quick Links</h4>
+                    <h4>Quick Links</h4>
                     <div class="footer-links">
                         <a href="#home" class="footer-link">Home</a>
-                        <a href="#documentation" class="footer-link">Documentation</a>
-                        <a href="#dashboard" class="footer-link">Dashboard</a>
+                        <a href="#endpoints" class="footer-link">Endpoints</a>
                         <a href="#console" class="footer-link">API Console</a>
-                        <a href="#contact" class="footer-link">Contact</a>
+                        <a href="#dashboard" class="footer-link">Dashboard</a>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 class="footer-title">API Endpoints</h4>
+                    <h4>Support</h4>
                     <div class="footer-links">
-                        <a href="#" class="footer-link">/api/status</a>
-                        <a href="#" class="footer-link">/api/ai/chat</a>
-                        <a href="#" class="footer-link">/api/deepseek</a>
-                        <a href="#" class="footer-link">/api/copilot</a>
-                        <a href="#" class="footer-link">/api/health</a>
+                        <a href="#" class="footer-link">Documentation</a>
+                        <a href="#" class="footer-link">API Reference</a>
+                        <a href="#" class="footer-link">Status</a>
+                        <a href="#" class="footer-link">Contact</a>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 class="footer-title">Contact & Support</h4>
-                    <div class="footer-links">
-                        <a href="mailto:support@apiteguh.com" class="footer-link">
-                            <i class="fas fa-envelope"></i> support@apiteguh.com
-                        </a>
-                        <a href="#" class="footer-link">
-                            <i class="fas fa-file-alt"></i> Documentation
-                        </a>
-                        <a href="#" class="footer-link">
-                            <i class="fas fa-code-branch"></i> GitHub
-                        </a>
-                        <a href="#" class="footer-link">
-                            <i class="fas fa-life-ring"></i> Support Portal
-                        </a>
+                    <h4>Server Info</h4>
+                    <div style="color: rgba(255, 255, 255, 0.7);">
+                        <div>Status: <span id="footerStatus" style="color: var(--success);">● Online</span></div>
+                        <div>Uptime: <span id="footerUptime">00:00:00</span></div>
+                        <div>Requests: <span id="footerRequests">0</span></div>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2024 API Teguh. All rights reserved. | Built with Node.js & Express.js</p>
-                <p style="margin-top: 0.5rem; color: var(--gray-500);">
-                    Server Time: <span id="footer-time"></span> | 
-                    Requests: <span id="footer-requests">0</span> | 
-                    Status: <span id="footer-status" style="color: var(--success);">● Online</span>
-                </p>
             </div>
         </div>
     </footer>
 
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title" id="toastTitle"></div>
+            <div class="toast-message" id="toastMessage"></div>
+        </div>
+        <button class="toast-close" onclick="hideToast()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>
-        // Global variables
-        let requestCount = 0;
-        let serverStartTime = Date.now();
-        let isMonitoring = true;
+        // Initialize highlight.js
+        hljs.highlightAll();
 
-        // Format bytes to human readable
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-        }
+        // Global state
+        const state = {
+            endpoints: [],
+            requests: [],
+            requestCount: 0,
+            serverStartTime: Date.now(),
+            isOnline: true,
+            autoDetectInterval: null,
+            metricsInterval: null
+        };
 
-        // Format time to HH:MM:SS
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
+        // DOM Elements
+        const elements = {
+            navbar: document.getElementById('navbar'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            navLinks: document.getElementById('navLinks'),
+            endpointsContainer: document.getElementById('endpointsContainer'),
+            endpointSelect: document.getElementById('endpointSelect'),
+            paramsContainer: document.getElementById('paramsContainer'),
+            responseBody: document.getElementById('responseBody'),
+            responseStatus: document.getElementById('responseStatus'),
+            toast: document.getElementById('toast'),
+            toastTitle: document.getElementById('toastTitle'),
+            toastMessage: document.getElementById('toastMessage'),
+            recentRequests: document.getElementById('recentRequests'),
+            curlRequest: document.getElementById('curlRequest')
+        };
 
-        // Update server metrics
-        async function updateServerMetrics() {
-            try {
-                const startTime = Date.now();
-                const response = await fetch('/api/status');
-                const endTime = Date.now();
+        // Utility Functions
+        const utils = {
+            formatBytes(bytes) {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            },
+
+            formatTime(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            },
+
+            showToast(title, message, type = 'success') {
+                elements.toastTitle.textContent = title;
+                elements.toastMessage.textContent = message;
+                elements.toast.className = `toast toast-${type}`;
+                elements.toast.classList.add('show');
                 
-                if (response.ok) {
-                    const data = await response.json();
+                setTimeout(() => {
+                    elements.toast.classList.remove('show');
+                }, 3000);
+            },
+
+            hideToast() {
+                elements.toast.classList.remove('show');
+            },
+
+            jsonSyntaxHighlight(json) {
+                if (typeof json !== 'string') {
+                    json = JSON.stringify(json, null, 2);
+                }
+                
+                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, 
+                    match => {
+                        let cls = 'number';
+                        if (/^"/.test(match)) {
+                            if (/:$/.test(match)) {
+                                cls = 'key';
+                            } else {
+                                cls = 'string';
+                            }
+                        } else if (/true|false/.test(match)) {
+                            cls = 'boolean';
+                        } else if (/null/.test(match)) {
+                            cls = 'null';
+                        }
+                        return `<span class="hljs-${cls}">${match}</span>`;
+                    }
+                );
+            },
+
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            },
+
+            parseQueryString(url) {
+                const params = {};
+                const urlObj = new URL(url, window.location.origin);
+                urlObj.searchParams.forEach((value, key) => {
+                    params[key] = value;
+                });
+                return params;
+            }
+        };
+
+        // API Functions
+        const api = {
+            async discoverEndpoints() {
+                try {
+                    // Try to get API info first
+                    const response = await fetch('/api/info');
+                    if (response.ok) {
+                        const data = await response.json();
+                        return this.parseApiInfo(data);
+                    }
+                } catch (error) {
+                    console.log('API info endpoint not available, trying manual discovery');
+                }
+
+                // Fallback to manual discovery
+                return this.discoverEndpointsManually();
+            },
+
+            parseApiInfo(data) {
+                const endpoints = [];
+                if (data.data?.endpoints) {
+                    Object.entries(data.data.endpoints).forEach(([name, endpoint]) => {
+                        endpoints.push({
+                            name,
+                            path: endpoint.path,
+                            method: endpoint.method,
+                            description: endpoint.description,
+                            parameters: endpoint.parameters
+                        });
+                    });
+                }
+                return endpoints;
+            },
+
+            async discoverEndpointsManually() {
+                const endpoints = [];
+                
+                // Common endpoints to check
+                const commonEndpoints = [
+                    { path: '/api/status', method: 'GET', description: 'Server status' },
+                    { path: '/api/ping', method: 'GET', description: 'Ping test' },
+                    { path: '/api/health', method: 'GET', description: 'Health check' },
+                    { path: '/api/info', method: 'GET', description: 'API information' },
+                    { path: '/api/deepseek', method: 'GET', description: 'DeepSeek AI' },
+                    { path: '/api/copilot', method: 'GET', description: 'Microsoft Copilot AI' },
+                    { path: '/api/ai/chat', method: 'GET', description: 'AI Chat' }
+                ];
+
+                // Check each endpoint
+                for (const endpoint of commonEndpoints) {
+                    try {
+                        const response = await fetch(endpoint.path);
+                        if (response.ok || response.status === 400) {
+                            endpoints.push(endpoint);
+                        }
+                    } catch (error) {
+                        // Endpoint not available
+                    }
+                }
+
+                return endpoints;
+            },
+
+            async sendRequest(method, url, data = null, headers = {}) {
+                const startTime = Date.now();
+                const requestId = Date.now();
+                
+                const request = {
+                    id: requestId,
+                    method,
+                    url,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                state.requests.unshift(request);
+                if (state.requests.length > 10) state.requests.pop();
+
+                try {
+                    const options = {
+                        method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            ...headers
+                        }
+                    };
+
+                    if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+                        options.body = JSON.stringify(data);
+                    }
+
+                    const response = await fetch(url, options);
+                    const endTime = Date.now();
+                    const responseTime = endTime - startTime;
+
+                    const responseData = await response.json().catch(() => null);
+
+                    request.status = response.status;
+                    request.responseTime = responseTime;
+                    request.success = response.ok;
+
+                    // Update metrics
+                    state.requestCount++;
+                    document.getElementById('requestCount').textContent = state.requestCount;
+                    document.getElementById('footerRequests').textContent = state.requestCount;
+
+                    // Update response time
+                    document.getElementById('responseTime').textContent = `${responseTime}ms`;
+
+                    return {
+                        status: response.status,
+                        statusText: response.statusText,
+                        data: responseData,
+                        responseTime,
+                        headers: Object.fromEntries(response.headers.entries())
+                    };
+
+                } catch (error) {
+                    request.status = 'error';
+                    request.error = error.message;
+
+                    return {
+                        status: 0,
+                        statusText: 'Network Error',
+                        data: { error: error.message },
+                        responseTime: Date.now() - startTime,
+                        headers: {}
+                    };
+                }
+            }
+        };
+
+        // UI Functions
+        const ui = {
+            init() {
+                this.setupEventListeners();
+                this.setupAutoDetect();
+                this.setupMetrics();
+                this.setupTypingEffect();
+                this.updateUptime();
+            },
+
+            setupEventListeners() {
+                // Mobile menu
+                elements.mobileMenuBtn.addEventListener('click', () => {
+                    elements.navLinks.classList.toggle('active');
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!elements.navLinks.contains(e.target) && !elements.mobileMenuBtn.contains(e.target)) {
+                        elements.navLinks.classList.remove('active');
+                    }
+                });
+
+                // Nav scroll
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        elements.navbar.classList.add('scrolled');
+                    } else {
+                        elements.navbar.classList.remove('scrolled');
+                    }
+                });
+
+                // Tab switching
+                document.querySelectorAll('.console-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.console-tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                        
+                        tab.classList.add('active');
+                        document.getElementById(`${tab.dataset.tab}Tab`).classList.remove('hidden');
+                        
+                        if (tab.dataset.tab === 'json') {
+                            this.updateCurlCommand();
+                        }
+                    });
+                });
+
+                // Endpoint selection
+                elements.endpointSelect.addEventListener('change', (e) => {
+                    this.loadEndpointParams(e.target.value);
+                });
+
+                // Send request
+                document.getElementById('sendRequest').addEventListener('click', () => {
+                    this.sendSelectedRequest();
+                });
+
+                // Send custom request
+                document.getElementById('sendCustomRequest').addEventListener('click', () => {
+                    this.sendCustomRequest();
+                });
+
+                // Clear request
+                document.getElementById('clearRequest').addEventListener('click', () => {
+                    this.clearRequest();
+                });
+
+                // Copy cURL
+                document.getElementById('copyCurl').addEventListener('click', () => {
+                    navigator.clipboard.writeText(elements.curlRequest.value);
+                    utils.showToast('Copied!', 'cURL command copied to clipboard');
+                });
+
+                // Parameter input changes
+                elements.paramsContainer.addEventListener('input', utils.debounce(() => {
+                    this.updateCurlCommand();
+                }, 300));
+            },
+
+            async setupAutoDetect() {
+                // Initial discovery
+                state.endpoints = await api.discoverEndpoints();
+                
+                // Update endpoint count
+                document.getElementById('endpointCount').textContent = state.endpoints.length;
+                
+                // Render endpoints
+                this.renderEndpoints();
+                this.populateEndpointSelect();
+                
+                // Auto-refresh every 30 seconds
+                state.autoDetectInterval = setInterval(async () => {
+                    const newEndpoints = await api.discoverEndpoints();
+                    if (JSON.stringify(newEndpoints) !== JSON.stringify(state.endpoints)) {
+                        state.endpoints = newEndpoints;
+                        this.renderEndpoints();
+                        this.populateEndpointSelect();
+                        utils.showToast('Endpoints Updated', 'API endpoints refreshed');
+                    }
+                }, 30000);
+            },
+
+            setupMetrics() {
+                // Initial metrics update
+                this.updateMetrics();
+                
+                // Update every 10 seconds
+                state.metricsInterval = setInterval(() => {
+                    this.updateMetrics();
+                }, 10000);
+            },
+
+            setupTypingEffect() {
+                const texts = [
+                    'Enterprise REST API Services',
+                    'AI-Powered API Endpoints',
+                    'Real-time Monitoring Dashboard',
+                    'Scalable & Secure Infrastructure'
+                ];
+                
+                let textIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+                
+                function type() {
+                    const currentText = texts[textIndex];
+                    const typingText = document.getElementById('typing-text');
                     
-                    // Update memory usage
-                    if (data.data?.memory) {
-                        const memory = data.data.memory;
-                        const usagePercent = memory.usage_percent || 
-                            ((memory.used / memory.total) * 100).toFixed(1);
+                    if (isDeleting) {
+                        typingText.textContent = currentText.substring(0, charIndex - 1);
+                        charIndex--;
+                    } else {
+                        typingText.textContent = currentText.substring(0, charIndex + 1);
+                        charIndex++;
+                    }
+                    
+                    if (!isDeleting && charIndex === currentText.length) {
+                        isDeleting = true;
+                        setTimeout(type, 2000);
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        textIndex = (textIndex + 1) % texts.length;
+                        setTimeout(type, 500);
+                    } else {
+                        setTimeout(type, isDeleting ? 50 : 100);
+                    }
+                }
+                
+                setTimeout(type, 1000);
+            },
+
+            updateUptime() {
+                setInterval(() => {
+                    const uptime = Math.floor((Date.now() - state.serverStartTime) / 1000);
+                    document.getElementById('uptime').textContent = utils.formatTime(uptime);
+                    document.getElementById('footerUptime').textContent = utils.formatTime(uptime);
+                }, 1000);
+            },
+
+            async updateMetrics() {
+                try {
+                    const response = await api.sendRequest('GET', '/api/status');
+                    if (response.data?.data?.memory) {
+                        const memory = response.data.data.memory;
+                        const usagePercent = memory.usage_percent || ((memory.used / memory.total) * 100).toFixed(1);
                         
-                        document.getElementById('memory-usage-text').textContent = `${usagePercent}%`;
-                        document.getElementById('memory-details').textContent = 
-                            `${formatBytes(memory.used)} / ${formatBytes(memory.total)}`;
+                        document.getElementById('memoryUsage').textContent = `${usagePercent}%`;
+                        document.getElementById('memoryBar').style.width = `${usagePercent}%`;
                         
-                        const barWidth = Math.min(usagePercent, 100);
-                        document.getElementById('memory-bar').style.width = `${barWidth}%`;
-                        
-                        // Change color based on usage
-                        if (barWidth > 80) {
-                            document.getElementById('memory-bar').style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
-                        } else if (barWidth > 60) {
-                            document.getElementById('memory-bar').style.background = 'linear-gradient(90deg, #f59e0b, #eab308)';
+                        // Update health bar color based on usage
+                        if (usagePercent > 80) {
+                            document.getElementById('memoryBar').style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                        } else if (usagePercent > 60) {
+                            document.getElementById('memoryBar').style.background = 'linear-gradient(90deg, #f59e0b, #eab308)';
                         }
                     }
                     
-                    // Update server uptime
-                    if (data.data?.server?.uptime) {
-                        const uptimeText = formatTime(data.data.server.uptime);
-                        document.getElementById('server-uptime-text').textContent = `Uptime: ${uptimeText}`;
-                        document.getElementById('uptime-count').textContent = uptimeText;
+                    if (response.data?.data?.server?.uptime) {
+                        const uptimeText = utils.formatTime(response.data.data.server.uptime);
+                        document.getElementById('uptime').textContent = uptimeText;
                     }
                     
-                    // Update response time
-                    const responseTime = endTime - startTime;
-                    document.getElementById('response-time-text').textContent = `${responseTime}ms`;
-                    document.getElementById('response-bar').style.width = `${Math.min(responseTime / 10, 100)}%`;
-                    
-                    // Change color based on response time
-                    if (responseTime > 500) {
-                        document.getElementById('response-bar').style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
-                    } else if (responseTime > 200) {
-                        document.getElementById('response-bar').style.background = 'linear-gradient(90deg, #f59e0b, #eab308)';
-                    }
-                    
-                    return true;
+                } catch (error) {
+                    // Silently fail - metrics will retry
                 }
-            } catch (error) {
-                console.error('Failed to fetch server metrics:', error);
-                document.getElementById('server-status-text').textContent = 'Offline';
-                document.getElementById('server-status-text').style.color = 'var(--error)';
-                document.getElementById('server-health-bar').style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
-                return false;
-            }
-        }
+            },
 
-        // Update local uptime counter
-        function updateUptimeCounter() {
-            const now = Date.now();
-            const uptime = Math.floor((now - serverStartTime) / 1000);
-            document.getElementById('uptime-count').textContent = formatTime(uptime);
-        }
+            renderEndpoints() {
+                if (state.endpoints.length === 0) {
+                    elements.endpointsContainer.innerHTML = `
+                        <div class="text-center p-4">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--warning);"></i>
+                            <p class="mt-2">No endpoints detected. Make sure your API server is running.</p>
+                        </div>
+                    `;
+                    return;
+                }
 
-        // Update server time
-        function updateServerTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            const dateString = now.toLocaleDateString();
-            document.getElementById('footer-time').textContent = `${timeString} ${dateString}`;
-        }
+                elements.endpointsContainer.innerHTML = state.endpoints.map(endpoint => `
+                    <div class="endpoint-card" data-path="${endpoint.path}">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-${endpoint.method.toLowerCase()}">
+                                ${endpoint.method}
+                            </span>
+                            <span class="endpoint-path text-mono">${endpoint.path}</span>
+                        </div>
+                        <p class="endpoint-description">${endpoint.description}</p>
+                        ${endpoint.parameters ? `
+                            <div class="endpoint-params">
+                                ${endpoint.parameters.split(',').map(param => `
+                                    <span class="param-tag">${param.trim()}</span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        <button class="btn btn-outline btn-sm" onclick="ui.testEndpoint('${endpoint.path}', '${endpoint.method}')">
+                            <i class="fas fa-play"></i> Test This Endpoint
+                        </button>
+                    </div>
+                `).join('');
+            },
 
-        // Send API request
-        async function sendApiRequest(endpoint) {
-            requestCount++;
-            document.getElementById('request-count').textContent = requestCount;
-            document.getElementById('footer-requests').textContent = requestCount;
-            
-            const startTime = Date.now();
-            const responseStatus = document.getElementById('response-status');
-            const responseBody = document.getElementById('response-body');
-            
-            // Show loading state
-            responseStatus.textContent = 'Loading...';
-            responseStatus.className = 'response-status';
-            responseBody.textContent = 'Sending request...';
-            
-            try {
-                const response = await fetch(endpoint);
-                const endTime = Date.now();
-                const responseTime = endTime - startTime;
+            populateEndpointSelect() {
+                elements.endpointSelect.innerHTML = `
+                    <option value="">Select an endpoint...</option>
+                    ${state.endpoints.map(endpoint => `
+                        <option value="${endpoint.path}" data-method="${endpoint.method}">
+                            [${endpoint.method}] ${endpoint.path}
+                        </option>
+                    `).join('')}
+                `;
+            },
+
+            loadEndpointParams(endpointPath) {
+                const endpoint = state.endpoints.find(ep => ep.path === endpointPath);
+                if (!endpoint) {
+                    elements.paramsContainer.innerHTML = '';
+                    return;
+                }
+
+                // Parse query parameters from endpoint path
+                const url = new URL(endpointPath, window.location.origin);
+                const params = Array.from(url.searchParams.entries());
                 
-                // Update response status
-                const statusText = `${response.status} ${response.statusText}`;
-                responseStatus.textContent = `${statusText} (${responseTime}ms)`;
+                let html = '<div class="form-group"><label class="form-label">Parameters</label>';
                 
-                if (response.ok) {
-                    responseStatus.className = 'response-status status-success';
+                if (params.length > 0) {
+                    params.forEach(([key, value], index) => {
+                        html += `
+                            <div class="form-row mt-2">
+                                <input type="text" class="form-control" value="${key}" placeholder="Parameter name" readonly>
+                                <input type="text" class="form-control param-value" data-param="${key}" 
+                                       value="${value}" placeholder="Value">
+                                <button class="btn btn-outline btn-sm" onclick="ui.removeParam('${key}')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
                 } else {
-                    responseStatus.className = 'response-status status-error';
+                    html += '<p style="color: var(--dark-2);">No parameters required for this endpoint.</p>';
                 }
                 
-                // Parse and display response
+                html += '</div>';
+                elements.paramsContainer.innerHTML = html;
+                
+                // Add parameter button if it's a GET endpoint
+                if (endpoint.method === 'GET') {
+                    html += `
+                        <div class="form-row mt-2">
+                            <input type="text" class="form-control" id="newParamName" placeholder="New parameter name">
+                            <input type="text" class="form-control" id="newParamValue" placeholder="Value">
+                            <button class="btn btn-outline btn-sm" onclick="ui.addParam()">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    `;
+                    elements.paramsContainer.innerHTML = html;
+                }
+                
+                this.updateCurlCommand();
+            },
+
+            addParam() {
+                const nameInput = document.getElementById('newParamName');
+                const valueInput = document.getElementById('newParamValue');
+                
+                if (!nameInput || !nameInput.value.trim()) return;
+                
+                const name = nameInput.value.trim();
+                const value = valueInput?.value || '';
+                
+                const html = `
+                    <div class="form-row mt-2">
+                        <input type="text" class="form-control" value="${name}" readonly>
+                        <input type="text" class="form-control param-value" data-param="${name}" 
+                               value="${value}" placeholder="Value">
+                        <button class="btn btn-outline btn-sm" onclick="ui.removeParam('${name}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                const paramsGroup = elements.paramsContainer.querySelector('.form-group');
+                const addRow = paramsGroup.querySelector('.form-row:last-child');
+                if (addRow) {
+                    addRow.insertAdjacentHTML('beforebegin', html);
+                }
+                
+                nameInput.value = '';
+                if (valueInput) valueInput.value = '';
+                
+                this.updateCurlCommand();
+            },
+
+            removeParam(paramName) {
+                const paramRow = elements.paramsContainer.querySelector(`input[data-param="${paramName}"]`)?.closest('.form-row');
+                if (paramRow) {
+                    paramRow.remove();
+                    this.updateCurlCommand();
+                }
+            },
+
+            async sendSelectedRequest() {
+                const endpointPath = elements.endpointSelect.value;
+                if (!endpointPath) {
+                    utils.showToast('Error', 'Please select an endpoint', 'error');
+                    return;
+                }
+
+                const endpoint = state.endpoints.find(ep => ep.path === endpointPath);
+                const method = endpoint?.method || 'GET';
+                
+                // Build URL with parameters
+                const url = new URL(endpointPath, window.location.origin);
+                const paramInputs = elements.paramsContainer.querySelectorAll('.param-value');
+                
+                paramInputs.forEach(input => {
+                    const param = input.dataset.param;
+                    const value = input.value;
+                    if (param && value) {
+                        url.searchParams.set(param, value);
+                    }
+                });
+
+                this.sendRequest(method, url.toString());
+            },
+
+            async sendCustomRequest() {
+                const method = document.getElementById('methodSelect').value;
+                let url = document.getElementById('customEndpoint').value;
+                const bodyText = document.getElementById('requestBody').value;
+                const headersText = document.getElementById('requestHeaders').value;
+                
+                if (!url) {
+                    utils.showToast('Error', 'Please enter an endpoint URL', 'error');
+                    return;
+                }
+
+                // Ensure URL has proper format
+                if (!url.startsWith('/')) {
+                    url = '/' + url;
+                }
+                if (!url.startsWith('/api/')) {
+                    url = '/api' + url;
+                }
+
+                const fullUrl = new URL(url, window.location.origin);
+                
+                let data = null;
+                let headers = {};
+                
                 try {
-                    const data = await response.json();
-                    responseBody.textContent = JSON.stringify(data, null, 2);
-                    
-                    // Update request bar
-                    const requestsBar = document.getElementById('requests-bar');
-                    const barWidth = Math.min(requestCount / 10, 100);
-                    requestsBar.style.width = `${barWidth}%`;
-                    document.getElementById('requests-today').textContent = requestCount;
-                    
-                } catch (jsonError) {
-                    const text = await response.text();
-                    responseBody.textContent = text || 'No response body';
+                    if (bodyText.trim()) {
+                        data = JSON.parse(bodyText);
+                    }
+                } catch (e) {
+                    utils.showToast('Error', 'Invalid JSON in request body', 'error');
+                    return;
                 }
                 
-                // Update metrics if needed
-                if (endpoint.includes('/api/status')) {
-                    updateServerMetrics();
+                if (headersText.trim()) {
+                    headersText.split('\n').forEach(line => {
+                        const [key, ...values] = line.split(':');
+                        if (key && values.length > 0) {
+                            headers[key.trim()] = values.join(':').trim();
+                        }
+                    });
+                }
+
+                this.sendRequest(method, fullUrl.toString(), data, headers);
+            },
+
+            async sendRequest(method, url, data = null, headers = {}) {
+                // Show loading state
+                elements.responseBody.textContent = 'Sending request...';
+                elements.responseStatus.textContent = 'Loading';
+                elements.responseStatus.className = 'response-status';
+                
+                const response = await api.sendRequest(method, url, data, headers);
+                
+                // Update response display
+                elements.responseStatus.textContent = `${response.status} ${response.statusText}`;
+                elements.responseStatus.className = `response-status status-${Math.floor(response.status / 100)}xx`;
+                
+                if (response.data) {
+                    const formattedJson = JSON.stringify(response.data, null, 2);
+                    elements.responseBody.innerHTML = `<code>${utils.jsonSyntaxHighlight(formattedJson)}</code>`;
+                    hljs.highlightAll();
+                } else {
+                    elements.responseBody.textContent = 'No response data';
                 }
                 
-            } catch (error) {
-                responseStatus.textContent = 'Network Error';
-                responseStatus.className = 'response-status status-error';
-                responseBody.textContent = `Failed to fetch: ${error.message}`;
+                // Update recent requests
+                this.updateRecentRequests();
+                
+                // Update curl command
+                this.updateCurlCommand();
+                
+                // Show success toast
+                if (response.status >= 200 && response.status < 300) {
+                    utils.showToast('Success', `Request completed in ${response.responseTime}ms`);
+                } else {
+                    utils.showToast('Error', `Request failed with status ${response.status}`, 'error');
+                }
+            },
+
+            testEndpoint(path, method) {
+                // Switch to console section
+                document.querySelector(`a[href="#console"]`).click();
+                
+                // Set the endpoint
+                elements.endpointSelect.value = path;
+                this.loadEndpointParams(path);
+                
+                // Auto-send if no parameters
+                const url = new URL(path, window.location.origin);
+                if (url.searchParams.size === 0) {
+                    setTimeout(() => this.sendSelectedRequest(), 500);
+                }
+            },
+
+            clearRequest() {
+                elements.endpointSelect.value = '';
+                elements.paramsContainer.innerHTML = '';
+                elements.responseStatus.textContent = 'Ready';
+                elements.responseStatus.className = 'response-status';
+                elements.responseBody.textContent = '{\n  "message": "Select an endpoint and click \'Send Request\'"\n}';
+            },
+
+            updateRecentRequests() {
+                if (state.requests.length === 0) {
+                    elements.recentRequests.innerHTML = '<p>No requests yet. Start testing the API!</p>';
+                    return;
+                }
+
+                elements.recentRequests.innerHTML = state.requests.slice(0, 5).map(req => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--light-2);">
+                        <div>
+                            <span class="method-badge method-${req.method.toLowerCase()}">${req.method}</span>
+                            <span class="text-mono" style="font-size: 0.875rem;">${req.url}</span>
+                        </div>
+                        <div>
+                            <span style="color: ${req.status >= 200 && req.status < 300 ? 'var(--success)' : 'var(--error)'};">
+                                ${req.status}
+                            </span>
+                            ${req.responseTime ? `<span style="color: var(--dark-2); font-size: 0.75rem;">${req.responseTime}ms</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            updateCurlCommand() {
+                const endpointPath = elements.endpointSelect.value;
+                if (!endpointPath) return;
+
+                const method = document.getElementById('methodSelect').value;
+                const fullUrl = new URL(endpointPath, window.location.origin);
+                
+                // Add parameters
+                const paramInputs = elements.paramsContainer.querySelectorAll('.param-value');
+                paramInputs.forEach(input => {
+                    const param = input.dataset.param;
+                    const value = input.value;
+                    if (param && value) {
+                        fullUrl.searchParams.set(param, value);
+                    }
+                });
+
+                // Build cURL command
+                let curl = `curl -X ${method} "${fullUrl.toString()}"`;
+
+                // Add headers
+                curl += ` \\\n  -H "Content-Type: application/json"`;
+                curl += ` \\\n  -H "Accept: application/json"`;
+
+                // Add body if POST/PUT/PATCH
+                if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+                    const bodyText = document.getElementById('requestBody')?.value;
+                    if (bodyText && bodyText.trim()) {
+                        try {
+                            JSON.parse(bodyText);
+                            curl += ` \\\n  -d '${bodyText.replace(/\n/g, ' ')}'`;
+                        } catch (e) {
+                            // Invalid JSON, skip body
+                        }
+                    }
+                }
+
+                elements.curlRequest.value = curl;
             }
-        }
+        };
 
-        // Initialize event listeners
-        function initializeEventListeners() {
-            // API console controls
-            document.getElementById('endpoint-select').addEventListener('change', function() {
-                document.getElementById('endpoint-input').value = this.value;
-            });
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            ui.init();
             
-            document.getElementById('send-request').addEventListener('click', function() {
-                const endpoint = document.getElementById('endpoint-input').value;
-                if (endpoint.trim()) {
-                    sendApiRequest(endpoint);
+            // Add blinking cursor style
+            const style = document.createElement('style');
+            style.textContent = `
+                .blinking-cursor {
+                    animation: blink 1s infinite;
+                    color: var(--primary);
                 }
-            });
-            
-            document.getElementById('endpoint-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('send-request').click();
+                @keyframes blink {
+                    0%, 50% { opacity: 1; }
+                    51%, 100% { opacity: 0; }
                 }
-            });
-            
-            document.getElementById('reset-console').addEventListener('click', function() {
-                document.getElementById('endpoint-input').value = '/api/status';
-                document.getElementById('endpoint-select').value = '/api/status';
-                document.getElementById('response-status').textContent = '200 OK';
-                document.getElementById('response-status').className = 'response-status status-success';
-                document.getElementById('response-body').textContent = '{\n  "message": "Select an endpoint and click \'Send Request\' to test"\n}';
-            });
-            
-            // Navigation smooth scroll
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                        
-                        // Update active nav link
-                        document.querySelectorAll('.nav-link').forEach(link => {
-                            link.classList.remove('active');
-                        });
-                        this.classList.add('active');
-                    }
-                });
-            });
-            
-            // Auto update endpoint examples
-            document.querySelectorAll('.api-path').forEach(pathElement => {
-                pathElement.addEventListener('click', function() {
-                    const path = this.textContent.split(' ')[1];
-                    if (path) {
-                        document.getElementById('endpoint-input').value = path;
-                        document.getElementById('endpoint-select').value = path;
-                    }
-                });
-            });
-        }
-
-        // Initialize monitoring
-        function initializeMonitoring() {
-            // Initial metrics update
-            updateServerMetrics();
-            updateServerTime();
-            updateUptimeCounter();
-            
-            // Periodic updates
-            setInterval(updateServerMetrics, 10000); // Every 10 seconds
-            setInterval(updateServerTime, 1000); // Every second
-            setInterval(updateUptimeCounter, 1000); // Every second
-            
-            // Initial test request
-            setTimeout(() => {
-                sendApiRequest('/api/status');
-            }, 1000);
-        }
-
-        // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add fade-in animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in-up');
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe all sections for animations
-            document.querySelectorAll('.feature-card, .api-section, .metric-card').forEach(el => {
-                observer.observe(el);
-            });
-            
-            // Initialize app
-            initializeEventListeners();
-            initializeMonitoring();
-            
-            // Update active nav based on scroll
-            window.addEventListener('scroll', function() {
-                const scrollPosition = window.scrollY + 100;
-                
-                document.querySelectorAll('section[id]').forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    const sectionId = section.getAttribute('id');
-                    
-                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                        document.querySelectorAll('.nav-link').forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href') === `#${sectionId}`) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            });
+            `;
+            document.head.appendChild(style);
         });
 
-        // Expose some functions globally for debugging
-        window.apiTeguh = {
-            sendRequest: sendApiRequest,
-            updateMetrics: updateServerMetrics,
-            getRequestCount: () => requestCount
-        };
+        // Make UI functions globally available
+        window.ui = ui;
+        window.utils = utils;
+        window.api = api;
+        window.hideToast = utils.hideToast;
     </script>
 </body>
 </html>
