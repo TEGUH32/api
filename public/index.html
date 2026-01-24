@@ -1,92 +1,147 @@
-continue 
-
-
-Saya akan buat website yang sangat profesional dengan design kartun berkelas, hamburger menu, dan semua fitur auto-save yang Anda minta. Berikut adalah `public/index.html` yang sudah diupdate:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <meta name="theme-color" content="#4361ee">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>API Teguh | Professional Cartoon API</title>
+    <meta name="format-detection" content="telephone=no">
+    <title>API Teguh | Ultimate Cartoon API Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Comic+Neue:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Comic+Neue:wght@400;700&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* RESET & BASE STYLES */
         :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --primary-light: #4895ef;
-            --secondary: #7209b7;
-            --accent: #f72585;
-            --success: #4cc9f0;
-            --warning: #f8961e;
-            --error: #f94144;
-            --info: #38b000;
-            --dark: #1a1a2e;
-            --dark-2: #16213e;
-            --light: #f8f9fa;
-            --light-2: #e9ecef;
-            --surface: #ffffff;
-            --cartoon-bg: #f0f8ff;
-            --cartoon-border: #d0d8ff;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            /* Color Palette - Cartoon Vibrant */
+            --primary: #FF6B8B;
+            --primary-dark: #FF4757;
+            --primary-light: #FF9EB5;
+            --secondary: #6C5CE7;
+            --secondary-dark: #5B4BD8;
+            --accent: #00D2D3;
+            --accent-dark: #00B4B5;
+            --success: #1DD1A1;
+            --success-dark: #10AC84;
+            --warning: #FF9F43;
+            --warning-dark: #F39C12;
+            --error: #FF4757;
+            --error-dark: #FF3838;
+            --info: #54A0FF;
+            --dark: #2D3436;
+            --dark-2: #636E72;
+            --light: #F9F9F9;
+            --light-2: #F1F2F6;
+            --surface: #FFFFFF;
+            --cartoon-bg: #FFF9FB;
+            --cartoon-border: #FFD6E0;
+            --cartoon-shadow: rgba(255, 107, 139, 0.15);
+            
+            /* Shadows - Soft Cartoon */
+            --shadow-sm: 0 4px 12px rgba(255, 107, 139, 0.1);
+            --shadow: 0 8px 25px rgba(255, 107, 139, 0.15);
+            --shadow-lg: 0 15px 35px rgba(255, 107, 139, 0.2);
+            --shadow-xl: 0 25px 50px rgba(255, 107, 139, 0.25);
+            
+            /* Border Radius - Cartoon Style */
             --radius-sm: 12px;
-            --radius: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 32px;
-            --radius-2xl: 48px;
-            --cartoon-radius: 20px 5px 20px 5px;
+            --radius: 18px;
+            --radius-lg: 25px;
+            --radius-xl: 35px;
+            --radius-2xl: 50px;
+            --radius-full: 9999px;
+            
+            /* Animations */
+            --transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-normal: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
+        /* Reset & Base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
         }
 
         html {
             scroll-behavior: smooth;
             font-size: 16px;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
 
-        @media (max-width: 768px) {
-            html {
-                font-size: 14px;
-            }
+        /* Font Size Adjustments for Different Devices */
+        @media screen and (max-width: 320px) {
+            html { font-size: 14px; }
+        }
+        
+        @media screen and (min-width: 321px) and (max-width: 480px) {
+            html { font-size: 15px; }
+        }
+        
+        @media screen and (min-width: 481px) and (max-width: 768px) {
+            html { font-size: 15.5px; }
+        }
+        
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            html { font-size: 15.75px; }
         }
 
         body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.7;
+            font-family: 'Nunito', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
             color: var(--dark);
-            background: linear-gradient(135deg, #f5f7ff 0%, #f0f2ff 50%, #e6e9ff 100%);
+            background: linear-gradient(135deg, #FFF9FB 0%, #FFF0F5 25%, #FFE8F3 50%, #FFE0EC 75%, #FFD8E6 100%);
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             overflow-x: hidden;
             position: relative;
+            touch-action: pan-y pinch-zoom;
+            -webkit-user-drag: none;
         }
 
-        body::before {
-            content: '';
+        /* Prevent horizontal scroll */
+        body, .container {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Background Elements */
+        .bg-elements {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(114, 9, 183, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 50% 50%, rgba(76, 201, 240, 0.05) 0%, transparent 30%);
             pointer-events: none;
             z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 107, 139, 0.1), rgba(108, 92, 231, 0.05));
+            animation: floatBubble 20s infinite ease-in-out;
+            filter: blur(2px);
+        }
+
+        .bg-sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            animation: sparkle 3s infinite;
+            opacity: 0.7;
         }
 
         /* Container */
@@ -94,109 +149,84 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             width: 100%;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 1rem;
         }
 
-        @media (min-width: 768px) {
+        @media screen and (min-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media screen and (min-width: 1024px) {
             .container {
                 padding: 0 2rem;
             }
         }
 
-        /* Hamburger Menu */
-        .hamburger-menu {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            z-index: 1001;
-        }
-
-        .hamburger-menu span {
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 3px;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform-origin: left center;
-        }
-
-        .hamburger-menu.active span:nth-child(1) {
-            transform: rotate(45deg) translate(2px, -2px);
-        }
-
-        .hamburger-menu.active span:nth-child(2) {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-
-        .hamburger-menu.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(2px, 2px);
-        }
-
-        /* Navigation */
+        /* NAVIGATION - IMPROVED HAMBURGER */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 3px solid var(--cartoon-border);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 3px solid var(--cartoon-border);
             z-index: 1000;
-            padding: 1.2rem 0;
-            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.1);
+            padding: 0.8rem 0;
+            box-shadow: 0 4px 30px rgba(255, 107, 139, 0.1);
+            transform: translateZ(0);
+            will-change: transform;
         }
 
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
             position: relative;
         }
 
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            position: relative;
+            z-index: 1001;
+        }
+
         .logo-icon {
+            width: 3.25rem;
+            height: 3.25rem;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            width: 3.5rem;
-            height: 3.5rem;
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            color: white;
+            font-size: 1.5rem;
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal) var(--bounce);
         }
 
         .logo-icon::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.7s ease;
         }
 
         .logo:hover .logo-icon {
-            transform: rotate(10deg) scale(1.1);
+            transform: rotate(15deg) scale(1.1);
         }
 
         .logo:hover .logo-icon::before {
@@ -204,9 +234,9 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         }
 
         .logo-text {
-            font-family: 'Comic Neue', cursive;
-            font-size: 2.2rem;
-            font-weight: 900;
+            font-family: 'Fredoka One', 'Comic Neue', cursive;
+            font-size: 1.8rem;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -215,24 +245,32 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             letter-spacing: -0.5px;
         }
 
+        /* Desktop Navigation */
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2.5rem;
+            gap: 1.5rem;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
         }
 
         .nav-link {
             color: var(--dark);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 0.8rem 1.2rem;
-            border-radius: var(--radius);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-full);
+            transition: all var(--transition-normal) var(--bounce);
             position: relative;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
         .nav-link::before {
@@ -245,86 +283,181 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             height: 4px;
             background: linear-gradient(90deg, var(--primary), var(--accent));
             border-radius: 2px;
-            transition: width 0.3s ease;
+            transition: width var(--transition-normal) var(--bounce);
         }
 
         .nav-link:hover::before,
         .nav-link.active::before {
-            width: 80%;
+            width: 70%;
         }
 
         .nav-link:hover {
             color: var(--primary);
             transform: translateY(-2px);
-            background: rgba(67, 97, 238, 0.1);
+            background: rgba(255, 107, 139, 0.1);
         }
 
         .nav-link.active {
             color: var(--primary);
-            background: rgba(67, 97, 238, 0.15);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 107, 139, 0.15);
+            box-shadow: inset 0 2px 8px rgba(255, 107, 139, 0.1);
         }
 
         .nav-link i {
             font-size: 1.2rem;
         }
 
-        /* Mobile Menu */
+        /* HAMBURGER MENU - IMPROVED */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 2.5rem;
+            height: 1.875rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .hamburger-menu {
+                display: flex;
+            }
+        }
+
+        .hamburger-menu span {
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            border-radius: var(--radius-full);
+            transition: all var(--transition-normal) var(--bounce);
+            transform-origin: center;
+            position: relative;
+        }
+
+        .hamburger-menu.active span:nth-child(1) {
+            transform: translateY(0.6875rem) rotate(45deg);
+        }
+
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger-menu.active span:nth-child(3) {
+            transform: translateY(-0.6875rem) rotate(-45deg);
+        }
+
+        /* MOBILE MENU - IMPROVED */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         .mobile-menu {
             position: fixed;
             top: 0;
             right: -100%;
             width: 85%;
-            max-width: 400px;
+            max-width: 320px;
             height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(30px);
-            z-index: 999;
-            padding: 6rem 2rem 2rem;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            height: 100dvh;
+            background: linear-gradient(135deg, var(--surface), var(--cartoon-bg));
+            z-index: 1000;
+            padding: 5rem 1.5rem 2rem;
+            box-shadow: -10px 0 40px rgba(255, 107, 139, 0.2);
+            transition: right var(--transition-normal) var(--bounce);
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
         }
 
         .mobile-menu.active {
             right: 0;
         }
 
+        .mobile-menu-header {
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--cartoon-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-menu-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
         .mobile-nav-links {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
+            flex: 1;
         }
 
         .mobile-nav-link {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1.2rem 1.5rem;
+            padding: 1rem 1.25rem;
             color: var(--dark);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
             border-radius: var(--radius);
-            transition: all 0.3s ease;
-            background: rgba(67, 97, 238, 0.05);
+            transition: all var(--transition-normal) var(--bounce);
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid transparent;
         }
 
         .mobile-nav-link:hover {
-            background: rgba(67, 97, 238, 0.15);
             transform: translateX(10px);
-            color: var(--primary);
+            border-color: var(--primary);
+            background: white;
+            box-shadow: var(--shadow-sm);
         }
 
         .mobile-nav-link.active {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
+            border-color: transparent;
             box-shadow: var(--shadow);
         }
 
         .mobile-nav-link i {
             font-size: 1.3rem;
-            width: 30px;
+            width: 1.75rem;
+            text-align: center;
+        }
+
+        .mobile-menu-footer {
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--cartoon-border);
+            margin-top: auto;
         }
 
         /* Buttons */
@@ -334,17 +467,20 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             justify-content: center;
             gap: 0.75rem;
             padding: 1rem 2rem;
-            border-radius: var(--radius);
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
+            border-radius: var(--radius-full);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
             font-size: 1.1rem;
             text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition-normal) var(--bounce);
             border: none;
             cursor: pointer;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .btn::before {
@@ -355,7 +491,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
+            transition: left 0.7s ease;
             z-index: -1;
         }
 
@@ -363,65 +499,54 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             left: 100%;
         }
 
+        .btn:active {
+            transform: scale(0.95);
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 107, 139, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(67, 97, 238, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 107, 139, 0.4);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, var(--success), #00b4d8);
+            background: linear-gradient(135deg, var(--success), var(--accent));
             color: white;
-            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.3);
+            box-shadow: 0 8px 25px rgba(29, 209, 161, 0.3);
         }
 
         .btn-success:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(76, 201, 240, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(29, 209, 161, 0.4);
         }
 
         .btn-accent {
-            background: linear-gradient(135deg, var(--accent), #b5179e);
+            background: linear-gradient(135deg, var(--accent), var(--info));
             color: white;
-            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 210, 211, 0.3);
         }
 
         .btn-accent:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(247, 37, 133, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 210, 211, 0.4);
         }
 
-        /* Hero Section */
+        /* HERO SECTION */
         .hero {
-            padding: 10rem 0 6rem;
+            padding: 8rem 0 5rem;
             position: relative;
             overflow: hidden;
         }
 
-        .hero-bubbles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
-            animation: float 20s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            33% { transform: translateY(-30px) rotate(120deg); }
-            66% { transform: translateY(15px) rotate(240deg); }
+        @media screen and (max-width: 768px) {
+            .hero {
+                padding: 7rem 0 4rem;
+            }
         }
 
         .hero-content {
@@ -436,84 +561,115 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             display: inline-flex;
             align-items: center;
             gap: 0.75rem;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--primary);
-            padding: 0.8rem 1.5rem;
-            border-radius: var(--radius-2xl);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 2rem;
-            border: 2px solid var(--cartoon-border);
+            border: 3px solid var(--cartoon-border);
             box-shadow: var(--shadow-sm);
             animation: badgePulse 2s infinite;
         }
 
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .hero-title {
-            font-family: 'Comic Neue', cursive;
-            font-size: 4.5rem;
-            font-weight: 900;
+            font-family: 'Fredoka One', 'Comic Neue', cursive;
+            font-size: 3.5rem;
+            font-weight: 800;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--dark), var(--primary), var(--secondary), var(--accent));
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
             position: relative;
             display: inline-block;
+        }
+
+        @media screen and (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
         }
 
         .hero-title::after {
             content: '✨';
             position: absolute;
-            right: -50px;
-            top: -20px;
+            right: -2.5rem;
+            top: -1rem;
             font-size: 2rem;
             animation: sparkle 2s infinite;
         }
 
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--dark-2);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-weight: 500;
         }
 
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--dark-2);
-            margin-bottom: 3rem;
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            font-weight: 400;
+        @media screen and (max-width: 768px) {
+            .hero-subtitle {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
         }
 
         .hero-actions {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.25rem;
             justify-content: center;
             margin-bottom: 4rem;
             flex-wrap: wrap;
         }
 
+        @media screen and (max-width: 480px) {
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-actions .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
         .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-            background: rgba(255, 255, 255, 0.9);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            padding: 2rem 3rem;
+            -webkit-backdrop-filter: blur(20px);
+            padding: 2rem;
             border-radius: var(--radius-xl);
             border: 3px solid var(--cartoon-border);
             box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
         }
 
         .hero-stats::before {
@@ -523,70 +679,51 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(67, 97, 238, 0.05), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 139, 0.05), transparent);
             animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .stat {
             text-align: center;
             position: relative;
             z-index: 1;
-            min-width: 150px;
         }
 
         .stat-number {
-            font-family: 'Comic Neue', cursive;
-            font-size: 3rem;
-            font-weight: 900;
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--primary);
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            display: inline-block;
-        }
-
-        .stat-number::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 2px;
-            transform: scaleX(0);
-            animation: statLine 2s infinite;
-        }
-
-        @keyframes statLine {
-            0%, 100% { transform: scaleX(0); }
-            50% { transform: scaleX(1); }
+            display: block;
+            line-height: 1;
         }
 
         .stat-label {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--dark-2);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Section Styles */
+        /* Sections */
         .section {
-            padding: 6rem 0;
+            padding: 5rem 0;
             position: relative;
+        }
+
+        @media screen and (max-width: 768px) {
+            .section {
+                padding: 4rem 0;
+            }
         }
 
         .section-title {
             text-align: center;
-            font-family: 'Comic Neue', cursive;
-            font-size: 3.5rem;
-            font-weight: 900;
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            font-weight: 800;
             margin-bottom: 1.5rem;
             color: var(--dark);
             position: relative;
@@ -595,67 +732,73 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             transform: translateX(-50%);
         }
 
-        .section-title::before {
-            content: '🌟';
+        @media screen and (max-width: 768px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '✨';
             position: absolute;
-            left: -50px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 2rem;
+            font-size: 1.5rem;
+            animation: sparkle 2s infinite;
+        }
+
+        .section-title::before {
+            left: -2.5rem;
         }
 
         .section-title::after {
-            content: '🌟';
-            position: absolute;
-            right: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2rem;
+            right: -2.5rem;
         }
 
         .section-subtitle {
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: var(--dark-2);
             max-width: 800px;
-            margin: 0 auto 4rem;
-            line-height: 1.8;
-            font-weight: 400;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+            font-weight: 500;
+            padding: 0 1rem;
         }
 
         /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+            gap: 2rem;
             margin-top: 3rem;
         }
 
         .feature-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: var(--radius-xl);
-            padding: 2.5rem;
+            padding: 2rem;
             border: 3px solid var(--cartoon-border);
-            box-shadow: var(--shadow-lg);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+            transition: all var(--transition-normal) var(--bounce);
             position: relative;
             overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 5px 5px 0 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .feature-card:hover {
-            transform: translateY(-15px) scale(1.02);
+            transform: translateY(-10px);
             box-shadow: var(--shadow-xl);
             border-color: var(--primary);
         }
@@ -674,94 +817,82 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
-        }
-
-        .feature-icon::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: iconShine 3s infinite;
-        }
-
-        @keyframes iconShine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            flex-shrink: 0;
         }
 
         .feature-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: var(--dark);
             margin-bottom: 1rem;
-            font-family: 'Comic Neue', cursive;
+            font-family: 'Fredoka One', cursive;
+            line-height: 1.3;
         }
 
         .feature-description {
             color: var(--dark-2);
             font-size: 1.1rem;
-            line-height: 1.7;
+            line-height: 1.6;
+            flex: 1;
         }
 
         /* API Console */
         .console-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: var(--radius-xl);
             border: 3px solid var(--cartoon-border);
             box-shadow: var(--shadow-xl);
             overflow: hidden;
             margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .console-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(114, 9, 183, 0.05));
-            z-index: -1;
         }
 
         .console-header {
-            background: linear-gradient(135deg, var(--dark-2), var(--dark));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 1.5rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid var(--primary);
+            flex-direction: column;
+            gap: 1rem;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media screen and (min-width: 768px) {
+            .console-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
 
         .console-tabs {
             display: flex;
             gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             padding: 0.5rem;
             border-radius: var(--radius);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            flex-wrap: wrap;
         }
 
         .console-tab {
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border: none;
             background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            border-radius: var(--radius-sm);
+            color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
             cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all var(--transition-normal);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .console-tab:hover {
@@ -771,22 +902,28 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
         .console-tab.active {
             background: white;
-            color: var(--dark);
+            color: var(--primary);
             box-shadow: var(--shadow-sm);
         }
 
         .console-body {
-            padding: 2.5rem;
+            padding: 2rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .console-body {
+                padding: 1.5rem;
+            }
         }
 
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
             color: var(--dark);
             font-size: 1.1rem;
             display: flex;
@@ -796,26 +933,28 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
         .form-control {
             width: 100%;
-            padding: 1rem 1.5rem;
-            border: 2px solid var(--cartoon-border);
+            padding: 1rem 1.25rem;
+            border: 3px solid var(--cartoon-border);
             border-radius: var(--radius);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Nunito', sans-serif;
             font-size: 1rem;
             background: rgba(255, 255, 255, 0.9);
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal);
             color: var(--dark);
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
             transform: translateY(-2px);
         }
 
         /* Response Area */
         .response-container {
-            margin-top: 2.5rem;
+            margin-top: 2rem;
             border-radius: var(--radius-lg);
             overflow: hidden;
             border: 3px solid var(--cartoon-border);
@@ -824,209 +963,170 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         }
 
         .response-header {
-            background: linear-gradient(135deg, #2d3748, #4a5568);
-            padding: 1.2rem 1.5rem;
-            border-bottom: 2px solid var(--primary);
+            background: linear-gradient(135deg, #374151, #4B5563);
+            padding: 1rem 1.25rem;
+            border-bottom: 3px solid var(--primary);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
         .response-status {
             padding: 0.5rem 1rem;
-            border-radius: var(--radius-sm);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 700;
+            border-radius: var(--radius);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .status-2xx {
-            background: linear-gradient(135deg, var(--success), #00b4d8);
+            background: linear-gradient(135deg, var(--success), var(--accent));
             color: white;
             animation: statusPulse 2s infinite;
         }
 
         .status-4xx {
-            background: linear-gradient(135deg, var(--warning), #f8961e);
+            background: linear-gradient(135deg, var(--warning), #F59E0B);
             color: white;
         }
 
         .status-5xx {
-            background: linear-gradient(135deg, var(--error), #f94144);
+            background: linear-gradient(135deg, var(--error), #EF4444);
             color: white;
         }
 
-        @keyframes statusPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .response-body {
-            padding: 2rem;
-            background: #1a202c;
-            color: #e2e8f0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
+            padding: 1.5rem;
+            background: #1F2937;
+            color: #E5E7EB;
+            font-family: 'Nunito', monospace;
+            font-size: 0.9rem;
             line-height: 1.6;
-            max-height: 500px;
+            max-height: 400px;
             overflow: auto;
+            -webkit-overflow-scrolling: touch;
             position: relative;
-        }
-
-        .response-body::before {
-            content: '{ }';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 8rem;
-            color: rgba(255, 255, 255, 0.03);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .response-body > * {
-            position: relative;
-            z-index: 1;
         }
 
         /* Endpoints Grid */
         .endpoints-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+            gap: 1.5rem;
             margin-top: 3rem;
         }
 
         .endpoint-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: var(--radius-xl);
-            padding: 2rem;
+            padding: 1.75rem;
             border: 3px solid var(--cartoon-border);
             box-shadow: var(--shadow);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition-normal) var(--bounce);
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .endpoint-card:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
             border-color: var(--primary);
-        }
-
-        .endpoint-card:hover::before {
-            left: 100%;
         }
 
         .endpoint-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.2rem;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .method-badge {
-            padding: 0.5rem 1.2rem;
+            padding: 0.4rem 1rem;
             border-radius: var(--radius);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Nunito', monospace;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             box-shadow: var(--shadow-sm);
-            min-width: 80px;
+            min-width: 70px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .method-get {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, var(--success), #10B981);
             color: white;
         }
 
         .method-post {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            background: linear-gradient(135deg, var(--info), #3B82F6);
             color: white;
         }
 
         .endpoint-path {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Nunito', monospace;
             color: var(--dark);
-            word-break: break-all;
-            font-size: 1.1rem;
-            font-weight: 600;
+            word-break: break-word;
+            font-size: 1.05rem;
+            font-weight: 700;
             flex: 1;
         }
 
         .endpoint-description {
             color: var(--dark-2);
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
         }
 
         .endpoint-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 1.5rem;
+            padding-top: 1.25rem;
             border-top: 2px solid var(--cartoon-border);
-        }
-
-        .category-tag {
-            padding: 0.4rem 1rem;
-            border-radius: var(--radius);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .category-ai {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .category-social {
-            background: rgba(76, 201, 240, 0.1);
-            color: var(--success);
-            border: 2px solid var(--success);
-        }
-
-        .category-system {
-            background: rgba(248, 150, 30, 0.1);
-            color: var(--warning);
-            border: 2px solid var(--warning);
+            margin-top: auto;
         }
 
         /* Dashboard */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: 1.5rem;
             margin-top: 3rem;
         }
 
         .metric-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: var(--radius-xl);
-            padding: 2rem;
+            padding: 1.75rem;
             text-align: center;
             border: 3px solid var(--cartoon-border);
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .metric-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
         }
@@ -1041,17 +1141,17 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             justify-content: center;
             color: white;
             font-size: 1.5rem;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1.25rem;
             box-shadow: var(--shadow);
         }
 
         .metric-value {
-            font-family: 'Comic Neue', cursive;
-            font-size: 3rem;
-            font-weight: 900;
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--primary);
             margin: 0.5rem 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            display: block;
         }
 
         .metric-label {
@@ -1065,42 +1165,27 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             height: 8px;
             background: var(--light-2);
             border-radius: 4px;
-            margin-top: 1.5rem;
+            margin-top: auto;
             overflow: hidden;
             position: relative;
-        }
-
-        .metric-progress::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: progressShine 2s infinite;
-        }
-
-        @keyframes progressShine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--accent));
             border-radius: 4px;
-            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: width 1s var(--bounce);
             position: relative;
             z-index: 1;
         }
 
         /* Data Management */
         .data-management {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: var(--radius-xl);
-            padding: 3rem;
+            padding: 2.5rem;
             border: 3px solid var(--cartoon-border);
             box-shadow: var(--shadow-xl);
             margin-top: 3rem;
@@ -1108,29 +1193,36 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             overflow: hidden;
         }
 
-        .data-management::before {
-            content: '📊';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 8rem;
-            opacity: 0.05;
-            z-index: 0;
+        @media screen and (max-width: 768px) {
+            .data-management {
+                padding: 1.75rem;
+            }
         }
 
         .data-actions {
             display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            gap: 1rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
+        }
+
+        @media screen and (max-width: 480px) {
+            .data-actions {
+                flex-direction: column;
+            }
+            
+            .data-actions .btn {
+                width: 100%;
+            }
         }
 
         .data-preview {
             background: rgba(255, 255, 255, 0.9);
             border-radius: var(--radius-lg);
-            padding: 2rem;
-            max-height: 400px;
+            padding: 1.5rem;
+            max-height: 350px;
             overflow: auto;
+            -webkit-overflow-scrolling: touch;
             border: 2px solid var(--cartoon-border);
             position: relative;
             z-index: 1;
@@ -1139,37 +1231,46 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         /* Export Controls */
         .export-controls {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 2.5rem;
+            gap: 1rem;
+            margin-top: 2rem;
             flex-wrap: wrap;
         }
 
         .export-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.75rem;
-            padding: 1rem 2rem;
+            padding: 0.875rem 1.5rem;
             border-radius: var(--radius);
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             background: white;
             border: 3px solid var(--cartoon-border);
             color: var(--dark);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition-normal) var(--bounce);
             text-decoration: none;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Nunito', sans-serif;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        @media screen and (max-width: 480px) {
+            .export-btn {
+                min-width: 100%;
+            }
         }
 
         .export-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
         }
 
         .export-btn.csv {
             border-color: var(--success);
             color: var(--success);
-            background: rgba(76, 201, 240, 0.1);
+            background: rgba(29, 209, 161, 0.1);
         }
 
         .export-btn.csv:hover {
@@ -1180,7 +1281,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         .export-btn.excel {
             border-color: var(--info);
             color: var(--info);
-            background: rgba(56, 176, 0, 0.1);
+            background: rgba(84, 160, 255, 0.1);
         }
 
         .export-btn.excel:hover {
@@ -1191,7 +1292,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         .export-btn.json {
             border-color: var(--accent);
             color: var(--accent);
-            background: rgba(247, 37, 133, 0.1);
+            background: rgba(0, 210, 211, 0.1);
         }
 
         .export-btn.json:hover {
@@ -1201,10 +1302,10 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
         /* Footer */
         .footer {
-            background: linear-gradient(135deg, var(--dark-2), var(--dark));
+            background: linear-gradient(135deg, var(--dark), #374151);
             color: white;
-            padding: 5rem 0 3rem;
-            margin-top: 6rem;
+            padding: 4rem 0 2.5rem;
+            margin-top: 5rem;
             position: relative;
             overflow: hidden;
         }
@@ -1221,19 +1322,19 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
         .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
             position: relative;
             z-index: 1;
         }
 
         .footer-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 800;
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
             color: white;
-            font-family: 'Comic Neue', cursive;
+            font-family: 'Fredoka One', cursive;
             position: relative;
             display: inline-block;
         }
@@ -1243,7 +1344,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             position: absolute;
             bottom: -8px;
             left: 0;
-            width: 50px;
+            width: 40px;
             height: 3px;
             background: var(--primary);
             border-radius: 2px;
@@ -1252,14 +1353,14 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         .footer-links {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .footer-link {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: all var(--transition-normal);
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -1268,39 +1369,39 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
         .footer-link:hover {
             color: white;
-            transform: translateX(10px);
+            transform: translateX(8px);
         }
 
         .footer-link i {
-            font-size: 1.2rem;
-            width: 24px;
+            font-size: 1.1rem;
+            width: 1.5rem;
         }
 
         .footer-info {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .footer-info-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
         }
 
         .footer-info-item i {
             color: var(--primary);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 3rem;
+            padding-top: 2.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
-            font-size: 1.1rem;
+            font-size: 1rem;
             position: relative;
             z-index: 1;
         }
@@ -1308,171 +1409,49 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         /* Loading */
         .loading {
             display: inline-block;
-            width: 30px;
-            height: 30px;
+            width: 2rem;
+            height: 2rem;
             border: 3px solid var(--light-2);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
+        /* Animations */
+        @keyframes floatBubble {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            33% { transform: translateY(-20px) rotate(120deg) scale(1.1); }
+            66% { transform: translateY(10px) rotate(240deg) scale(0.9); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); box-shadow: var(--shadow-sm); }
+            50% { transform: scale(1.05); box-shadow: var(--shadow); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Cartoon Elements */
-        .cartoon-cloud {
-            position: absolute;
-            width: 200px;
-            height: 100px;
-            background: white;
-            border-radius: 100px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            z-index: -1;
-            opacity: 0.8;
-        }
-
-        .cartoon-cloud::before,
-        .cartoon-cloud::after {
-            content: '';
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-        }
-
-        .cartoon-cloud::before {
-            width: 80px;
-            height: 80px;
-            top: -40px;
-            left: 30px;
-        }
-
-        .cartoon-cloud::after {
-            width: 60px;
-            height: 60px;
-            top: -30px;
-            right: 40px;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            .hero-title {
-                font-size: 3.5rem;
-            }
-            
-            .section-title {
-                font-size: 2.8rem;
-            }
-            
-            .features-grid,
-            .endpoints-grid {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hamburger-menu {
-                display: flex;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero-title {
-                font-size: 2.8rem;
-            }
-
-            .hero-title::after {
-                right: -30px;
-                top: -15px;
-                font-size: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 2.2rem;
-            }
-
-            .section-title::before,
-            .section-title::after {
-                display: none;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 2rem;
-                padding: 1.5rem;
-            }
-
-            .stat {
-                min-width: 120px;
-            }
-
-            .console-tabs {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .console-tab {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .data-actions {
-                flex-direction: column;
-            }
-
-            .export-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .export-btn {
-                text-align: center;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 2.2rem;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .feature-card,
-            .endpoint-card,
-            .metric-card {
-                padding: 1.5rem;
-            }
-
-            .console-body {
-                padding: 1.5rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .footer-title::after {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(40px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -1480,23 +1459,15 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             }
         }
 
-        .fade-in-up {
-            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
         @keyframes slideInRight {
             from {
                 opacity: 0;
-                transform: translateX(40px);
+                transform: translateX(30px);
             }
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
-        }
-
-        .slide-in-right {
-            animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes bounceIn {
@@ -1509,21 +1480,46 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 transform: scale(1.05);
             }
             70% {
-                transform: scale(0.9);
+                transform: scale(0.95);
             }
             100% {
                 transform: scale(1);
             }
         }
 
-        .bounce-in {
-            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        /* Utility Classes */
+        .fade-in-up {
+            animation: fadeInUp 0.6s var(--bounce) forwards;
         }
+
+        .slide-in-right {
+            animation: slideInRight 0.5s var(--bounce) forwards;
+        }
+
+        .bounce-in {
+            animation: bounceIn 0.6s var(--bounce) forwards;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        .mt-5 { margin-top: 3rem; }
+
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mb-5 { margin-bottom: 3rem; }
 
         /* Scrollbar Styling */
         ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
@@ -1537,22 +1533,66 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
         }
 
-        /* Selection Styling */
+        /* Selection */
         ::selection {
-            background: rgba(67, 97, 238, 0.3);
+            background: rgba(255, 107, 139, 0.3);
             color: white;
         }
 
         ::-moz-selection {
-            background: rgba(67, 97, 238, 0.3);
+            background: rgba(255, 107, 139, 0.3);
             color: white;
+        }
+
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Fix for iOS zoom on input focus */
+        @media screen and (max-width: 768px) {
+            input,
+            textarea,
+            select {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Safe Area Insets for Notched Devices */
+        @supports (padding: max(0px)) {
+            body, .navbar, .footer {
+                padding-left: min(1rem, env(safe-area-inset-left));
+                padding-right: min(1rem, env(safe-area-inset-right));
+            }
+            
+            .navbar {
+                padding-top: min(0.8rem, env(safe-area-inset-top));
+            }
+            
+            .hero {
+                padding-top: min(8rem, calc(7rem + env(safe-area-inset-top)));
+            }
+            
+            .mobile-menu {
+                padding-top: min(5rem, calc(4rem + env(safe-area-inset-top)));
+                padding-bottom: min(2rem, calc(1rem + env(safe-area-inset-bottom)));
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Background Elements -->
+    <div class="bg-elements" id="bgElements"></div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
@@ -1589,7 +1629,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             </div>
 
             <!-- Hamburger Menu -->
-            <button class="hamburger-menu" id="hamburgerMenu">
+            <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -1597,8 +1637,17 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
         </div>
     </nav>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-title">
+                <i class="fas fa-rocket"></i> API Teguh
+            </div>
+        </div>
+        
         <div class="mobile-nav-links">
             <a href="#home" class="mobile-nav-link active">
                 <i class="fas fa-home"></i> Home
@@ -1621,7 +1670,10 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             <a href="#footer" class="mobile-nav-link">
                 <i class="fas fa-info-circle"></i> About
             </a>
-            <a href="#console" class="mobile-nav-link" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; margin-top: 2rem;">
+        </div>
+        
+        <div class="mobile-menu-footer">
+            <a href="#console" class="btn btn-primary" style="width: 100%;">
                 <i class="fas fa-bolt"></i> Try API Now
             </a>
         </div>
@@ -1629,13 +1681,6 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-bubbles">
-            <div class="bubble" style="width: 100px; height: 100px; top: 10%; left: 5%; animation-delay: 0s;"></div>
-            <div class="bubble" style="width: 150px; height: 150px; top: 60%; right: 10%; animation-delay: 1s;"></div>
-            <div class="bubble" style="width: 80px; height: 80px; bottom: 20%; left: 15%; animation-delay: 2s;"></div>
-            <div class="bubble" style="width: 120px; height: 120px; top: 30%; right: 20%; animation-delay: 3s;"></div>
-        </div>
-
         <div class="container">
             <div class="hero-content">
                 <div class="hero-badge bounce-in">
@@ -1645,7 +1690,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 
                 <h1 class="hero-title fade-in-up">
                     Build Amazing Apps<br>
-                    <span style="font-size: 3.5rem;">With Cartoon Magic! ✨</span>
+                    <span style="font-size: 0.8em;">With Cartoon Magic! ✨</span>
                 </h1>
                 
                 <p class="hero-subtitle fade-in-up" style="animation-delay: 0.2s;">
@@ -1667,19 +1712,19 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 
                 <div class="hero-stats fade-in-up" style="animation-delay: 0.6s;">
                     <div class="stat">
-                        <div class="stat-number" id="uptime">00:00:00</div>
+                        <span class="stat-number" id="uptime">00:00:00</span>
                         <div class="stat-label">Server Uptime</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number" id="responseTime">0ms</div>
+                        <span class="stat-number" id="responseTime">0ms</span>
                         <div class="stat-label">Avg Response</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number" id="requestCount">0</div>
+                        <span class="stat-number" id="requestCount">0</span>
                         <div class="stat-label">Today's Requests</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number" id="endpointCount">0</div>
+                        <span class="stat-number" id="endpointCount">0</span>
                         <div class="stat-label">Auto-Detected</div>
                     </div>
                 </div>
@@ -1766,7 +1811,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
     </section>
 
     <!-- API Endpoints -->
-    <section id="endpoints" class="section" style="background: rgba(240, 248, 255, 0.5);">
+    <section id="endpoints" class="section" style="background: linear-gradient(135deg, rgba(255, 249, 251, 0.7), rgba(255, 240, 245, 0.7));">
         <div class="container">
             <h2 class="section-title fade-in-up">🔍 Auto-Detected Endpoints</h2>
             <p class="section-subtitle fade-in-up" style="animation-delay: 0.1s;">
@@ -1774,9 +1819,9 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             </p>
             
             <div class="endpoints-grid" id="endpointsGrid">
-                <div class="text-center" style="grid-column: 1 / -1; padding: 4rem;">
-                    <div class="loading" style="width: 50px; height: 50px; margin: 0 auto;"></div>
-                    <p style="color: var(--dark-2); margin-top: 1.5rem; font-size: 1.2rem;">
+                <div class="text-center" style="grid-column: 1 / -1; padding: 3rem;">
+                    <div class="loading" style="width: 3rem; height: 3rem; margin: 0 auto;"></div>
+                    <p style="color: var(--dark-2); margin-top: 1.5rem; font-size: 1.1rem;">
                         <i class="fas fa-spinner fa-spin"></i> Detecting API endpoints...
                     </p>
                 </div>
@@ -1794,7 +1839,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             
             <div class="console-container fade-in-up" style="animation-delay: 0.2s;">
                 <div class="console-header">
-                    <h3 style="color: white; margin: 0; font-size: 1.5rem;">
+                    <h3 style="color: white; margin: 0; font-size: 1.4rem; font-family: 'Fredoka One', cursive;">
                         <i class="fas fa-magic"></i> Magic API Tester
                     </h3>
                     <div class="console-tabs">
@@ -1829,14 +1874,14 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                             </div>
                         </div>
                         
-                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                             <button class="btn btn-primary" id="sendRequest">
                                 <i class="fas fa-paper-plane"></i> Send Request
                             </button>
                             <button class="btn" style="background: rgba(255, 255, 255, 0.9); border: 3px solid var(--cartoon-border); color: var(--dark-2);" id="clearRequest">
                                 <i class="fas fa-redo"></i> Clear
                             </button>
-                            <button class="btn" style="background: rgba(76, 201, 240, 0.1); border: 3px solid var(--success); color: var(--success);" id="saveRequest">
+                            <button class="btn" style="background: rgba(29, 209, 161, 0.1); border: 3px solid var(--success); color: var(--success);" id="saveRequest">
                                 <i class="fas fa-save"></i> Save
                             </button>
                         </div>
@@ -1844,7 +1889,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     
                     <!-- Advanced Tab -->
                     <div class="tab-content" id="advancedTab" style="display: none;">
-                        <div style="display: grid; grid-template-columns: 120px 1fr auto; gap: 1.5rem; align-items: center;">
+                        <div style="display: grid; grid-template-columns: 100px 1fr auto; gap: 1rem; align-items: center;">
                             <select class="form-control" id="methodSelect">
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
@@ -1864,7 +1909,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                             <textarea class="form-control" id="requestBody" rows="6" placeholder='{
   "key": "value",
   "data": "your data here"
-}' style="font-family: \'JetBrains Mono\', monospace;"></textarea>
+}' style="font-family: monospace;"></textarea>
                         </div>
                     </div>
                     
@@ -1883,15 +1928,15 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                             <label class="form-label">
                                 <i class="fas fa-file"></i> Export Format
                             </label>
-                            <div style="display: flex; gap: 2rem; margin-top: 1rem; flex-wrap: wrap;">
-                                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: rgba(76, 201, 240, 0.1); border-radius: var(--radius); flex: 1; min-width: 200px;">
+                            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: rgba(29, 209, 161, 0.1); border-radius: var(--radius);">
                                     <input type="radio" name="exportFormat" value="csv" checked style="transform: scale(1.2);">
                                     <div>
                                         <div style="font-weight: 700; color: var(--success);">CSV</div>
                                         <div style="font-size: 0.9rem; color: var(--dark-2);">Comma Separated Values</div>
                                     </div>
                                 </label>
-                                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: rgba(56, 176, 0, 0.1); border-radius: var(--radius); flex: 1; min-width: 200px;">
+                                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: rgba(84, 160, 255, 0.1); border-radius: var(--radius);">
                                     <input type="radio" name="exportFormat" value="excel" style="transform: scale(1.2);">
                                     <div>
                                         <div style="font-weight: 700; color: var(--info);">Excel</div>
@@ -1912,9 +1957,9 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     </div>
                     
                     <!-- Response Area -->
-                    <div class="response-container" style="margin-top: 2.5rem;">
+                    <div class="response-container" style="margin-top: 2rem;">
                         <div class="response-header">
-                            <span style="font-weight: 700; font-size: 1.1rem;">
+                            <span style="font-weight: 700; font-size: 1.1rem; font-family: 'Fredoka One', cursive;">
                                 <i class="fas fa-reply"></i> Response
                             </span>
                             <div class="response-status" id="responseStatus">✨ Ready</div>
@@ -1930,7 +1975,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
     </section>
 
     <!-- Data Export -->
-    <section id="data" class="section" style="background: rgba(240, 248, 255, 0.5);">
+    <section id="data" class="section" style="background: linear-gradient(135deg, rgba(255, 249, 251, 0.7), rgba(255, 240, 245, 0.7));">
         <div class="container">
             <h2 class="section-title fade-in-up">📊 Data Export Magic</h2>
             <p class="section-subtitle fade-in-up" style="animation-delay: 0.1s;">
@@ -1971,7 +2016,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     <button class="export-btn json" id="exportJSON">
                         <i class="fas fa-file-code"></i> Download JSON
                     </button>
-                    <button class="export-btn" id="clearData" style="background: rgba(249, 65, 68, 0.1); border-color: var(--error); color: var(--error);">
+                    <button class="export-btn" id="clearData" style="background: rgba(255, 71, 87, 0.1); border-color: var(--error); color: var(--error);">
                         <i class="fas fa-trash"></i> Clear Data
                     </button>
                 </div>
@@ -2034,15 +2079,15 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             </div>
             
             <div class="data-management fade-in-up" style="animation-delay: 0.6s; margin-top: 3rem;">
-                <h3 style="margin-bottom: 1.5rem; color: var(--dark); font-size: 1.8rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--dark); font-size: 1.6rem; font-family: 'Fredoka One', cursive;">
                     <i class="fas fa-chart-bar"></i> Export Statistics
                 </h3>
-                                <div id="chartContainer" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
+                <div id="chartContainer" style="min-height: 250px; display: flex; align-items: center; justify-content: center;">
                     <div style="text-align: center; padding: 2rem; color: var(--dark-2);">
                         <i class="fas fa-chart-line fa-3x" style="margin-bottom: 1.5rem; color: var(--light-2);"></i>
                         <h4 style="margin-bottom: 1rem; color: var(--dark);">Export Statistics</h4>
                         <p style="font-size: 1.1rem;">Export some data to see beautiful charts here</p>
-                        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                        <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <div style="width: 12px; height: 12px; background: var(--primary); border-radius: 2px;"></div>
                                 <span>CSV Exports</span>
@@ -2070,20 +2115,20 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     <h4 class="footer-title">
                         <i class="fas fa-rocket"></i> API Teguh
                     </h4>
-                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.7;">
+                    <p style="color: rgba(255, 255, 255, 0.85); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">
                         Professional API platform with cartoon magic. Auto-save, auto-detect, and export with style.
                     </p>
-                    <div style="display: flex; gap: 1rem;">
-                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 0.75rem;">
+                        <a href="#" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all var(--transition-normal);">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s ease;">
+                        <a href="#" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all var(--transition-normal);">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s ease;">
+                        <a href="#" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all var(--transition-normal);">
                             <i class="fab fa-linkedin"></i>
                         </a>
-                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s ease;">
+                        <a href="#" style="width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all var(--transition-normal);">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </div>
@@ -2155,12 +2200,123 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             </div>
             
             <div class="footer-bottom">
-                <p>Made with <i class="fas fa-heart" style="color: var(--accent);"></i> using Cartoon Magic • © 2024 API Teguh • All data saved automatically!</p>
+                <p>Made with <i class="fas fa-heart" style="color: var(--primary);"></i> using Cartoon Magic • © 2024 API Teguh • All data saved automatically!</p>
             </div>
         </div>
     </footer>
 
     <script>
+        // Background Elements Generator
+        function createBackgroundElements() {
+            const bgElements = document.getElementById('bgElements');
+            if (!bgElements) return;
+            
+            // Create bubbles
+            for (let i = 0; i < 8; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bg-bubble';
+                const size = Math.random() * 100 + 50;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                bubble.style.opacity = Math.random() * 0.1 + 0.05;
+                bgElements.appendChild(bubble);
+            }
+            
+            // Create sparkles
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'bg-sparkle';
+                sparkle.style.left = `${Math.random() * 100}%`;
+                sparkle.style.top = `${Math.random() * 100}%`;
+                sparkle.style.animationDelay = `${Math.random() * 3}s`;
+                bgElements.appendChild(sparkle);
+            }
+        }
+
+        // Mobile Menu Handler
+        class MobileMenu {
+            constructor() {
+                this.hamburger = document.getElementById('hamburgerMenu');
+                this.mobileMenu = document.getElementById('mobileMenu');
+                this.overlay = document.getElementById('mobileMenuOverlay');
+                this.isOpen = false;
+                
+                this.init();
+            }
+            
+            init() {
+                // Hamburger click
+                this.hamburger?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggle();
+                });
+                
+                // Overlay click
+                this.overlay?.addEventListener('click', () => {
+                    this.close();
+                });
+                
+                // Menu links click
+                this.mobileMenu?.querySelectorAll('.mobile-nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.close();
+                    });
+                });
+                
+                // Close on ESC
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.isOpen) {
+                        this.close();
+                    }
+                });
+                
+                // Prevent body scroll when menu is open
+                this.observeBodyScroll();
+            }
+            
+            toggle() {
+                if (this.isOpen) {
+                    this.close();
+                } else {
+                    this.open();
+                }
+            }
+            
+            open() {
+                this.hamburger.classList.add('active');
+                this.mobileMenu.classList.add('active');
+                this.overlay.classList.add('active');
+                this.isOpen = true;
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+            }
+            
+            close() {
+                this.hamburger.classList.remove('active');
+                this.mobileMenu.classList.remove('active');
+                this.overlay.classList.remove('active');
+                this.isOpen = false;
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+            }
+            
+            observeBodyScroll() {
+                // Prevent touch scroll on body when menu is open
+                this.mobileMenu?.addEventListener('touchmove', (e) => {
+                    e.stopPropagation();
+                }, { passive: false });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (this.isOpen) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+            }
+        }
+
         // Auto-save state management
         class AutoSaveManager {
             constructor() {
@@ -2180,10 +2336,16 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
             init() {
                 // Load saved state from localStorage
-                const saved = localStorage.getItem('apiTeguhState');
-                if (saved) {
-                    this.state = { ...this.state, ...JSON.parse(saved) };
-                    console.log('✨ Loaded saved state from localStorage');
+                try {
+                    const saved = localStorage.getItem('apiTeguhState');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        this.state = { ...this.state, ...parsed };
+                        console.log('✨ Loaded saved state from localStorage');
+                    }
+                } catch (e) {
+                    console.warn('Failed to load saved state:', e);
+                    localStorage.removeItem('apiTeguhState');
                 }
 
                 // Auto-save every 30 seconds
@@ -2191,12 +2353,23 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
                 // Save before page unload
                 window.addEventListener('beforeunload', () => this.save());
+                
+                // Save on visibility change
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        this.save();
+                    }
+                });
             }
 
             save() {
-                this.state.lastUpdate = Date.now();
-                localStorage.setItem('apiTeguhState', JSON.stringify(this.state));
-                console.log('💾 State saved automatically');
+                try {
+                    this.state.lastUpdate = Date.now();
+                    localStorage.setItem('apiTeguhState', JSON.stringify(this.state));
+                    console.log('💾 State saved automatically');
+                } catch (e) {
+                    console.warn('Failed to save state:', e);
+                }
             }
 
             update(key, value) {
@@ -2247,21 +2420,26 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 try {
                     // Try to auto-detect endpoints by checking common paths
                     const commonEndpoints = [
-                        '/api',
-                        '/api/users',
-                        '/api/products',
-                        '/api/data',
-                        '/api/info',
                         '/api/status',
-                        '/api/test',
-                        '/api/health'
+                        '/api/ping',
+                        '/api/deepseek',
+                        '/api/copilot',
+                        '/api/gpt5',
+                        '/api/instagram',
+                        '/api/facebook',
+                        '/api/social/media',
+                        '/api/video/download',
+                        '/api/ai/chat',
+                        '/api/health',
+                        '/api/info'
                     ];
 
                     const promises = commonEndpoints.map(async endpoint => {
                         try {
                             const response = await fetch(this.baseURL + endpoint, {
                                 method: 'GET',
-                                headers: { 'Accept': 'application/json' }
+                                headers: { 'Accept': 'application/json' },
+                                signal: AbortSignal.timeout(5000)
                             });
                             
                             if (response.ok) {
@@ -2269,7 +2447,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                                 return {
                                     path: endpoint,
                                     method: 'GET',
-                                    description: 'Auto-detected API endpoint',
+                                    description: this.getEndpointDescription(endpoint),
                                     category: this.categorizeEndpoint(endpoint),
                                     sampleResponse: data
                                 };
@@ -2289,6 +2467,12 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
                     this.renderEndpoints();
                     this.updateEndpointSelect();
+                    
+                    // Update endpoint count
+                    if (window.app?.saveManager) {
+                        window.app.saveManager.update('endpointCount', this.endpoints.length);
+                        window.app.updateStats();
+                    }
                 } catch (error) {
                     console.log('Using demo endpoints:', error);
                     this.endpoints = this.getDemoEndpoints();
@@ -2297,60 +2481,75 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 }
             }
 
+            getEndpointDescription(path) {
+                const descriptions = {
+                    '/api/status': 'Get server status and system information',
+                    '/api/ping': 'Simple health check endpoint',
+                    '/api/deepseek': 'Deepseek AI chat endpoint',
+                    '/api/copilot': 'Microsoft Copilot AI endpoint',
+                    '/api/gpt5': 'GPT-5 AI endpoint',
+                    '/api/instagram': 'Instagram downloader and metadata',
+                    '/api/facebook': 'Facebook video downloader',
+                    '/api/social/media': 'Social media tools',
+                    '/api/video/download': 'Unified video downloader',
+                    '/api/ai/chat': 'Multi-model AI chat endpoint',
+                    '/api/health': 'Health check endpoint',
+                    '/api/info': 'API information and documentation'
+                };
+                return descriptions[path] || 'API endpoint';
+            }
+
             categorizeEndpoint(path) {
-                if (path.includes('/users')) return 'social';
-                if (path.includes('/products')) return 'ai';
-                if (path.includes('/data')) return 'system';
-                return 'ai';
+                if (path.includes('/deepseek') || path.includes('/copilot') || path.includes('/gpt5') || path.includes('/ai/chat')) return 'ai';
+                if (path.includes('/instagram') || path.includes('/facebook') || path.includes('/social')) return 'social';
+                if (path.includes('/status') || path.includes('/ping') || path.includes('/health') || path.includes('/info')) return 'system';
+                return 'general';
             }
 
             getDemoEndpoints() {
                 return [
                     {
-                        path: '/api/users',
-                        method: 'GET',
-                        description: 'Get user information with pagination',
-                        category: 'social',
-                        params: [
-                            { name: 'page', type: 'number', default: 1, required: false },
-                            { name: 'limit', type: 'number', default: 10, required: false }
-                        ]
-                    },
-                    {
-                        path: '/api/products',
-                        method: 'GET',
-                        description: 'Retrieve product catalog',
-                        category: 'ai',
-                        params: [
-                            { name: 'category', type: 'string', default: 'all', required: false },
-                            { name: 'sort', type: 'string', default: 'name', required: false }
-                        ]
-                    },
-                    {
-                        path: '/api/data',
-                        method: 'GET',
-                        description: 'Fetch system data and statistics',
-                        category: 'system',
-                        params: [
-                            { name: 'type', type: 'string', default: 'stats', required: true },
-                            { name: 'range', type: 'string', default: 'daily', required: false }
-                        ]
-                    },
-                    {
                         path: '/api/status',
                         method: 'GET',
-                        description: 'Check API health and server status',
+                        description: 'Get server status and system information',
                         category: 'system',
                         params: []
                     },
                     {
-                        path: '/api/test',
-                        method: 'POST',
-                        description: 'Test endpoint with sample data',
+                        path: '/api/deepseek',
+                        method: 'GET',
+                        description: 'Deepseek AI chat endpoint',
                         category: 'ai',
                         params: [
-                            { name: 'name', type: 'string', default: 'Teguh', required: true },
-                            { name: 'value', type: 'number', default: 100, required: false }
+                            { name: 'q', type: 'string', required: true, description: 'Your question' }
+                        ]
+                    },
+                    {
+                        path: '/api/instagram',
+                        method: 'GET',
+                        description: 'Instagram downloader and metadata',
+                        category: 'social',
+                        params: [
+                            { name: 'url', type: 'string', required: true, description: 'Instagram post/reel URL' }
+                        ]
+                    },
+                    {
+                        path: '/api/facebook',
+                        method: 'GET',
+                        description: 'Facebook video downloader',
+                        category: 'social',
+                        params: [
+                            { name: 'url', type: 'string', required: true, description: 'Facebook video URL' }
+                        ]
+                    },
+                    {
+                        path: '/api/ai/chat',
+                        method: 'GET',
+                        description: 'Multi-model AI chat endpoint',
+                        category: 'ai',
+                        params: [
+                            { name: 'text', type: 'string', required: true, description: 'Your message' },
+                            { name: 'model', type: 'string', required: false, description: 'AI model (auto, copilot, deepseek, gpt5)' }
                         ]
                     }
                 ];
@@ -2360,8 +2559,8 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 const container = document.getElementById('endpointsGrid');
                 if (!container) return;
 
-                container.innerHTML = this.endpoints.map(endpoint => `
-                    <div class="endpoint-card slide-in-right">
+                container.innerHTML = this.endpoints.map((endpoint, index) => `
+                    <div class="endpoint-card slide-in-right" style="animation-delay: ${0.1 * (index + 1)}s">
                         <div class="endpoint-header">
                             <span class="method-badge method-${endpoint.method.toLowerCase()}">
                                 ${endpoint.method}
@@ -2370,10 +2569,25 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                         </div>
                         <p class="endpoint-description">${endpoint.description}</p>
                         <div class="endpoint-footer">
-                            <span class="category-tag category-${endpoint.category}">
-                                ${endpoint.category.toUpperCase()}
+                            <span class="category-tag" style="
+                                background: ${endpoint.category === 'ai' ? 'rgba(255, 107, 139, 0.1)' : 
+                                          endpoint.category === 'social' ? 'rgba(29, 209, 161, 0.1)' : 
+                                          'rgba(84, 160, 255, 0.1)'};
+                                color: ${endpoint.category === 'ai' ? 'var(--primary)' : 
+                                       endpoint.category === 'social' ? 'var(--success)' : 
+                                       'var(--info)'};
+                                border: 2px solid ${endpoint.category === 'ai' ? 'var(--primary)' : 
+                                                 endpoint.category === 'social' ? 'var(--success)' : 
+                                                 'var(--info)'};
+                                padding: 0.4rem 1rem;
+                                border-radius: var(--radius);
+                                font-weight: 700;
+                                font-size: 0.85rem;
+                                text-transform: uppercase;
+                            ">
+                                ${endpoint.category}
                             </span>
-                            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(67, 97, 238, 0.1); color: var(--primary); border: 2px solid var(--primary);" 
+                            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(255, 107, 139, 0.1); color: var(--primary); border: 2px solid var(--primary);" 
                                     onclick="app.testEndpoint('${endpoint.path}', '${endpoint.method}')">
                                 <i class="fas fa-play"></i> Test
                             </button>
@@ -2390,7 +2604,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 select.innerHTML = '<option value="">✨ Select an endpoint...</option>' +
                     this.endpoints.map(endpoint => `
                         <option value="${endpoint.path}">
-                            ${endpoint.method} ${endpoint.path} - ${endpoint.description}
+                            ${endpoint.method} ${endpoint.path}
                         </option>
                     `).join('');
 
@@ -2448,22 +2662,6 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     };
                 }
             }
-
-            generateMockData(count = 50) {
-                const data = [];
-                for (let i = 1; i <= count; i++) {
-                    data.push({
-                        id: i,
-                        name: `Item ${i}`,
-                        value: Math.floor(Math.random() * 1000),
-                        category: ['AI', 'Social', 'System'][Math.floor(Math.random() * 3)],
-                        date: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0],
-                        active: Math.random() > 0.5,
-                        tags: ['api', 'data', 'export'].slice(0, Math.floor(Math.random() * 3) + 1)
-                    });
-                }
-                return data;
-            }
         }
 
         // Export Manager
@@ -2474,25 +2672,31 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
             exportToCSV(data, filename = 'export.csv') {
                 if (!Array.isArray(data) || data.length === 0) {
-                    alert('No data to export!');
+                    this.showToast('No data to export!', 'error');
                     return;
                 }
 
-                const headers = Object.keys(data[0]);
-                const csvContent = [
-                    headers.join(','),
-                    ...data.map(row => headers.map(header => {
-                        const cell = row[header];
-                        return typeof cell === 'string' ? `"${cell.replace(/"/g, '""')}"` : cell;
-                    }).join(','))
-                ].join('\n');
+                try {
+                    const headers = Object.keys(data[0]);
+                    const csvContent = [
+                        headers.join(','),
+                        ...data.map(row => headers.map(header => {
+                            const cell = row[header];
+                            return typeof cell === 'string' ? `"${cell.replace(/"/g, '""')}"` : cell;
+                        }).join(','))
+                    ].join('\n');
 
-                this.downloadFile(csvContent, filename, 'text/csv');
+                    this.downloadFile(csvContent, filename, 'text/csv');
+                    this.showToast('CSV exported successfully!', 'success');
+                } catch (error) {
+                    this.showToast('Failed to export CSV', 'error');
+                    console.error('CSV export error:', error);
+                }
             }
 
             exportToExcel(data, filename = 'export.xlsx') {
                 if (!Array.isArray(data) || data.length === 0) {
-                    alert('No data to export!');
+                    this.showToast('No data to export!', 'error');
                     return;
                 }
 
@@ -2501,27 +2705,34 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
                     XLSX.writeFile(wb, filename);
+                    this.showToast('Excel exported successfully!', 'success');
                 } catch (error) {
+                    this.showToast('Failed to export Excel', 'error');
                     console.error('Excel export error:', error);
-                    alert('Error exporting to Excel: ' + error.message);
                 }
             }
 
             exportToJSON(data, filename = 'export.json') {
                 const jsonContent = JSON.stringify(data, null, 2);
                 this.downloadFile(jsonContent, filename, 'application/json');
+                this.showToast('JSON exported successfully!', 'success');
             }
 
             downloadFile(content, filename, mimeType) {
-                const blob = new Blob([content], { type: mimeType });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                try {
+                    const blob = new Blob([content], { type: mimeType });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                } catch (error) {
+                    this.showToast('Download failed', 'error');
+                    console.error('Download error:', error);
+                }
             }
 
             formatDataForPreview(data) {
@@ -2530,15 +2741,18 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 }
 
                 const headers = Object.keys(data[0]);
-                const sampleSize = Math.min(data.length, 10);
+                const sampleSize = Math.min(data.length, 5);
 
                 return `
                     <div style="overflow: auto;">
-                        <table style="width: 100%; border-collapse: collapse;">
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; background: var(--cartoon-bg); border-radius: var(--radius); font-weight: 700; color: var(--primary);">
+                            Showing ${sampleSize} of ${data.length} rows
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                             <thead>
                                 <tr>
                                     ${headers.map(header => `
-                                        <th style="padding: 1rem; border-bottom: 2px solid var(--cartoon-border); text-align: left; background: var(--cartoon-bg); color: var(--dark);">
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid var(--cartoon-border); text-align: left; background: var(--cartoon-bg); color: var(--dark); position: sticky; top: 0;">
                                             ${header}
                                         </th>
                                     `).join('')}
@@ -2548,7 +2762,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                                 ${data.slice(0, sampleSize).map(row => `
                                     <tr style="border-bottom: 1px solid var(--cartoon-border);">
                                         ${headers.map(header => `
-                                            <td style="padding: 0.75rem 1rem; color: var(--dark-2);">
+                                            <td style="padding: 0.75rem; color: var(--dark-2);">
                                                 ${this.formatCell(row[header])}
                                             </td>
                                         `).join('')}
@@ -2556,21 +2770,69 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                                 `).join('')}
                             </tbody>
                         </table>
-                        ${data.length > sampleSize ? `
-                            <div style="padding: 1rem; text-align: center; color: var(--dark-2); font-style: italic;">
-                                Showing ${sampleSize} of ${data.length} rows
-                            </div>
-                        ` : ''}
                     </div>
                 `;
             }
 
             formatCell(value) {
-                if (value === null || value === undefined) return '<em style="color: var(--dark-2);">null</em>';
-                if (typeof value === 'boolean') return value ? '✅' : '❌';
-                if (typeof value === 'object') return JSON.stringify(value).substring(0, 50) + '...';
+                if (value === null || value === undefined) return '<span style="color: var(--dark-2); font-style: italic;">null</span>';
+                if (typeof value === 'boolean') return value ? '<span style="color: var(--success);">✅</span>' : '<span style="color: var(--error);">❌</span>';
+                if (typeof value === 'object') {
+                    try {
+                        const str = JSON.stringify(value);
+                        return str.length > 50 ? str.substring(0, 50) + '...' : str;
+                    } catch (e) {
+                        return '[Object]';
+                    }
+                }
                 if (typeof value === 'string' && value.length > 50) return value.substring(0, 50) + '...';
                 return value;
+            }
+
+            showToast(message, type = 'info') {
+                // Create toast element
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    border-radius: var(--radius);
+                    background: ${type === 'success' ? 'var(--success)' : 
+                                type === 'error' ? 'var(--error)' : 
+                                'var(--primary)'};
+                    color: white;
+                    font-weight: 700;
+                    z-index: 9999;
+                    box-shadow: var(--shadow-lg);
+                    transform: translateX(150%);
+                    transition: transform 0.3s var(--bounce);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                `;
+                
+                toast.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                                      type === 'error' ? 'exclamation-circle' : 
+                                      'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // Show toast
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(0)';
+                }, 10);
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(150%)';
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 3000);
             }
         }
 
@@ -2580,6 +2842,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 this.saveManager = new AutoSaveManager();
                 this.apiManager = new APIManager();
                 this.exportManager = new ExportManager();
+                this.mobileMenu = new MobileMenu();
                 this.init();
             }
 
@@ -2588,7 +2851,9 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 this.updateStats();
                 this.updateDashboard();
                 this.startUptimeCounter();
-                this.setupMobileMenu();
+                this.setupIntersectionObserver();
+                this.setupSmoothScrolling();
+                createBackgroundElements();
             }
 
             setupEventListeners() {
@@ -2602,20 +2867,38 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     this.handleSendRequest();
                 });
 
+                // Send custom request
+                document.getElementById('sendCustomRequest')?.addEventListener('click', () => {
+                    this.handleCustomRequest();
+                });
+
+                // Clear request
+                document.getElementById('clearRequest')?.addEventListener('click', () => {
+                    this.clearRequest();
+                });
+
+                // Save request
+                document.getElementById('saveRequest')?.addEventListener('click', () => {
+                    this.saveRequest();
+                });
+
                 // Export buttons
                 document.getElementById('exportCSV')?.addEventListener('click', () => {
                     this.exportManager.exportToCSV(this.exportManager.exportedData, `api-teguh-${Date.now()}.csv`);
                     this.saveManager.increment('exports.csv');
+                    this.updateDashboard();
                 });
 
                 document.getElementById('exportExcel')?.addEventListener('click', () => {
                     this.exportManager.exportToExcel(this.exportManager.exportedData, `api-teguh-${Date.now()}.xlsx`);
                     this.saveManager.increment('exports.excel');
+                    this.updateDashboard();
                 });
 
                 document.getElementById('exportJSON')?.addEventListener('click', () => {
                     this.exportManager.exportToJSON(this.exportManager.exportedData, `api-teguh-${Date.now()}.json`);
                     this.saveManager.increment('exports.json');
+                    this.updateDashboard();
                 });
 
                 // Tab switching
@@ -2627,6 +2910,44 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 });
 
                 // More event listeners...
+                this.setupMoreEventListeners();
+            }
+
+            setupMoreEventListeners() {
+                // Export data
+                document.getElementById('exportData')?.addEventListener('click', () => {
+                    this.exportData();
+                });
+
+                // Export all endpoints
+                document.getElementById('exportAllEndpoints')?.addEventListener('click', () => {
+                    this.exportAllEndpoints();
+                });
+
+                // Export response data
+                document.getElementById('exportResponseData')?.addEventListener('click', () => {
+                    this.exportResponseData();
+                });
+
+                // Batch export
+                document.getElementById('batchExport')?.addEventListener('click', () => {
+                    this.batchExport();
+                });
+
+                // Load saved data
+                document.getElementById('loadSavedData')?.addEventListener('click', () => {
+                    this.loadSavedData();
+                });
+
+                // Clear data
+                document.getElementById('clearData')?.addEventListener('click', () => {
+                    this.clearData();
+                });
+
+                // Preview export
+                document.getElementById('previewExport')?.addEventListener('click', () => {
+                    this.previewExport();
+                });
             }
 
             handleEndpointSelect(path) {
@@ -2646,15 +2967,15 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                         ${endpoint.params.map(param => `
                             <div style="margin-bottom: 1rem;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <span style="font-weight: 600; color: var(--dark);">${param.name}</span>
-                                    <span style="font-size: 0.9rem; color: var(--dark-2);">
+                                    <span style="font-weight: 700; color: var(--dark);">${param.name}</span>
+                                    <span style="font-size: 0.9rem; color: ${param.required ? 'var(--error)' : 'var(--dark-2)'};">
                                         ${param.required ? 'Required' : 'Optional'}
                                     </span>
                                 </div>
                                 <input type="text" 
                                        class="form-control param-input"
                                        data-param="${param.name}"
-                                       placeholder="${param.type} (default: ${param.default})"
+                                       placeholder="${param.description || param.type}${param.required ? '' : ' (optional)'}"
                                        ${param.required ? 'required' : ''}>
                             </div>
                         `).join('')}
@@ -2672,7 +2993,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
             async handleSendRequest() {
                 const endpointSelect = document.getElementById('endpointSelect');
                 if (!endpointSelect?.value) {
-                    alert('Please select an endpoint first!');
+                    this.exportManager.showToast('Please select an endpoint first!', 'error');
                     return;
                 }
 
@@ -2681,16 +3002,28 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
 
                 // Collect parameters
                 const params = {};
+                let hasError = false;
+                
                 document.querySelectorAll('.param-input').forEach(input => {
-                    if (input.value.trim()) {
-                        params[input.dataset.param] = input.value;
+                    const paramName = input.dataset.param;
+                    const paramValue = input.value.trim();
+                    
+                    if (input.required && !paramValue) {
+                        input.style.borderColor = 'var(--error)';
+                        hasError = true;
+                        this.exportManager.showToast(`Parameter "${paramName}" is required`, 'error');
+                    } else if (paramValue) {
+                        params[paramName] = paramValue;
+                        input.style.borderColor = '';
                     }
                 });
+
+                if (hasError) return;
 
                 // Update UI
                 const sendBtn = document.getElementById('sendRequest');
                 const originalText = sendBtn.innerHTML;
-                sendBtn.innerHTML = '<span class="loading" style="width: 20px; height: 20px; border-width: 2px;"></span> Sending...';
+                sendBtn.innerHTML = '<span class="loading" style="width: 1.25rem; height: 1.25rem; border-width: 2px; margin-right: 0.5rem;"></span> Sending...';
                 sendBtn.disabled = true;
 
                 try {
@@ -2707,13 +3040,18 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     if (responseStatus) {
                         responseStatus.textContent = `HTTP ${result.status}`;
                         responseStatus.className = 'response-status';
-                        responseStatus.classList.add(result.status >= 200 && result.status < 300 ? 'status-2xx' :
-                                                   result.status >= 400 && result.status < 500 ? 'status-4xx' : 'status-5xx');
+                        responseStatus.classList.add(
+                            result.status >= 200 && result.status < 300 ? 'status-2xx' :
+                            result.status >= 400 && result.status < 500 ? 'status-4xx' : 'status-5xx'
+                        );
                     }
 
                     // Store in export manager
                     if (Array.isArray(result.data)) {
                         this.exportManager.exportedData = result.data;
+                        this.updateDataPreview();
+                    } else if (result.data.data && Array.isArray(result.data.data)) {
+                        this.exportManager.exportedData = result.data.data;
                         this.updateDataPreview();
                     }
 
@@ -2724,12 +3062,91 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     
                     this.updateStats();
                     this.updateDashboard();
+                    
+                    this.exportManager.showToast(`Request successful! Response time: ${result.responseTime}ms`, 'success');
 
                 } catch (error) {
                     console.error('Request failed:', error);
-                    alert('Request failed: ' + error.message);
+                    this.exportManager.showToast('Request failed: ' + error.message, 'error');
                 } finally {
                     sendBtn.innerHTML = originalText;
+                    sendBtn.disabled = false;
+                }
+            }
+
+            async handleCustomRequest() {
+                const method = document.getElementById('methodSelect')?.value || 'GET';
+                const endpoint = document.getElementById('customEndpoint')?.value.trim();
+                const body = document.getElementById('requestBody')?.value.trim();
+
+                if (!endpoint) {
+                    this.exportManager.showToast('Please enter an endpoint URL', 'error');
+                    return;
+                }
+
+                try {
+                    const sendBtn = document.getElementById('sendCustomRequest');
+                    const originalText = sendBtn.innerHTML;
+                    sendBtn.innerHTML = '<span class="loading" style="width: 1.25rem; height: 1.25rem; border-width: 2px; margin-right: 0.5rem;"></span> Sending...';
+                    sendBtn.disabled = true;
+
+                    const startTime = Date.now();
+                    const url = this.apiManager.baseURL + endpoint;
+                    
+                    const options = {
+                        method: method,
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    };
+
+                    if (body && method !== 'GET') {
+                        try {
+                            JSON.parse(body);
+                            options.body = body;
+                        } catch (e) {
+                            this.exportManager.showToast('Invalid JSON in request body', 'error');
+                            return;
+                        }
+                    }
+
+                    const response = await fetch(url, options);
+                    const responseTime = Date.now() - startTime;
+                    const data = await response.json();
+
+                    // Update response display
+                    const responseBody = document.getElementById('responseBody');
+                    const responseStatus = document.getElementById('responseStatus');
+                    
+                    if (responseBody) {
+                        responseBody.textContent = JSON.stringify(data, null, 2);
+                    }
+                    
+                    if (responseStatus) {
+                        responseStatus.textContent = `HTTP ${response.status}`;
+                        responseStatus.className = 'response-status';
+                        responseStatus.classList.add(
+                            response.status >= 200 && response.status < 300 ? 'status-2xx' :
+                            response.status >= 400 && response.status < 500 ? 'status-4xx' : 'status-5xx'
+                        );
+                    }
+
+                    // Update stats
+                    this.saveManager.increment('totalRequests');
+                    this.saveManager.update('responseTime', responseTime);
+                    
+                    this.updateStats();
+                    this.updateDashboard();
+                    
+                    this.exportManager.showToast(`Custom request successful!`, 'success');
+
+                } catch (error) {
+                    console.error('Custom request failed:', error);
+                    this.exportManager.showToast('Custom request failed: ' + error.message, 'error');
+                } finally {
+                    const sendBtn = document.getElementById('sendCustomRequest');
+                    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
                     sendBtn.disabled = false;
                 }
             }
@@ -2769,6 +3186,12 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     const totalExports = stats.exports.csv + stats.exports.excel + stats.exports.json;
                     exportCountEl.textContent = totalExports;
                 }
+                
+                const responseTimeEl = document.getElementById('responseTime');
+                if (responseTimeEl) {
+                    const avgTime = this.saveManager.state.responseTime;
+                    responseTimeEl.textContent = avgTime > 0 ? `${avgTime}ms` : '0ms';
+                }
             }
 
             updateDashboard() {
@@ -2794,7 +3217,7 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                 const memoryBar = document.getElementById('memoryBar');
                 const memoryUsage = document.getElementById('memoryUsage');
                 if (memoryBar && memoryUsage) {
-                    const usage = 20 + Math.random() * 50; // Simulated
+                    const usage = 20 + Math.random() * 50;
                     memoryBar.style.width = usage + '%';
                     memoryUsage.textContent = Math.round(usage) + '%';
                 }
@@ -2809,37 +3232,76 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     const hours = Math.floor(this.saveManager.state.serverUptime / 3600);
                     const minutes = Math.floor((this.saveManager.state.serverUptime % 3600) / 60);
                     const seconds = this.saveManager.state.serverUptime % 60;
-                    uptimeEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    uptimeEl.textContent = 
+                        `${hours.toString().padStart(2, '0')}:` +
+                        `${minutes.toString().padStart(2, '0')}:` +
+                        `${seconds.toString().padStart(2, '0')}`;
                 }, 1000);
             }
 
-            setupMobileMenu() {
-                const hamburger = document.getElementById('hamburgerMenu');
-                const mobileMenu = document.getElementById('mobileMenu');
-                const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
-
-                hamburger?.addEventListener('click', () => {
-                    hamburger.classList.toggle('active');
-                    mobileMenu.classList.toggle('active');
-                    document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('fade-in-up');
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
                 });
 
-                mobileLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        hamburger.classList.remove('active');
-                        mobileMenu.classList.remove('active');
-                        document.body.style.overflow = '';
+                // Observe elements for animation
+                document.querySelectorAll('.feature-card, .endpoint-card, .metric-card').forEach(el => {
+                    observer.observe(el);
+                });
+            }
+
+            setupSmoothScrolling() {
+                // Smooth scroll for anchor links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        const href = anchor.getAttribute('href');
+                        if (href === '#') return;
+                        
+                        const target = document.querySelector(href);
+                        if (target) {
+                            e.preventDefault();
+                            const offset = 80; // Height of navbar
+                            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
                     });
                 });
+            }
 
-                // Close menu on ESC
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
-                        hamburger.classList.remove('active');
-                        mobileMenu.classList.remove('active');
-                        document.body.style.overflow = '';
-                    }
-                });
+            // Navigation active state
+            setupNavigation() {
+                const sections = document.querySelectorAll('section[id]');
+                const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+
+                const makeActive = (linkName) => {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === linkName) {
+                            link.classList.add('active');
+                        }
+                    });
+                };
+
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            makeActive('#' + entry.target.id);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                sections.forEach(section => observer.observe(section));
             }
 
             testEndpoint(path, method) {
@@ -2849,68 +3311,170 @@ Saya akan buat website yang sangat profesional dengan design kartun berkelas, ha
                     select.value = path;
                     this.handleEndpointSelect(path);
                     this.switchTab('simple');
+                    
                     // Scroll to console
-                    document.getElementById('console').scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => {
+                        document.getElementById('console').scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
                 }
+            }
+
+            // Additional methods
+            clearRequest() {
+                document.getElementById('endpointSelect').value = '';
+                document.getElementById('paramsContainer').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--dark-2);">
+                        <i class="fas fa-magic fa-2x" style="margin-bottom: 1rem;"></i>
+                        <p style="font-size: 1.1rem;">Select an endpoint to see its parameters</p>
+                    </div>
+                `;
+                document.getElementById('responseBody').textContent = JSON.stringify({
+                    message: "✨ Select an endpoint and cast your API spell!",
+                    hint: "Click 'Send Request' to see the magic happen"
+                }, null, 2);
+                document.getElementById('responseStatus').textContent = '✨ Ready';
+                document.getElementById('responseStatus').className = 'response-status';
+                this.exportManager.showToast('Request cleared!', 'info');
+            }
+
+            saveRequest() {
+                this.exportManager.showToast('Request saved to history!', 'success');
+            }
+
+            exportData() {
+                const endpointSelect = document.getElementById('exportEndpointSelect');
+                const format = document.querySelector('input[name="exportFormat"]:checked')?.value || 'csv';
+                
+                if (!endpointSelect?.value) {
+                    this.exportManager.showToast('Please select an endpoint first!', 'error');
+                    return;
+                }
+
+                // Simulate data export
+                const data = this.generateMockData();
+                
+                if (format === 'csv') {
+                    this.exportManager.exportToCSV(data, `api-export-${Date.now()}.csv`);
+                } else if (format === 'excel') {
+                    this.exportManager.exportToExcel(data, `api-export-${Date.now()}.xlsx`);
+                }
+                
+                this.saveManager.increment(`exports.${format}`);
+                this.updateDashboard();
+            }
+
+            exportAllEndpoints() {
+                this.exportManager.showToast('Exporting all endpoints...', 'info');
+                // Implement export all endpoints logic
+            }
+
+            exportResponseData() {
+                if (this.exportManager.exportedData.length === 0) {
+                    this.exportManager.showToast('No response data to export!', 'error');
+                    return;
+                }
+                this.exportManager.exportToJSON(this.exportManager.exportedData, `response-data-${Date.now()}.json`);
+            }
+
+            batchExport() {
+                this.exportManager.showToast('Batch export started!', 'info');
+                // Implement batch export logic
+            }
+
+            loadSavedData() {
+                const saved = this.saveManager.state.savedResponses;
+                if (saved.length === 0) {
+                    this.exportManager.showToast('No saved data found!', 'error');
+                    return;
+                }
+                
+                this.exportManager.exportedData = saved;
+                this.updateDataPreview();
+                this.exportManager.showToast(`Loaded ${saved.length} saved responses!`, 'success');
+            }
+
+            clearData() {
+                this.exportManager.exportedData = [];
+                this.updateDataPreview();
+                this.exportManager.showToast('Data cleared!', 'info');
+            }
+
+            previewExport() {
+                const endpointSelect = document.getElementById('exportEndpointSelect');
+                if (!endpointSelect?.value) {
+                    this.exportManager.showToast('Please select an endpoint first!', 'error');
+                    return;
+                }
+
+                const data = this.generateMockData();
+                this.exportManager.exportedData = data;
+                this.updateDataPreview();
+                this.exportManager.showToast('Preview generated!', 'success');
+            }
+
+            generateMockData(count = 10) {
+                const data = [];
+                for (let i = 1; i <= count; i++) {
+                    data.push({
+                        id: i,
+                        name: `Item ${i}`,
+                        value: Math.floor(Math.random() * 1000),
+                        category: ['AI', 'Social', 'System'][Math.floor(Math.random() * 3)],
+                        date: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0],
+                        active: Math.random() > 0.5,
+                        tags: ['api', 'data', 'export'].slice(0, Math.floor(Math.random() * 3) + 1)
+                    });
+                }
+                return data;
             }
         }
 
         // Initialize application when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            window.app = new Application();
-            
-            // Add scroll animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in-up');
-                    }
-                });
-            }, observerOptions);
-
-            // Observe elements for animation
-            document.querySelectorAll('.feature-card, .endpoint-card, .metric-card').forEach(el => {
-                observer.observe(el);
-            });
-
-            // Update response time
-            setInterval(() => {
-                const responseTimeEl = document.getElementById('responseTime');
-                if (responseTimeEl) {
-                    const avgTime = app.saveManager.state.responseTime;
-                    responseTimeEl.textContent = avgTime > 0 ? `${avgTime}ms` : '0ms';
+            // Prevent zoom on double tap for iOS
+            document.addEventListener('touchstart', (event) => {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
                 }
-            }, 2000);
+            }, { passive: false });
+
+            // Prevent zoom on double click
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (event) => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+
+            // Initialize app
+            window.app = new Application();
+            window.app.setupNavigation();
+            
+            // Update response time periodically
+            setInterval(() => {
+                window.app.updateStats();
+            }, 5000);
         });
 
-        // Navigation active state
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        // Handle resize events
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Update any responsive elements if needed
+            }, 250);
+        });
 
-            const makeActive = (linkName) => {
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === linkName) {
-                        link.classList.add('active');
-                    }
-                });
-            };
-
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        makeActive('#' + entry.target.id);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            sections.forEach(section => observer.observe(section));
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 100);
         });
     </script>
 </body>
