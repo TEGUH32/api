@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Teguh - Advanced REST API Dashboard</title>
     <meta name="description" content="Advanced REST API server dengan Multi-Model AI, Social Media Downloader, dan Real-time Monitoring" />
-    <meta name="keywords" content="API, REST API, AI, Deepseek, Copilot, GPT-5, Instagram Downloader, Facebook Downloader" />
+    <meta name="keywords" content="API, REST API, AI, Deepseek, Copilot, GPT-5, Instagram Downloader, Facebook Downloader, Spotify, YouTube, Threads" />
     <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/api.png" />
     
     <!-- Fonts & Icons -->
@@ -414,6 +414,38 @@
             display: block;
         }
 
+        /* Media Grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .media-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            font-size: 0.75rem;
+        }
+
         /* API Response */
         .api-response {
             background: var(--dark-color);
@@ -668,6 +700,10 @@
             .chat-container {
                 height: 250px;
             }
+            
+            .media-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
         }
     </style>
 </head>
@@ -688,7 +724,7 @@
                     </div>
                     <div class="app-brand-text">
                         API Teguh
-                        <small>v3.2.0</small>
+                        <small>v3.6.0</small>
                     </div>
                 </a>
             </div>
@@ -728,7 +764,7 @@
                     </ul>
                 </li>
 
-                <!-- Social Media -->
+                <!-- Social Media Downloaders -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                         <i class="menu-icon ri-download-cloud-line"></i>
@@ -737,9 +773,30 @@
                     <ul class="menu-sub">
                         <li><a href="/api/instagram?url=" target="_blank">Instagram</a></li>
                         <li><a href="/api/facebook?url=" target="_blank">Facebook</a></li>
+                        <li><a href="/api/threads?url=" target="_blank">Threads</a></li>
                         <li><a href="/api/social/media?url=" target="_blank">Social Tools</a></li>
-                        <li><a href="/api/video/download?url=" target="_blank">Video Download</a></li>
                     </ul>
+                </li>
+
+                <!-- Audio & Video -->
+                <li class="menu-item">
+                    <a href="javascript:void(0)" class="menu-link menu-toggle">
+                        <i class="menu-icon ri-music-line"></i>
+                        <span>Audio & Video</span>
+                    </a>
+                    <ul class="menu-sub">
+                        <li><a href="/api/spotify?url=" target="_blank">Spotify</a></li>
+                        <li><a href="/api/youtube/audio?url=" target="_blank">YouTube Audio</a></li>
+                        <li><a href="/api/youtube/video?url=" target="_blank">YouTube Video</a></li>
+                    </ul>
+                </li>
+
+                <!-- Unified Downloader -->
+                <li class="menu-item">
+                    <a href="/api/download?url=" target="_blank" class="menu-link">
+                        <i class="menu-icon ri-download-line"></i>
+                        <span>Unified Downloader</span>
+                    </a>
                 </li>
 
                 <!-- Server Tools -->
@@ -776,6 +833,12 @@
                     <a href="#api-tester" class="menu-link" onclick="scrollToSection('api-tester')">
                         <i class="menu-icon ri-code-s-slash-line"></i>
                         <span>API Tester</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#threads-downloader" class="menu-link" onclick="scrollToSection('threads-downloader')">
+                        <i class="menu-icon ri-threads-line"></i>
+                        <span>Threads Download</span>
                     </a>
                 </li>
 
@@ -847,7 +910,7 @@
                             <div class="stat-icon primary">
                                 <i class="ri-plug-line"></i>
                             </div>
-                            <div class="stat-number" id="endpointsCount">10</div>
+                            <div class="stat-number" id="endpointsCount">14</div>
                             <div class="stat-label">API Endpoints</div>
                         </div>
                     </div>
@@ -856,7 +919,7 @@
                             <div class="stat-icon success">
                                 <i class="ri-checkbox-circle-line"></i>
                             </div>
-                            <div class="stat-number" id="successRate">99.8%</div>
+                            <div class="stat-number" id="successRate">99.9%</div>
                             <div class="stat-label">Success Rate</div>
                         </div>
                     </div>
@@ -865,7 +928,7 @@
                             <div class="stat-icon warning">
                                 <i class="ri-time-line"></i>
                             </div>
-                            <div class="stat-number" id="responseTime">45ms</div>
+                            <div class="stat-number" id="responseTime">32ms</div>
                             <div class="stat-label">Avg Response</div>
                         </div>
                     </div>
@@ -874,7 +937,7 @@
                             <div class="stat-icon info">
                                 <i class="ri-user-line"></i>
                             </div>
-                            <div class="stat-number" id="activeUsers">128</div>
+                            <div class="stat-number" id="activeUsers">156</div>
                             <div class="stat-label">Active Users</div>
                         </div>
                     </div>
@@ -919,10 +982,10 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="metric-card">
-                                            <div class="metric-value" id="totalRequests">12.5K</div>
+                                            <div class="metric-value" id="totalRequests">15.8K</div>
                                             <div class="metric-label">Total Requests</div>
                                             <div class="mt-2">
-                                                <span class="badge bg-primary">Today: 245</span>
+                                                <span class="badge bg-primary">Today: 387</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1002,7 +1065,7 @@
                         <div class="card fade-in">
                             <div class="card-header">
                                 <h5 class="card-title">Social Media Downloader</h5>
-                                <p class="card-subtitle">Download videos from Instagram and Facebook</p>
+                                <p class="card-subtitle">Download videos from Instagram, Facebook, and Threads</p>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -1013,11 +1076,26 @@
                                                 <option value="auto">Auto Detect</option>
                                                 <option value="instagram">Instagram</option>
                                                 <option value="facebook">Facebook</option>
+                                                <option value="threads">Threads</option>
+                                                <option value="youtube">YouTube</option>
+                                                <option value="spotify">Spotify</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Media URL</label>
                                             <input type="text" class="form-control" id="mediaUrl" placeholder="https://www.instagram.com/p/...">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Quality (Optional)</label>
+                                            <select class="form-select" id="downloadQuality">
+                                                <option value="best">Best Quality</option>
+                                                <option value="high">High</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="low">Low</option>
+                                                <option value="360">360p</option>
+                                                <option value="720">720p</option>
+                                                <option value="1080">1080p</option>
+                                            </select>
                                         </div>
                                         <button class="btn btn-primary w-100" id="downloadBtn">
                                             <i class="ri-download-line me-2"></i>Download Media
@@ -1032,6 +1110,61 @@
                                                 <div id="downloadResult" class="text-center py-5">
                                                     <i class="ri-download-cloud-line text-muted" style="font-size: 3rem;"></i>
                                                     <p class="text-muted mt-3">Enter a URL to download media</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threads Downloader Section -->
+                <div class="row mb-4" id="threads-downloader">
+                    <div class="col-12">
+                        <div class="card fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title">Threads Downloader</h5>
+                                <p class="card-subtitle">Download images from Threads posts</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Threads URL</label>
+                                            <input type="text" class="form-control" id="threadsUrl" placeholder="https://www.threads.com/@username/post/...">
+                                            <small class="text-muted">Example: https://www.threads.com/@mamanyahyaali/post/DOslYoXAVSs</small>
+                                        </div>
+                                        <button class="btn btn-primary w-100" id="threadsDownloadBtn">
+                                            <i class="ri-threads-line me-2"></i>Download Threads Images
+                                        </button>
+                                        <div class="mt-3">
+                                            <small class="text-muted">
+                                                <i class="ri-information-line me-1"></i>
+                                                Threads downloader supports multi-image posts (carousels)
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h6 class="mb-0">Threads Images</h6>
+                                                    <small class="text-muted" id="threadsCount">0 images</small>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="threadsResult" class="text-center py-5">
+                                                    <i class="ri-threads-line text-muted" style="font-size: 3rem;"></i>
+                                                    <p class="text-muted mt-3">Enter a Threads URL to download images</p>
+                                                </div>
+                                                <div class="media-grid" id="threadsGallery" style="display: none;"></div>
+                                                <div class="mt-3" id="threadsInfo" style="display: none;">
+                                                    <div class="alert alert-info">
+                                                        <i class="ri-information-line me-2"></i>
+                                                        Click on any image to download it directly
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1061,8 +1194,13 @@
                                                 <option value="/api/gpt5?text=">GPT-5 AI</option>
                                                 <option value="/api/instagram?url=">Instagram</option>
                                                 <option value="/api/facebook?url=">Facebook</option>
+                                                <option value="/api/threads?url=">Threads</option>
+                                                <option value="/api/spotify?url=">Spotify</option>
+                                                <option value="/api/youtube/audio?url=">YouTube Audio</option>
+                                                <option value="/api/youtube/video?url=">YouTube Video</option>
                                                 <option value="/api/status">Server Status</option>
                                                 <option value="/api/health">Health Check</option>
+                                                <option value="/api/info">API Info</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
@@ -1134,7 +1272,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-6">
                             <div class="text-muted">
-                                © 2024 API Teguh v3.2.0 • Built by Muhammad Teguh
+                                © 2024 API Teguh v3.6.0 • Built by Muhammad Teguh
                             </div>
                         </div>
                         <div class="col-md-6 text-end">
@@ -1171,7 +1309,7 @@
             loadInitialData();
             startAutoRefresh();
             
-            console.log('Dashboard initialized successfully');
+            console.log('Dashboard v3.6.0 initialized successfully');
         });
 
         // Theme Management
@@ -1249,6 +1387,12 @@
                 if (e.key === 'Enter') processDownload();
             });
             
+            // Threads Downloader
+            document.getElementById('threadsDownloadBtn').addEventListener('click', processThreadsDownload);
+            document.getElementById('threadsUrl').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') processThreadsDownload();
+            });
+            
             // API Tester
             document.getElementById('testApiBtn').addEventListener('click', testApiEndpoint);
             document.getElementById('copyUrlBtn').addEventListener('click', copyApiUrl);
@@ -1266,7 +1410,8 @@
             loadActivityLog();
             
             // Add initial activity
-            addActivity('Dashboard loaded successfully', 'system');
+            addActivity('Dashboard v3.6.0 loaded successfully', 'system');
+            addActivity('Threads downloader now available', 'download');
         }
 
         // Auto Refresh
@@ -1331,6 +1476,10 @@
                 { name: 'GPT-5 AI', path: '/api/gpt5?text=test', method: 'GET' },
                 { name: 'Instagram', path: '/api/instagram?url=', method: 'GET' },
                 { name: 'Facebook', path: '/api/facebook?url=', method: 'GET' },
+                { name: 'Threads', path: '/api/threads?url=', method: 'GET' },
+                { name: 'Spotify', path: '/api/spotify?url=https://open.spotify.com/track/3k68kVFWTTBP0Jb4LOzCax', method: 'GET' },
+                { name: 'YouTube Audio', path: '/api/youtube/audio?url=https://youtu.be/HWjCStB6k4o', method: 'GET' },
+                { name: 'YouTube Video', path: '/api/youtube/video?url=https://youtu.be/HWjCStB6k4o', method: 'GET' },
                 { name: 'Server Status', path: '/api/status', method: 'GET' }
             ];
             
@@ -1339,8 +1488,7 @@
             for (const endpoint of endpoints) {
                 try {
                     const startTime = Date.now();
-                    const response = await fetch(endpoint.path === '/api/instagram?url=' || endpoint.path === '/api/facebook?url=' ? 
-                        endpoint.path + 'test' : endpoint.path);
+                    const response = await fetch(endpoint.path);
                     const endTime = Date.now();
                     
                     const status = response.status;
@@ -1356,7 +1504,7 @@
                             <div class="activity-content">
                                 <div class="activity-title">${endpoint.name}</div>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">${endpoint.method} ${endpoint.path}</small>
+                                    <small class="text-muted">${endpoint.method} ${endpoint.path.split('?')[0]}</small>
                                     <div>
                                         <small class="text-muted me-2">${responseTime}ms</small>
                                         <span class="badge bg-${statusClass}">${statusText}</span>
@@ -1374,7 +1522,7 @@
                             <div class="activity-content">
                                 <div class="activity-title">${endpoint.name}</div>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">${endpoint.method} ${endpoint.path}</small>
+                                    <small class="text-muted">${endpoint.method} ${endpoint.path.split('?')[0]}</small>
                                     <span class="badge bg-danger">Offline</span>
                                 </div>
                             </div>
@@ -1516,6 +1664,7 @@
         async function processDownload() {
             const urlInput = document.getElementById('mediaUrl');
             const platform = document.getElementById('downloadPlatform').value;
+            const quality = document.getElementById('downloadQuality').value;
             const url = urlInput.value.trim();
             
             if (!url) {
@@ -1539,13 +1688,11 @@
             try {
                 let apiUrl;
                 if (platform === 'auto') {
-                    if (url.includes('instagram.com')) {
-                        apiUrl = `/api/instagram?url=${encodeURIComponent(url)}`;
-                    } else if (url.includes('facebook.com')) {
-                        apiUrl = `/api/facebook?url=${encodeURIComponent(url)}`;
-                    } else {
-                        throw new Error('Unsupported URL');
-                    }
+                    apiUrl = `/api/download?url=${encodeURIComponent(url)}&quality=${quality}`;
+                } else if (platform === 'youtube') {
+                    apiUrl = `/api/youtube/video?url=${encodeURIComponent(url)}&quality=${quality}`;
+                } else if (platform === 'spotify') {
+                    apiUrl = `/api/spotify?url=${encodeURIComponent(url)}&quality=${quality}`;
                 } else {
                     apiUrl = `/api/${platform}?url=${encodeURIComponent(url)}`;
                 }
@@ -1554,7 +1701,7 @@
                 const data = await response.json();
                 
                 if (data.status) {
-                    showDownloadResult(data);
+                    showDownloadResult(data, platform);
                     addActivity(`Download from ${platform}: ${url.substring(0, 30)}...`, 'download');
                 } else {
                     throw new Error(data.message || 'Download failed');
@@ -1573,29 +1720,29 @@
             }
         }
 
-        function showDownloadResult(data) {
+        function showDownloadResult(data, platform) {
             const result = data.result || data.data;
             let html = '<div class="text-start">';
             
             html += '<div class="alert alert-success mb-3">Download successful!</div>';
             
-            if (result.title) {
-                html += `<p><strong>Title:</strong> ${result.title}</p>`;
+            if (result.title || result.metadata?.title) {
+                html += `<p><strong>Title:</strong> ${result.title || result.metadata.title}</p>`;
             }
             
-            if (result.durasi) {
-                html += `<p><strong>Duration:</strong> ${result.durasi}</p>`;
+            if (result.durasi || result.metadata?.duration) {
+                html += `<p><strong>Duration:</strong> ${result.durasi || result.metadata.duration.timestamp}</p>`;
             }
             
-            if (result.thumbnail) {
+            if (result.thumbnail || result.metadata?.thumbnail) {
                 html += `
                     <div class="mb-3">
-                        <img src="${result.thumbnail}" alt="Thumbnail" class="img-fluid rounded" style="max-height: 120px;">
+                        <img src="${result.thumbnail || result.metadata.thumbnail}" alt="Thumbnail" class="img-fluid rounded" style="max-height: 120px;">
                     </div>
                 `;
             }
             
-            if (result.download) {
+            if (result.download || result.download?.url) {
                 html += '<div class="mt-3"><strong>Download Options:</strong></div>';
                 
                 if (result.download.hd) {
@@ -1617,10 +1764,126 @@
                         </a>
                     `;
                 }
+                
+                if (result.download.url) {
+                    html += `
+                        <a href="${result.download.url}" target="_blank" class="download-option">
+                            <i class="download-icon ri-download-line"></i>
+                            <div>Download File</div>
+                            <small class="text-muted">${result.download.quality || 'Best Quality'}</small>
+                        </a>
+                    `;
+                }
             }
             
             html += '</div>';
             document.getElementById('downloadResult').innerHTML = html;
+        }
+
+        // Threads Downloader
+        async function processThreadsDownload() {
+            const urlInput = document.getElementById('threadsUrl');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a Threads URL');
+                return;
+            }
+            
+            // Validate URL
+            if (!url.includes('threads.com') && !url.includes('threads.net')) {
+                alert('Please enter a valid Threads URL');
+                return;
+            }
+            
+            // Show loading
+            const btn = document.getElementById('threadsDownloadBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ri-loader-4-line spin me-2"></i>Downloading...';
+            btn.disabled = true;
+            
+            const resultDiv = document.getElementById('threadsResult');
+            const galleryDiv = document.getElementById('threadsGallery');
+            const infoDiv = document.getElementById('threadsInfo');
+            
+            resultDiv.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3">Downloading Threads images...</p>
+                </div>
+            `;
+            galleryDiv.style.display = 'none';
+            infoDiv.style.display = 'none';
+            
+            try {
+                const apiUrl = `/api/threads?url=${encodeURIComponent(url)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.status && data.result?.media) {
+                    displayThreadsImages(data.result.media);
+                    addActivity(`Threads download: ${url.substring(0, 30)}...`, 'download');
+                } else {
+                    throw new Error(data.message || 'No images found');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="ri-error-warning-line text-danger" style="font-size: 3rem;"></i>
+                        <h6 class="mt-3">Download Failed</h6>
+                        <p class="text-muted">${error.message}</p>
+                    </div>
+                `;
+                addActivity(`Threads download failed: ${error.message}`, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function displayThreadsImages(media) {
+            const resultDiv = document.getElementById('threadsResult');
+            const galleryDiv = document.getElementById('threadsGallery');
+            const infoDiv = document.getElementById('threadsInfo');
+            const countDiv = document.getElementById('threadsCount');
+            
+            if (!media || media.length === 0) {
+                resultDiv.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="ri-image-line text-muted" style="font-size: 3rem;"></i>
+                        <p class="mt-3">No images found in this Threads post</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Update count
+            countDiv.textContent = `${media.length} images`;
+            
+            // Hide result message and show gallery
+            resultDiv.style.display = 'none';
+            
+            // Build gallery
+            let galleryHTML = '';
+            media.forEach((item, index) => {
+                galleryHTML += `
+                    <div class="media-item">
+                        <a href="${item.url}" target="_blank" download="threads-image-${index + 1}.jpg">
+                            <img src="${item.thumb || item.url}" alt="Threads Image ${index + 1}" loading="lazy">
+                            <div class="media-overlay">
+                                <div class="d-flex justify-content-between">
+                                    <span>Image ${index + 1}</span>
+                                    <span><i class="ri-download-line"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            });
+            
+            galleryDiv.innerHTML = galleryHTML;
+            galleryDiv.style.display = 'grid';
+            infoDiv.style.display = 'block';
         }
 
         // API Tester
@@ -1629,18 +1892,24 @@
             const paramInput = document.getElementById('paramValue');
             const endpoint = select.value;
             
-            if (endpoint.includes('status') || endpoint.includes('health')) {
+            if (endpoint.includes('status') || endpoint.includes('health') || endpoint.includes('info')) {
                 paramInput.style.display = 'none';
                 paramInput.previousElementSibling.style.display = 'none';
             } else {
                 paramInput.style.display = 'block';
                 paramInput.previousElementSibling.style.display = 'block';
                 
-                // Set placeholder
+                // Set placeholder based on endpoint
                 if (endpoint.includes('deepseek')) {
                     paramInput.placeholder = 'Enter your question...';
                 } else if (endpoint.includes('copilot') || endpoint.includes('gpt5')) {
                     paramInput.placeholder = 'Enter your message...';
+                } else if (endpoint.includes('threads')) {
+                    paramInput.placeholder = 'Enter Threads post URL...';
+                } else if (endpoint.includes('youtube')) {
+                    paramInput.placeholder = 'Enter YouTube URL...';
+                } else if (endpoint.includes('spotify')) {
+                    paramInput.placeholder = 'Enter Spotify track URL...';
                 } else {
                     paramInput.placeholder = 'Enter URL...';
                 }
@@ -1653,13 +1922,13 @@
             let endpoint = select.value;
             
             // Validate
-            if (!endpoint.includes('status') && !endpoint.includes('health') && !paramInput.value.trim()) {
+            if (!endpoint.includes('status') && !endpoint.includes('health') && !endpoint.includes('info') && !paramInput.value.trim()) {
                 alert('Please enter a parameter value');
                 return;
             }
             
             // Build URL
-            if (!endpoint.includes('status') && !endpoint.includes('health')) {
+            if (!endpoint.includes('status') && !endpoint.includes('health') && !endpoint.includes('info')) {
                 endpoint += encodeURIComponent(paramInput.value);
             }
             
@@ -1714,7 +1983,7 @@
             const paramInput = document.getElementById('paramValue');
             let endpoint = select.value;
             
-            if (!endpoint.includes('status') && !endpoint.includes('health') && paramInput.value.trim()) {
+            if (!endpoint.includes('status') && !endpoint.includes('health') && !endpoint.includes('info') && paramInput.value.trim()) {
                 endpoint += encodeURIComponent(paramInput.value);
             }
             
@@ -1734,10 +2003,12 @@
         // Activity Log
         function loadActivityLog() {
             const initialActivities = [
-                { type: 'system', message: 'Dashboard initialized', time: 'Just now' },
-                { type: 'ai', message: 'AI models loaded successfully', time: '2 minutes ago' },
-                { type: 'download', message: 'Downloader ready for use', time: '5 minutes ago' },
-                { type: 'api', message: 'All API endpoints online', time: '10 minutes ago' }
+                { type: 'system', message: 'Dashboard v3.6.0 initialized', time: 'Just now' },
+                { type: 'download', message: 'Threads downloader added', time: '2 minutes ago' },
+                { type: 'ai', message: 'All AI models loaded successfully', time: '5 minutes ago' },
+                { type: 'api', message: 'All API endpoints online', time: '10 minutes ago' },
+                { type: 'download', message: 'YouTube video downloader working', time: '15 minutes ago' },
+                { type: 'download', message: 'Spotify audio downloader ready', time: '20 minutes ago' }
             ];
             
             state.activities = initialActivities;
