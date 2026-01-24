@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Server - Advanced REST API</title>
+    <title>API Teguh - Advanced REST API Server</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
     <style>
         :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
             --success: #10b981;
             --info: #3b82f6;
             --warning: #f59e0b;
@@ -16,9 +18,18 @@
             --dark: #1e293b;
             --light: #f8fafc;
             --gray: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --radius: 16px;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            --radius: 20px;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        [data-theme="dark"] {
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --light: #0f172a;
+            --dark: #f1f5f9;
+            --gray: #94a3b8;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
         }
 
         * {
@@ -29,25 +40,54 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #334155;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
         }
 
         /* Header Styles */
         .header {
             text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 80px 20px;
+            background: var(--gradient);
             border-radius: var(--radius);
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             color: white;
             position: relative;
             overflow: hidden;
@@ -57,18 +97,17 @@
         .header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 20px 20px;
-            animation: float 20s linear infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            animation: float 60s linear infinite;
         }
 
         @keyframes float {
             0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-10px, -10px) rotate(360deg); }
+            100% { transform: translate(-100px, -100px) rotate(360deg); }
         }
 
         .header-content {
@@ -77,32 +116,44 @@
         }
 
         .logo {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: 4rem;
+            margin-bottom: 25px;
             animation: pulse 2s infinite;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             background: linear-gradient(to right, #ffffff, #e2e8f0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            line-height: 1.2;
         }
 
         .tagline {
-            font-size: 1.3rem;
-            opacity: 0.9;
+            font-size: 1.4rem;
+            opacity: 0.95;
             max-width: 800px;
-            margin: 0 auto 30px;
+            margin: 0 auto 40px;
             font-weight: 300;
+            line-height: 1.8;
         }
 
         .badges {
@@ -110,109 +161,139 @@
             justify-content: center;
             gap: 15px;
             flex-wrap: wrap;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         .badge {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .badge:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Main Content Grid */
-        .main-grid {
+        /* Stats Bar */
+        .stats-bar {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .stat-item {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
+        .category-tab {
+            padding: 15px 30px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* Cards */
-        .card {
+        .category-tab.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .category-tab:hover:not(.active) {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Endpoint Grid */
+        .endpoint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .endpoint-card {
             background: var(--card-bg);
             border-radius: var(--radius);
             padding: 30px;
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .card-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        /* Endpoint List */
-        .endpoint-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .endpoint-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            border-left: 5px solid var(--primary);
-            transition: all 0.3s ease;
-            cursor: pointer;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .endpoint-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 40px 60px rgba(0, 0, 0, 0.15);
         }
 
         .endpoint-card::before {
@@ -222,238 +303,337 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), transparent);
+            background: var(--gradient);
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
 
         .endpoint-card:hover::before {
-            opacity: 1;
+            opacity: 0.05;
+        }
+
+        .endpoint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .endpoint-method {
             display: inline-block;
-            padding: 5px 15px;
+            padding: 8px 20px;
             background: var(--primary);
             color: white;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .endpoint-path {
-            font-family: 'Monaco', 'Courier New', monospace;
-            background: #f1f5f9;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-size: 0.95rem;
-            color: var(--dark);
-            border: 1px solid #e2e8f0;
-            word-break: break-all;
-        }
-
-        .endpoint-desc {
-            color: var(--gray);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .param-list {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .param-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.85rem;
-        }
-
-        .param-name {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .param-type {
-            color: var(--success);
-            font-family: monospace;
-        }
-
-        /* Features List */
-        .features-list {
-            list-style: none;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-item:hover {
-            transform: translateX(5px);
-            background: linear-gradient(135deg, #f8fafc, white);
-        }
-
-        .feature-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--info), var(--primary));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .feature-content h4 {
-            color: var(--dark);
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .feature-content p {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #f8fafc, white);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary);
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
             font-size: 0.9rem;
-            color: var(--gray);
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 30px;
+        .endpoint-method.get { background: var(--info); }
+        .endpoint-method.post { background: var(--success); }
+        .endpoint-method.put { background: var(--warning); }
+        .endpoint-method.delete { background: var(--danger); }
+
+        .endpoint-actions {
+            display: flex;
+            gap: 10px;
         }
 
         .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 15px;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 600;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: none;
+            cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .action-btn:hover {
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
-            transform: translateY(-3px);
+            transform: rotate(15deg);
         }
 
-        .action-btn.primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        .endpoint-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .endpoint-path {
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: rgba(99, 102, 241, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+            color: var(--dark);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            word-break: break-all;
+            position: relative;
+            z-index: 2;
+        }
+
+        .endpoint-desc {
+            color: var(--gray);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .endpoint-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .param-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .param-badge i {
+            font-size: 0.8rem;
+        }
+
+        /* Features Section */
+        .features-section {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: var(--gradient);
+            border-radius: 10px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .feature-desc {
+            color: var(--gray);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 80px;
+            background: var(--gradient);
+            border-radius: var(--radius);
+            margin: 60px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .cta-desc {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
             border: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
         }
 
         /* Footer */
         .footer {
-            text-align: center;
-            padding: 30px;
-            background: white;
+            background: var(--card-bg);
             border-radius: var(--radius);
-            margin-top: 40px;
+            padding: 50px;
+            margin-top: 60px;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+            list-style: none;
         }
 
         .footer-link {
-            color: var(--gray);
-            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: color 0.3s ease;
+            gap: 10px;
+            padding: 10px 0;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
         .footer-link:hover {
             color: var(--primary);
+            transform: translateX(5px);
         }
 
         .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--gray);
-            font-size: 0.9rem;
-            margin-top: 20px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.2rem; }
-            .tagline { font-size: 1.1rem; }
-            .endpoint-grid { grid-template-columns: 1fr; }
-            .quick-actions { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .badges { flex-direction: column; align-items: center; }
-            .header { padding: 40px 20px; }
+            font-size: 0.95rem;
         }
 
         /* Test Panel */
         .test-panel {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 400px;
+            right: -500px;
+            width: 500px;
             height: 100vh;
-            background: white;
-            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-            transition: right 0.3s ease;
-            z-index: 1000;
-            padding: 30px;
+            background: var(--card-bg);
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.2);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            padding: 40px;
             overflow-y: auto;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .test-panel.active {
@@ -466,11 +646,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 999;
+            transition: all 0.4s ease;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
         .overlay.active {
@@ -478,24 +659,42 @@
             visibility: visible;
         }
 
-        .close-panel {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--gray);
-            cursor: pointer;
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .endpoint-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .tagline { font-size: 1.2rem; }
+            .stats-bar { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .endpoint-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .header { padding: 60px 20px; }
+            .cta-section { padding: 60px 20px; }
+            .test-panel { width: 100%; right: -100%; }
+            .cta-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
         }
 
         /* Loading Animation */
         .loader {
-            border: 3px solid #f1f5f9;
+            border: 3px solid rgba(99, 102, 241, 0.2);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
@@ -504,296 +703,696 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+        <i class="ri-sun-line"></i>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="ri-server-line"></i>
+            </div>
+            <h1>API Teguh - Advanced REST API</h1>
+            <p class="tagline">
+                Powerful multi-functional API server dengan AI Models, Social Media Downloaders, 
+                Audio/Video tools, dan real-time monitoring. Solusi lengkap untuk kebutuhan API modern.
+            </p>
+            
+            <div class="badges">
+                <div class="badge">
+                    <i class="ri-rocket-line"></i>
+                    <span>Version 3.6.0</span>
+                </div>
+                <div class="badge">
+                    <i class="ri-circle-fill" style="color: #10b981;"></i>
+                    <span>Status: ONLINE</span>
+                </div>
+                <div class="badge">
+                    <i class="ri-shield-check-line"></i>
+                    <span>Secure & Fast</span>
+                </div>
+                <div class="badge">
+                    <i class="ri-flashlight-line"></i>
+                    <span>2000+ req/min</span>
+                </div>
+                <div class="badge">
+                    <i class="ri-cpu-line"></i>
+                    <span>14 Endpoints</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-server"></i>
-                </div>
-                <h1>Advanced REST API Server</h1>
-                <p class="tagline">
-                    High-performance API server dengan multi-model AI, social media tools, 
-                    dan video downloader. Dibangun untuk developer yang membutuhkan solusi API yang cepat dan handal.
-                </p>
-                
-                <div class="badges">
-                    <div class="badge">
-                        <i class="fas fa-bolt"></i>
-                        <span>Version 3.2.0</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-circle" style="color: #10b981;"></i>
-                        <span>Status: ONLINE</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Secure API</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-bolt"></i>
-                        <span>2000 req/min</span>
-                    </div>
-                </div>
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item fade-in">
+                <div class="stat-number">14+</div>
+                <div class="stat-label">API Endpoints</div>
             </div>
-        </header>
-
-        <!-- Main Content Grid -->
-        <div class="main-grid">
-            <!-- Left Column: Endpoints -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <div class="card-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <span>API Endpoints</span>
-                    </div>
-                    <span class="badge" style="background: var(--primary); color: white;">
-                        <i class="fas fa-plug"></i> 10 Endpoints
-                    </span>
-                </div>
-
-                <div class="endpoint-grid">
-                    <!-- AI Endpoints -->
-                    <div class="endpoint-card" onclick="testEndpoint('/api/deepseek', 'Deepseek AI', 'q')">
-                        <div class="endpoint-method" style="background: var(--info);">GET</div>
-                        <h3>Deepseek AI</h3>
-                        <div class="endpoint-path">/api/deepseek?q={query}</div>
-                        <p class="endpoint-desc">
-                            Endpoint untuk berinteraksi dengan Deepseek AI. Mendukung percakapan AI yang canggih.
-                        </p>
-                        <div class="param-list">
-                            <div class="param-item">
-                                <span class="param-name">q</span>
-                                <span class="param-type">string (required)</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-name">model</span>
-                                <span class="param-type">string (optional)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="endpoint-card" onclick="testEndpoint('/api/copilot', 'Microsoft Copilot', 'text')">
-                        <div class="endpoint-method" style="background: var(--success);">GET</div>
-                        <h3>Copilot AI</h3>
-                        <div class="endpoint-path">/api/copilot?text={message}</div>
-                        <p class="endpoint-desc">
-                            Microsoft Copilot AI endpoint dengan kemampuan percakapan dan pencarian informasi.
-                        </p>
-                        <div class="param-list">
-                            <div class="param-item">
-                                <span class="param-name">text</span>
-                                <span class="param-type">string (required)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Social Media Endpoints -->
-                    <div class="endpoint-card" onclick="testEndpoint('/api/instagram', 'Instagram Downloader', 'url')">
-                        <div class="endpoint-method" style="background: var(--warning);">GET</div>
-                        <h3>Instagram Downloader</h3>
-                        <div class="endpoint-path">/api/instagram?url={instagram_url}</div>
-                        <p class="endpoint-desc">
-                            Download video dan foto dari Instagram. Mendukung Reels, Posts, dan Stories.
-                        </p>
-                        <div class="param-list">
-                            <div class="param-item">
-                                <span class="param-name">url</span>
-                                <span class="param-type">string (required)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="endpoint-card" onclick="testEndpoint('/api/facebook', 'Facebook Downloader', 'url')">
-                        <div class="endpoint-method" style="background: #1877f2;">GET</div>
-                        <h3>Facebook Downloader</h3>
-                        <div class="endpoint-path">/api/facebook?url={facebook_url}</div>
-                        <p class="endpoint-desc">
-                            Download video dari Facebook dengan kualitas HD/SD. Support berbagai format video.
-                        </p>
-                        <div class="param-list">
-                            <div class="param-item">
-                                <span class="param-name">url</span>
-                                <span class="param-type">string (required)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="endpoint-card" onclick="testEndpoint('/api/gpt5', 'GPT-5 AI', 'text')">
-                        <div class="endpoint-method" style="background: var(--danger);">GET</div>
-                        <h3>GPT-5 AI</h3>
-                        <div class="endpoint-path">/api/gpt5?text={message}</div>
-                        <p class="endpoint-desc">
-                            Advanced GPT-5 AI model dengan kemampuan pemrosesan bahasa alami tingkat tinggi.
-                        </p>
-                        <div class="param-list">
-                            <div class="param-item">
-                                <span class="param-name">text</span>
-                                <span class="param-type">string (required)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="endpoint-card" onclick="testEndpoint('/api/ai/chat', 'AI Chat Multi-Model', 'text')">
-                        <div class="endpoint-method" style="background: var(--secondary);">GET</div>
-                        <h3>AI Chat Multi-Model</h3>
-                        <div class="endpoint-path">/api/ai/chat?text={message}&model={model}</div>
-                        <p class="endpoint-desc">
-                            Unified AI chat endpoint dengan multiple model support (auto, copilot, deepseek, gpt5).
-                        </p>
-                        <div class="param-list">
-                            <div class="param-item">
-                                <span class="param-name">text</span>
-                                <span class="param-type">string (required)</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-name">model</span>
-                                <span class="param-type">string (optional)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">5</div>
+                <div class="stat-label">AI Models</div>
             </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Social Media</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
 
-            <!-- Right Column: Features & Actions -->
-            <div>
-                <!-- Features Card -->
-                <div class="card" style="margin-bottom: 30px;">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <span>Features</span>
-                        </div>
-                    </div>
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-tab active" data-category="all">
+                <i class="ri-grid-fill"></i> All Features
+            </button>
+            <button class="category-tab" data-category="ai">
+                <i class="ri-robot-line"></i> AI Models
+            </button>
+            <button class="category-tab" data-category="social">
+                <i class="ri-share-circle-line"></i> Social Media
+            </button>
+            <button class="category-tab" data-category="media">
+                <i class="ri-video-line"></i> Audio & Video
+            </button>
+            <button class="category-tab" data-category="tools">
+                <i class="ri-tools-line"></i> Server Tools
+            </button>
+        </div>
 
-                    <ul class="features-list">
-                        <li class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Multi-Model AI</h4>
-                                <p>Support Deepseek, Copilot, dan GPT-5 dalam satu API</p>
-                            </div>
-                        </li>
-                        <li class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Video Downloader</h4>
-                                <p>Download dari Instagram & Facebook dengan kualitas HD</p>
-                            </div>
-                        </li>
-                        <li class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h4>High Performance</h4>
-                                <p>Optimized untuk 2000+ requests per minute</p>
-                            </div>
-                        </li>
-                        <li class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Secure & Reliable</h4>
-                                <p>Rate limiting dan error handling yang baik</p>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <span class="stat-number">10+</span>
-                            <span class="stat-label">Endpoints</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">3</span>
-                            <span class="stat-label">AI Models</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">2</span>
-                            <span class="stat-label">Social Media</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">99.9%</span>
-                            <span class="stat-label">Uptime</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div class="card-icon">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <span>Quick Actions</span>
-                        </div>
-                    </div>
-
-                    <div class="quick-actions">
-                        <a href="dashboard.html" class="action-btn primary">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>Live Dashboard</span>
-                        </a>
-                        <button onclick="openTestPanel()" class="action-btn">
-                            <i class="fas fa-vial"></i>
-                            <span>Test API</span>
+        <!-- Endpoints Grid -->
+        <div class="endpoint-grid" id="endpointsContainer">
+            <!-- Deepseek AI -->
+            <div class="endpoint-card fade-in" data-category="ai">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/deepseek?q=')">
+                            <i class="ri-clipboard-line"></i>
                         </button>
-                        <a href="/api/status" target="_blank" class="action-btn">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Server Status</span>
-                        </a>
-                        <a href="/api/health" target="_blank" class="action-btn">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>Health Check</span>
-                        </a>
-                        <a href="/api/info" target="_blank" class="action-btn" style="grid-column: span 2;">
-                            <i class="fas fa-info-circle"></i>
-                            <span>API Documentation</span>
-                        </a>
+                        <button class="action-btn" onclick="testEndpoint('/api/deepseek?q=', 'Deepseek AI', 'q')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Deepseek AI</h3>
+                <div class="endpoint-path">/api/deepseek?q={query}</div>
+                <p class="endpoint-desc">
+                    Advanced AI conversation endpoint dengan model Deepseek. Mendukung percakapan kompleks dan analisis mendalam.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>q: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-time-line"></i>
+                        <span>Fast Response</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copilot AI -->
+            <div class="endpoint-card fade-in" data-category="ai">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/copilot?text=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/copilot?text=', 'Copilot AI', 'text')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Copilot AI</h3>
+                <div class="endpoint-path">/api/copilot?text={message}</div>
+                <p class="endpoint-desc">
+                    Microsoft Copilot AI integration dengan citation support. Perfect untuk research dan content creation.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>text: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-link-m"></i>
+                        <span>Citations</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GPT-5 AI -->
+            <div class="endpoint-card fade-in" data-category="ai">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/gpt5?text=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/gpt5?text=', 'GPT-5 AI', 'text')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">GPT-5 AI</h3>
+                <div class="endpoint-path">/api/gpt5?text={message}</div>
+                <p class="endpoint-desc">
+                    Next-generation GPT-5 model dengan kemampuan advanced text generation dan problem solving.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>text: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-brain-line"></i>
+                        <span>Advanced AI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Model AI Chat -->
+            <div class="endpoint-card fade-in" data-category="ai">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/ai/chat?text=&model=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/ai/chat?text=&model=', 'AI Chat', 'text')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Multi-Model AI Chat</h3>
+                <div class="endpoint-path">/api/ai/chat?text={message}&model={model}</div>
+                <p class="endpoint-desc">
+                    Unified AI chat dengan auto model selection. Support: auto, copilot, deepseek, gpt5.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>text: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-shuffle-line"></i>
+                        <span>Multi-Model</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instagram Downloader -->
+            <div class="endpoint-card fade-in" data-category="social">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/instagram?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/instagram?url=', 'Instagram', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Instagram Downloader</h3>
+                <div class="endpoint-path">/api/instagram?url={instagram_url}</div>
+                <p class="endpoint-desc">
+                    Download Instagram Reels, Posts, Stories dengan kualitas HD. Support multi-video dan photo carousel.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-hd-line"></i>
+                        <span>HD Quality</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facebook Downloader -->
+            <div class="endpoint-card fade-in" data-category="social">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/facebook?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/facebook?url=', 'Facebook', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Facebook Downloader</h3>
+                <div class="endpoint-path">/api/facebook?url={facebook_url}</div>
+                <p class="endpoint-desc">
+                    Download video dari Facebook dengan pilihan kualitas HD/SD. Support Facebook Watch, Reels, dan Posts.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-video-line"></i>
+                        <span>HD/SD Options</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threads Downloader -->
+            <div class="endpoint-card fade-in" data-category="social">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/threads?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/threads?url=', 'Threads', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Threads Downloader</h3>
+                <div class="endpoint-path">/api/threads?url={threads_url}</div>
+                <p class="endpoint-desc">
+                    Download images dari Threads posts. Support multi-image carousel dengan direct download links.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-image-line"></i>
+                        <span>Multi-Image</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spotify Downloader -->
+            <div class="endpoint-card fade-in" data-category="media">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/spotify?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/spotify?url=', 'Spotify', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Spotify Downloader</h3>
+                <div class="endpoint-path">/api/spotify?url={spotify_url}&quality=high</div>
+                <p class="endpoint-desc">
+                    Download audio dari Spotify tracks dengan metadata lengkap. Support MP3 format dengan kualitas tinggi.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-music-2-line"></i>
+                        <span>High Quality</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Audio -->
+            <div class="endpoint-card fade-in" data-category="media">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/youtube/audio?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/youtube/audio?url=', 'YouTube Audio', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">YouTube Audio Downloader</h3>
+                <div class="endpoint-path">/api/youtube/audio?url={youtube_url}&quality=128</div>
+                <p class="endpoint-desc">
+                    Extract audio dari YouTube videos sebagai MP3. Pilihan kualitas: 64, 128, 192, 256, 320 kbps.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-volume-up-line"></i>
+                        <span>MP3 Format</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Video -->
+            <div class="endpoint-card fade-in" data-category="media">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/youtube/video?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/youtube/video?url=', 'YouTube Video', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">YouTube Video Downloader</h3>
+                <div class="endpoint-path">/api/youtube/video?url={youtube_url}&quality=360</div>
+                <p class="endpoint-desc">
+                    Download YouTube videos sebagai MP4. Support kualitas: 144p, 360p, 720p, 1080p, hingga 4K.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-film-line"></i>
+                        <span>MP4 Format</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Tools -->
+            <div class="endpoint-card fade-in" data-category="social">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/social/media?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/social/media?url=', 'Social Media', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Social Media Tools</h3>
+                <div class="endpoint-path">/api/social/media?url={url}&platform=auto</div>
+                <p class="endpoint-desc">
+                    Unified social media downloader dengan auto-detection. Support: Instagram, Facebook, YouTube, Spotify, Threads.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-magic-line"></i>
+                        <span>Auto-Detect</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unified Downloader -->
+            <div class="endpoint-card fade-in" data-category="tools">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/download?url=')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/download?url=', 'Unified Downloader', 'url')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Unified Downloader</h3>
+                <div class="endpoint-path">/api/download?url={url}&quality=best&platform=auto</div>
+                <p class="endpoint-desc">
+                    All-in-one downloader untuk audio dan video dari berbagai platform. Support quality selection.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-key-2-line"></i>
+                        <span>url: string (required)</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-download-line"></i>
+                        <span>All-in-One</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Server Status -->
+            <div class="endpoint-card fade-in" data-category="tools">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/status')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/status', 'Server Status', '')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Server Status</h3>
+                <div class="endpoint-path">/api/status</div>
+                <p class="endpoint-desc">
+                    Real-time server monitoring dengan CPU, memory, uptime, dan sistem metrics.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-dashboard-line"></i>
+                        <span>Real-time</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-line-chart-line"></i>
+                        <span>Metrics</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Check -->
+            <div class="endpoint-card fade-in" data-category="tools">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/health')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/health', 'Health Check', '')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">Health Check</h3>
+                <div class="endpoint-path">/api/health</div>
+                <p class="endpoint-desc">
+                    Comprehensive health check dengan endpoint status, services monitoring, dan rate limit info.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-heart-pulse-line"></i>
+                        <span>Health Status</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-check-double-line"></i>
+                        <span>All Services</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Info -->
+            <div class="endpoint-card fade-in" data-category="tools">
+                <div class="endpoint-header">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-actions">
+                        <button class="action-btn" onclick="copyEndpoint('/api/info')">
+                            <i class="ri-clipboard-line"></i>
+                        </button>
+                        <button class="action-btn" onclick="testEndpoint('/api/info', 'API Info', '')">
+                            <i class="ri-play-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="endpoint-title">API Information</h3>
+                <div class="endpoint-path">/api/info</div>
+                <p class="endpoint-desc">
+                    Complete API documentation dengan semua endpoints, parameters, dan features overview.
+                </p>
+                <div class="endpoint-footer">
+                    <div class="param-badge">
+                        <i class="ri-information-line"></i>
+                        <span>Documentation</span>
+                    </div>
+                    <div class="param-badge">
+                        <i class="ri-book-open-line"></i>
+                        <span>Full Docs</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-links">
-                <a href="index.html" class="footer-link">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2 class="section-title">Why Choose API Teguh?</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-robot-2-line"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Model AI</h3>
+                    <p class="feature-desc">
+                        Access to multiple AI models including Deepseek, Copilot, and GPT-5 with intelligent auto-selection.
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-download-cloud-2-line"></i>
+                    </div>
+                    <h3 class="feature-title">All-in-One Downloader</h3>
+                    <p class="feature-desc">
+                        Download from Instagram, Facebook, Threads, YouTube, and Spotify with a single API endpoint.
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-zap-line"></i>
+                    </div>
+                    <h3 class="feature-title">High Performance</h3>
+                    <p class="feature-desc">
+                        Optimized for 2000+ requests per minute with intelligent caching and load balancing.
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="ri-shield-keyhole-line"></i>
+                    </div>
+                    <h3 class="feature-title">Secure & Reliable</h3>
+                    <p class="feature-desc">
+                        Enterprise-grade security with rate limiting, CORS support, and comprehensive error handling.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section fade-in">
+            <h2 class="cta-title">Ready to Power Your Applications?</h2>
+            <p class="cta-desc">
+                Start using our powerful API today. Get real-time AI assistance, download media from multiple platforms, 
+                and monitor your server performance all in one place.
+            </p>
+            <div class="cta-buttons">
+                <a href="dashboard.html" class="btn btn-primary">
+                    <i class="ri-dashboard-line"></i>
+                    Live Dashboard
                 </a>
-                <a href="dashboard.html" class="footer-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/api/info" target="_blank" class="footer-link">
-                    <i class="fas fa-book"></i>
-                    <span>Documentation</span>
-                </a>
-                <a href="https://github.com" target="_blank" class="footer-link">
-                    <i class="fab fa-github"></i>
-                    <span>GitHub</span>
+                <button onclick="openTestPanel()" class="btn btn-secondary">
+                    <i class="ri-code-s-slash-line"></i>
+                    Test API Now
+                </button>
+                <a href="/api/info" target="_blank" class="btn btn-secondary">
+                    <i class="ri-book-open-line"></i>
+                    Full Documentation
                 </a>
             </div>
-            
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>
+                        <i class="ri-server-line"></i>
+                        API Teguh
+                    </h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin-bottom: 20px;">
+                        Advanced REST API server dengan multi-functional tools untuk developers modern.
+                    </p>
+                    <div style="display: flex; gap: 15px;">
+                        <a href="https://github.com" target="_blank" style="color: var(--gray); font-size: 1.2rem;">
+                            <i class="ri-github-fill"></i>
+                        </a>
+                        <a href="#" style="color: var(--gray); font-size: 1.2rem;">
+                            <i class="ri-twitter-fill"></i>
+                        </a>
+                        <a href="#" style="color: var(--gray); font-size: 1.2rem;">
+                            <i class="ri-discord-fill"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html" class="footer-link"><i class="ri-home-line"></i> Home</a></li>
+                        <li><a href="dashboard.html" class="footer-link"><i class="ri-dashboard-line"></i> Dashboard</a></li>
+                        <li><a href="/api/info" target="_blank" class="footer-link"><i class="ri-book-line"></i> Documentation</a></li>
+                        <li><a href="/api/status" target="_blank" class="footer-link"><i class="ri-line-chart-line"></i> Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Endpoints</h3>
+                    <ul class="footer-links">
+                        <li><a href="/api/deepseek?q=hello" target="_blank" class="footer-link"><i class="ri-robot-line"></i> AI Models</a></li>
+                        <li><a href="/api/instagram?url=" target="_blank" class="footer-link"><i class="ri-instagram-line"></i> Social Media</a></li>
+                        <li><a href="/api/spotify?url=" target="_blank" class="footer-link"><i class="ri-music-line"></i> Audio/Video</a></li>
+                        <li><a href="/api/status" target="_blank" class="footer-link"><i class="ri-tools-line"></i> Server Tools</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:support@api-teguh.com" class="footer-link"><i class="ri-mail-line"></i> Email Support</a></li>
+                        <li><a href="#" class="footer-link"><i class="ri-question-line"></i> FAQ</a></li>
+                        <li><a href="#" class="footer-link"><i class="ri-bug-line"></i> Report Issue</a></li>
+                        <li><a href="#" class="footer-link"><i class="ri-lightbulb-line"></i> Feature Request</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="copyright">
-                <p>© 2024 Advanced REST API Server v3.2.0 | Built with ❤️ for Developers</p>
-                <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gray);">
-                    Response Format: JSON | Rate Limit: 2000 req/min | Uptime: 99.9%
+                <p>© 2024 API Teguh v3.6.0 • Built with ❤️ for Developers Worldwide</p>
+                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--gray);">
+                    Response Format: JSON • Rate Limit: 2000 req/min • Uptime: 99.9% • SSL: Enabled
                 </p>
             </div>
         </footer>
@@ -802,109 +1401,252 @@
     <!-- Test API Panel -->
     <div class="overlay" id="overlay"></div>
     <div class="test-panel" id="testPanel">
-        <button class="close-panel" onclick="closeTestPanel()">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <h2 style="margin-bottom: 25px; color: var(--dark);">
-            <i class="fas fa-vial"></i> API Tester
-        </h2>
+        <div style="margin-bottom: 30px;">
+            <button class="action-btn" onclick="closeTestPanel()" style="position: absolute; top: 20px; right: 20px;">
+                <i class="ri-close-line"></i>
+            </button>
+            <h2 style="color: var(--dark); font-size: 1.8rem; margin-bottom: 10px;">
+                <i class="ri-code-s-slash-line"></i> API Testing Console
+            </h2>
+            <p style="color: var(--gray);">Test any API endpoint directly from your browser</p>
+        </div>
         
         <div style="margin-bottom: 25px;">
-            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark);">
-                Select Endpoint
+            <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--dark);">
+                <i class="ri-terminal-line"></i> Select Endpoint
             </label>
-            <select id="endpointSelect" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 20px;" onchange="updateTestForm()">
+            <select id="endpointSelect" style="width: 100%; padding: 15px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 12px; font-size: 1rem; color: var(--dark); margin-bottom: 25px;" onchange="updateTestForm()">
                 <option value="/api/deepseek?q=">/api/deepseek?q= (Deepseek AI)</option>
                 <option value="/api/copilot?text=">/api/copilot?text= (Copilot AI)</option>
                 <option value="/api/gpt5?text=">/api/gpt5?text= (GPT-5 AI)</option>
+                <option value="/api/ai/chat?text=&model=auto">/api/ai/chat?text=&model= (Multi-Model Chat)</option>
                 <option value="/api/instagram?url=">/api/instagram?url= (Instagram)</option>
                 <option value="/api/facebook?url=">/api/facebook?url= (Facebook)</option>
-                <option value="/api/ai/chat?text=&model=">/api/ai/chat?text=&model= (AI Chat)</option>
+                <option value="/api/threads?url=">/api/threads?url= (Threads)</option>
+                <option value="/api/spotify?url=">/api/spotify?url= (Spotify)</option>
+                <option value="/api/youtube/audio?url=">/api/youtube/audio?url= (YouTube Audio)</option>
+                <option value="/api/youtube/video?url=">/api/youtube/video?url= (YouTube Video)</option>
+                <option value="/api/social/media?url=">/api/social/media?url= (Social Media Tools)</option>
+                <option value="/api/download?url=">/api/download?url= (Unified Downloader)</option>
                 <option value="/api/status">/api/status (Server Status)</option>
                 <option value="/api/health">/api/health (Health Check)</option>
+                <option value="/api/info">/api/info (API Information)</option>
             </select>
         </div>
         
         <div id="testForm">
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark);">
-                    Query Parameter
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--dark);">
+                    <i class="ri-key-2-line"></i> Parameters
                 </label>
-                <input type="text" id="paramValue" placeholder="Enter your query here..." style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;">
-            </div>
-            
-            <div id="modelSelectContainer" style="margin-bottom: 20px; display: none;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark);">
-                    AI Model
-                </label>
-                <select id="modelSelect" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;">
-                    <option value="auto">Auto Select</option>
-                    <option value="copilot">Copilot</option>
-                    <option value="deepseek">Deepseek</option>
-                    <option value="gpt5">GPT-5</option>
-                </select>
+                <div id="paramContainer">
+                    <input type="text" id="paramValue" placeholder="Enter parameter value..." style="width: 100%; padding: 15px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 12px; font-size: 1rem; color: var(--dark); margin-bottom: 15px;">
+                </div>
+                <div id="extraParams"></div>
             </div>
         </div>
         
-        <button onclick="executeTest()" style="width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 20px;">
-            <i class="fas fa-play"></i> Test API Endpoint
-        </button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+            <button onclick="executeTest()" style="padding: 16px; background: var(--gradient); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="ri-play-circle-line"></i>
+                Test Endpoint
+            </button>
+            <button onclick="copyTestUrl()" style="padding: 16px; background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="ri-clipboard-line"></i>
+                Copy URL
+            </button>
+        </div>
         
         <div id="testResult" style="display: none;">
-            <h3 style="margin-bottom: 15px; color: var(--dark);">
-                <i class="fas fa-clipboard-check"></i> Result
-            </h3>
-            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <div id="resultContent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: var(--dark); font-size: 1.3rem;">
+                    <i class="ri-clipboard-check-line"></i> Test Results
+                </h3>
+                <button onclick="copyResult()" class="action-btn" style="width: auto; padding: 8px 15px;">
+                    <i class="ri-clipboard-line"></i> Copy Result
+                </button>
+            </div>
+            <div id="resultContent" style="background: rgba(99, 102, 241, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1); max-height: 400px; overflow-y: auto;">
+                <!-- Results will be displayed here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Open test panel
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            themeIcon.className = newTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+            localStorage.setItem('theme', newTheme);
+            
+            // Add animation effect
+            themeToggle.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                themeToggle.style.transform = 'scale(1)';
+            }, 150);
+        });
+
+        // Category Filtering
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const category = tab.dataset.category;
+                const cards = document.querySelectorAll('.endpoint-card');
+                
+                if (category === 'all') {
+                    cards.forEach(card => {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 10);
+                    });
+                } else {
+                    cards.forEach(card => {
+                        if (card.dataset.category === category) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 10);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                }
+            });
+        });
+
+        // Scroll Animation
+        function checkFadeIn() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkFadeIn);
+        window.addEventListener('load', checkFadeIn);
+
+        // Copy Endpoint URL
+        function copyEndpoint(url) {
+            const fullUrl = window.location.origin + url;
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                showNotification('URL copied to clipboard!', 'success');
+            });
+        }
+
+        // Test Panel Functions
         function openTestPanel() {
             document.getElementById('testPanel').classList.add('active');
             document.getElementById('overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Close test panel
         function closeTestPanel() {
             document.getElementById('testPanel').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
             document.getElementById('testResult').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
-        // Update test form based on selected endpoint
         function updateTestForm() {
             const endpoint = document.getElementById('endpointSelect').value;
-            const modelContainer = document.getElementById('modelSelectContainer');
+            const paramContainer = document.getElementById('paramContainer');
+            const extraParams = document.getElementById('extraParams');
             
-            if (endpoint.includes('/api/ai/chat')) {
-                modelContainer.style.display = 'block';
+            // Clear previous inputs
+            extraParams.innerHTML = '';
+            
+            // Show/hide parameter input
+            if (endpoint.includes('?') && !endpoint.includes('/api/status') && 
+                !endpoint.includes('/api/health') && !endpoint.includes('/api/info')) {
+                paramContainer.style.display = 'block';
+                
+                // Add quality selector for media endpoints
+                if (endpoint.includes('/api/youtube/') || endpoint.includes('/api/spotify') || 
+                    endpoint.includes('/api/download') || endpoint.includes('/api/social/media')) {
+                    extraParams.innerHTML = `
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--dark);">
+                                Quality
+                            </label>
+                            <select id="qualitySelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 8px; font-size: 1rem; color: var(--dark);">
+                                <option value="best">Best Quality</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                                <option value="360">360p</option>
+                                <option value="720">720p</option>
+                                <option value="1080">1080p</option>
+                            </select>
+                        </div>
+                    `;
+                }
+                
+                // Add model selector for AI chat
+                if (endpoint.includes('/api/ai/chat')) {
+                    extraParams.innerHTML = `
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--dark);">
+                                AI Model
+                            </label>
+                            <select id="modelSelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 8px; font-size: 1rem; color: var(--dark);">
+                                <option value="auto">Auto Select</option>
+                                <option value="copilot">Copilot</option>
+                                <option value="deepseek">Deepseek</option>
+                                <option value="gpt5">GPT-5</option>
+                            </select>
+                        </div>
+                    `;
+                }
             } else {
-                modelContainer.style.display = 'none';
+                paramContainer.style.display = 'none';
             }
         }
 
-        // Execute API test
         async function executeTest() {
             let endpoint = document.getElementById('endpointSelect').value;
-            const paramValue = document.getElementById('paramValue').value.trim();
+            const paramValue = document.getElementById('paramValue')?.value.trim();
             
-            // Handle special cases
-            if (endpoint === '/api/status' || endpoint === '/api/health') {
-                endpoint = endpoint;
-            } else if (endpoint.includes('/api/ai/chat')) {
-                const model = document.getElementById('modelSelect').value;
-                endpoint = `/api/ai/chat?text=${encodeURIComponent(paramValue)}&model=${model}`;
-            } else {
-                endpoint = endpoint + encodeURIComponent(paramValue);
-            }
-            
-            if ((endpoint.includes('?') && !paramValue) && !endpoint.includes('/api/status') && !endpoint.includes('/api/health')) {
-                alert('Please enter a parameter value');
-                return;
+            // Build URL based on endpoint type
+            if (endpoint.includes('?') && paramValue) {
+                endpoint = endpoint.replace('?', '?' + encodeURIComponent(paramValue));
+                
+                // Add quality parameter for media endpoints
+                if (endpoint.includes('/api/youtube/') || endpoint.includes('/api/spotify') || 
+                    endpoint.includes('/api/download') || endpoint.includes('/api/social/media')) {
+                    const quality = document.getElementById('qualitySelect')?.value || 'best';
+                    endpoint += endpoint.includes('?') ? '&' : '?';
+                    endpoint += `quality=${quality}`;
+                }
+                
+                // Add model parameter for AI chat
+                if (endpoint.includes('/api/ai/chat')) {
+                    const model = document.getElementById('modelSelect')?.value || 'auto';
+                    endpoint += endpoint.includes('?') ? '&' : '?';
+                    endpoint += `model=${model}`;
+                }
             }
             
             const resultDiv = document.getElementById('testResult');
@@ -912,59 +1654,137 @@
             
             resultDiv.style.display = 'block';
             resultContent.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
+                <div style="text-align: center; padding: 40px;">
                     <div class="loader"></div>
-                    <p style="margin-top: 10px; color: var(--gray);">Testing API endpoint...</p>
+                    <p style="margin-top: 15px; color: var(--gray);">Testing API endpoint...</p>
                 </div>
             `;
+            
+            // Scroll to result
+            resultContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             try {
                 const startTime = Date.now();
                 const response = await fetch(endpoint);
-                const data = await response.json();
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
                 
+                let data;
+                try {
+                    data = await response.json();
+                } catch {
+                    data = { status: false, message: 'Invalid JSON response' };
+                }
+                
+                const statusColor = response.ok ? '#10b981' : '#ef4444';
+                const statusIcon = response.ok ? '✓' : '✗';
+                
                 resultContent.innerHTML = `
-                    <div style="margin-bottom: 15px;">
-                        <span style="background: ${data.status ? '#10b981' : '#ef4444'}; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem;">
-                            ${data.status ? '✓ SUCCESS' : '✗ ERROR'}
-                        </span>
-                        <span style="margin-left: 10px; color: var(--gray); font-size: 0.9rem;">
-                            Response: ${response.status} • Time: ${responseTime}ms
-                        </span>
+                    <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                            <span style="background: ${statusColor}; color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
+                                ${statusIcon} ${response.ok ? 'SUCCESS' : 'ERROR'} ${response.status}
+                            </span>
+                            <span style="color: var(--gray); font-size: 0.9rem;">
+                                <i class="ri-time-line"></i> ${responseTime}ms
+                            </span>
+                            <span style="color: var(--gray); font-size: 0.9rem;">
+                                <i class="ri-database-line"></i> ${(JSON.stringify(data).length / 1024).toFixed(2)} KB
+                            </span>
+                        </div>
+                        <div style="font-family: monospace; font-size: 0.9rem; color: var(--gray); word-break: break-all;">
+                            ${window.location.origin}${endpoint}
+                        </div>
                     </div>
                     
-                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
-                        <strong>Endpoint:</strong> ${endpoint}
+                    <div style="background: ${response.ok ? 'rgba(16, 185, 129, 0.05)' : 'rgba(239, 68, 68, 0.05)'}; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="ri-information-line" style="color: ${statusColor};"></i>
+                            <span style="font-weight: 600; color: var(--dark);">
+                                ${data.status ? 'API Response Successful' : 'API Error'}
+                            </span>
+                        </div>
+                        <div style="color: var(--gray); font-size: 0.95rem;">
+                            ${data.message || data.status ? 'Request completed successfully' : 'An error occurred'}
+                        </div>
                     </div>
                     
-                    <div style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow: auto; max-height: 400px;">
-                        <pre style="margin: 0; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.85rem;">${JSON.stringify(data, null, 2)}</pre>
+                    <div style="background: rgba(30, 41, 59, 0.8); border-radius: 8px; overflow: hidden;">
+                        <div style="background: rgba(99, 102, 241, 0.2); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #e2e8f0; font-weight: 600; font-size: 0.9rem;">
+                                <i class="ri-code-s-slash-line"></i> Response Data
+                            </span>
+                            <span style="color: #94a3b8; font-size: 0.8rem;">
+                                JSON
+                            </span>
+                        </div>
+                        <pre style="margin: 0; padding: 20px; color: #e2e8f0; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.85rem; line-height: 1.5; max-height: 300px; overflow: auto; background: rgba(15, 23, 42, 0.5);">
+${JSON.stringify(data, null, 2)}
+                        </pre>
                     </div>
                 `;
+                
+                showNotification('API test completed!', 'success');
+                
             } catch (error) {
                 resultContent.innerHTML = `
-                    <div style="margin-bottom: 15px;">
-                        <span style="background: #ef4444; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem;">
-                            ✗ NETWORK ERROR
-                        </span>
-                    </div>
-                    
-                    <div style="background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 8px;">
-                        <strong>Error:</strong> ${error.message}
-                    </div>
-                    
-                    <div style="margin-top: 15px; padding: 15px; background: #fef3c7; border-radius: 8px;">
-                        <strong>Troubleshooting:</strong>
-                        <ul style="margin-top: 10px; padding-left: 20px;">
-                            <li>Check if the server is running</li>
-                            <li>Verify your network connection</li>
-                            <li>Ensure the endpoint URL is correct</li>
-                        </ul>
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 25px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 3rem; color: var(--danger); margin-bottom: 15px;">
+                            <i class="ri-error-warning-line"></i>
+                        </div>
+                        <h4 style="color: var(--danger); margin-bottom: 10px;">Network Error</h4>
+                        <p style="color: var(--gray); margin-bottom: 20px;">${error.message}</p>
+                        
+                        <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; text-align: left;">
+                            <h5 style="color: var(--dark); margin-bottom: 10px; font-size: 0.9rem;">
+                                <i class="ri-lightbulb-line"></i> Troubleshooting Tips:
+                            </h5>
+                            <ul style="color: var(--gray); font-size: 0.9rem; padding-left: 20px;">
+                                <li>Check your internet connection</li>
+                                <li>Verify the API server is running</li>
+                                <li>Ensure the endpoint URL is correct</li>
+                                <li>Check browser console for errors</li>
+                            </ul>
+                        </div>
                     </div>
                 `;
+                
+                showNotification('API test failed!', 'error');
             }
+        }
+
+        function copyTestUrl() {
+            let endpoint = document.getElementById('endpointSelect').value;
+            const paramValue = document.getElementById('paramValue')?.value.trim();
+            
+            if (endpoint.includes('?') && paramValue) {
+                endpoint = endpoint.replace('?', '?' + encodeURIComponent(paramValue));
+                
+                if (endpoint.includes('/api/youtube/') || endpoint.includes('/api/spotify') || 
+                    endpoint.includes('/api/download') || endpoint.includes('/api/social/media')) {
+                    const quality = document.getElementById('qualitySelect')?.value || 'best';
+                    endpoint += endpoint.includes('?') ? '&' : '?';
+                    endpoint += `quality=${quality}`;
+                }
+                
+                if (endpoint.includes('/api/ai/chat')) {
+                    const model = document.getElementById('modelSelect')?.value || 'auto';
+                    endpoint += endpoint.includes('?') ? '&' : '?';
+                    endpoint += `model=${model}`;
+                }
+            }
+            
+            const fullUrl = window.location.origin + endpoint;
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                showNotification('API URL copied!', 'success');
+            });
+        }
+
+        function copyResult() {
+            const resultText = document.getElementById('resultContent').innerText;
+            navigator.clipboard.writeText(resultText).then(() => {
+                showNotification('Result copied!', 'success');
+            });
         }
 
         // Quick test from endpoint card
@@ -972,36 +1792,107 @@
             openTestPanel();
             const select = document.getElementById('endpointSelect');
             const option = Array.from(select.options).find(opt => opt.value.includes(path));
+            
             if (option) {
                 select.value = option.value;
                 updateTestForm();
                 
-                // Set placeholder
-                const paramInput = document.getElementById('paramValue');
-                paramInput.placeholder = `Enter ${param} for ${name}...`;
-                paramInput.focus();
+                if (param) {
+                    const paramInput = document.getElementById('paramValue');
+                    paramInput.placeholder = `Enter ${param} for ${name}...`;
+                    paramInput.focus();
+                    
+                    // Add example based on endpoint
+                    if (path.includes('/api/deepseek') || path.includes('/api/copilot') || path.includes('/api/gpt5')) {
+                        paramInput.value = 'Hello! How can you help me today?';
+                    } else if (path.includes('/api/instagram')) {
+                        paramInput.value = 'https://www.instagram.com/reel/example';
+                    } else if (path.includes('/api/facebook')) {
+                        paramInput.value = 'https://www.facebook.com/share/v/example';
+                    } else if (path.includes('/api/threads')) {
+                        paramInput.value = 'https://www.threads.com/@username/post/example';
+                    } else if (path.includes('/api/spotify')) {
+                        paramInput.value = 'https://open.spotify.com/track/3k68kVFWTTBP0Jb4LOzCax';
+                    } else if (path.includes('/api/youtube')) {
+                        paramInput.value = 'https://youtu.be/HWjCStB6k4o';
+                    }
+                }
             }
         }
 
-        // Check server status on load
-        window.addEventListener('load', function() {
-            fetch('/api/ping')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        console.log('API Server is ready');
-                    }
-                })
-                .catch(() => {
-                    console.warn('API Server may be offline');
-                });
-        });
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.3s ease;
+                font-weight: 500;
+            `;
+            
+            notification.innerHTML = `
+                <i class="ri-${type === 'success' ? 'check-circle' : 'error-warning'}-line"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
 
-        // Close panel when clicking overlay
-        document.getElementById('overlay').addEventListener('click', closeTestPanel);
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+        `;
+        document.head.appendChild(style);
 
         // Initialize
         updateTestForm();
+        checkFadeIn();
+        
+        // Check server status on load
+        fetch('/api/ping')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    console.log('API Server is ready');
+                    showNotification('API Server connected!', 'success');
+                }
+            })
+            .catch(() => {
+                console.warn('API Server may be offline');
+                showNotification('API Server is offline', 'error');
+            });
+
+        // Close panel when clicking overlay
+        document.getElementById('overlay').addEventListener('click', closeTestPanel);
     </script>
 </body>
 </html>
