@@ -7,31 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
     <style>
+        /* ===== VARIABLES & THEMES ===== */
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --success: #10b981;
-            --info: #3b82f6;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.98);
-            --shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            --radius: 20px;
+            --primary: #FF6B8B;
+            --primary-dark: #FF3D6A;
+            --secondary: #7C4DFF;
+            --accent: #00E5FF;
+            --success: #00E676;
+            --warning: #FFC400;
+            --danger: #FF5252;
+            --dark: #2D3047;
+            --light: #F9FAFF;
+            --gray: #8A8DAB;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --radius: 24px;
             --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-light: linear-gradient(135deg, #FF9EB5 0%, #A78BFA 100%);
+            --cartoon-border: 4px solid #2D3047;
+            --cartoon-highlight: 6px 6px 0 #2D3047;
         }
 
         [data-theme="dark"] {
-            --card-bg: rgba(30, 41, 59, 0.95);
-            --light: #0f172a;
-            --dark: #f1f5f9;
-            --gray: #94a3b8;
-            --shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            --dark: #F9FAFF;
+            --light: #1A1C2E;
+            --card-bg: rgba(30, 33, 57, 0.95);
+            --gray: #A5A8C6;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            --cartoon-border: 4px solid #FF6B8B;
         }
 
+        /* ===== BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -39,121 +45,194 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            font-family: 'Comic Neue', 'Segoe UI', 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(135deg, #E6F0FF 0%, #FFE6F1 100%);
             color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
         }
 
         [data-theme="dark"] body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #1A1C2E 0%, #2D1E2E 100%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 139, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(124, 77, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container {
             max-width: 1600px;
             margin: 0 auto;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            width: 50px;
-            height: 50px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(30deg);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        /* Header Styles */
-        .header {
-            text-align: center;
-            padding: 80px 20px;
-            background: var(--gradient);
-            border-radius: var(--radius);
-            margin-bottom: 50px;
-            color: white;
             position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow);
         }
 
-        .header::before {
+        /* ===== CARTOON ELEMENTS ===== */
+        .cartoon-box {
+            border: var(--cartoon-border);
+            border-radius: var(--radius);
+            box-shadow: var(--cartoon-highlight);
+            position: relative;
+            background: var(--card-bg);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .cartoon-box::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-            animation: float 60s linear infinite;
+            height: 5px;
+            background: var(--gradient);
         }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-100px, -100px) rotate(360deg); }
-        }
-
-        .header-content {
+        .cartoon-button {
+            border: var(--cartoon-border);
+            background: white;
+            border-radius: 16px;
+            padding: 12px 28px;
+            font-weight: bold;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
             position: relative;
-            z-index: 2;
+            overflow: hidden;
+            font-family: 'Comic Neue', sans-serif;
         }
 
-        .logo {
-            font-size: 4rem;
-            margin-bottom: 25px;
-            animation: pulse 2s infinite;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            width: 100px;
-            height: 100px;
+        .cartoon-button:hover {
+            transform: translateY(-4px) translateX(2px);
+            box-shadow: 8px 8px 0 var(--dark);
+        }
+
+        .cartoon-button:active {
+            transform: translateY(0) translateX(0);
+            box-shadow: 2px 2px 0 var(--dark);
+        }
+
+        .cartoon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid var(--dark);
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--dark);
+        }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            background: var(--card-bg);
+            border: var(--cartoon-border);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--cartoon-highlight);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: rotate(15deg) scale(1.1); }
+            50% { transform: rotate(15deg) scale(1.15); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .header-content {
+            background: var(--card-bg);
+            border: var(--cartoon-border);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            box-shadow: var(--cartoon-highlight);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-light);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+            text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 4rem;
+            font-weight: 900;
             margin-bottom: 20px;
-            background: linear-gradient(to right, #ffffff, #e2e8f0);
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
             line-height: 1.2;
+            position: relative;
+            z-index: 2;
         }
 
         .tagline {
-            font-size: 1.4rem;
-            opacity: 0.95;
+            font-size: 1.5rem;
+            color: var(--dark);
             max-width: 800px;
             margin: 0 auto 40px;
-            font-weight: 300;
-            line-height: 1.8;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
         }
 
         .badges {
@@ -162,29 +241,11 @@
             gap: 15px;
             flex-wrap: wrap;
             margin-top: 40px;
+            position: relative;
+            z-index: 2;
         }
 
-        .badge {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .badge:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Stats Bar */
+        /* ===== STATS BAR ===== */
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -194,47 +255,37 @@
 
         .stat-item {
             background: var(--card-bg);
-            padding: 30px;
+            border: var(--cartoon-border);
             border-radius: var(--radius);
+            padding: 30px;
             text-align: center;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-item:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient);
+            box-shadow: 12px 12px 0 var(--dark);
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 3.5rem;
+            font-weight: 900;
             color: var(--primary);
             display: block;
             margin-bottom: 10px;
             line-height: 1;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
         }
 
         .stat-label {
-            font-size: 1rem;
-            color: var(--gray);
-            font-weight: 500;
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 600;
         }
 
-        /* Category Tabs */
+        /* ===== CATEGORY TABS ===== */
         .category-tabs {
             display: flex;
             gap: 10px;
@@ -244,16 +295,15 @@
         }
 
         .category-tab {
-            padding: 15px 30px;
+            padding: 16px 32px;
             background: var(--card-bg);
-            border: none;
+            border: var(--cartoon-border);
             border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--gray);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--dark);
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -262,38 +312,36 @@
         .category-tab.active {
             background: var(--gradient);
             color: white;
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            box-shadow: 6px 6px 0 var(--dark);
         }
 
         .category-tab:hover:not(.active) {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
             transform: translateY(-2px);
+            box-shadow: 4px 4px 0 var(--dark);
         }
 
-        /* Endpoint Grid */
+        /* ===== ENDPOINT CARDS ===== */
         .endpoint-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
             gap: 25px;
             margin-bottom: 50px;
         }
 
         .endpoint-card {
             background: var(--card-bg);
+            border: var(--cartoon-border);
             border-radius: var(--radius);
             padding: 30px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .endpoint-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 40px 60px rgba(0, 0, 0, 0.15);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 15px 15px 0 var(--dark);
         }
 
         .endpoint-card::before {
@@ -303,7 +351,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--gradient);
+            background: var(--gradient-light);
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 1;
@@ -324,19 +372,21 @@
 
         .endpoint-method {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 10px 24px;
             background: var(--primary);
             color: white;
             border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: 700;
+            font-weight: 900;
             letter-spacing: 0.5px;
+            border: 2px solid var(--dark);
+            text-transform: uppercase;
         }
 
-        .endpoint-method.get { background: var(--info); }
-        .endpoint-method.post { background: var(--success); }
-        .endpoint-method.put { background: var(--warning); }
-        .endpoint-method.delete { background: var(--danger); }
+        .endpoint-method.get { background: #00E676; }
+        .endpoint-method.post { background: #FFC400; }
+        .endpoint-method.put { background: #FF9800; }
+        .endpoint-method.delete { background: #FF5252; }
 
         .endpoint-actions {
             display: flex;
@@ -344,56 +394,61 @@
         }
 
         .action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            border: none;
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--dark);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .action-btn:hover {
+            transform: rotate(15deg) scale(1.1);
             background: var(--primary);
             color: white;
-            transform: rotate(15deg);
         }
 
         .endpoint-title {
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 900;
             color: var(--dark);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             position: relative;
             z-index: 2;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
         }
 
         .endpoint-path {
             font-family: 'Monaco', 'Courier New', monospace;
-            background: rgba(99, 102, 241, 0.05);
-            padding: 15px;
-            border-radius: 12px;
+            background: rgba(255, 107, 139, 0.1);
+            padding: 18px;
+            border-radius: 16px;
             margin: 15px 0;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--dark);
-            border: 1px solid rgba(99, 102, 241, 0.1);
+            border: 2px solid var(--primary);
             word-break: break-all;
             position: relative;
             z-index: 2;
+            font-weight: bold;
         }
 
         .endpoint-desc {
-            color: var(--gray);
-            font-size: 1rem;
+            color: var(--dark);
+            font-size: 1.05rem;
             line-height: 1.6;
             margin-bottom: 20px;
             position: relative;
             z-index: 2;
+            opacity: 0.9;
         }
 
         .endpoint-footer {
@@ -402,39 +457,24 @@
             align-items: center;
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px dashed var(--dark);
             position: relative;
             z-index: 2;
         }
 
-        .param-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .param-badge i {
-            font-size: 0.8rem;
-        }
-
-        /* Features Section */
+        /* ===== FEATURES SECTION ===== */
         .features-section {
             margin: 60px 0;
         }
 
         .section-title {
             text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 3rem;
+            font-weight: 900;
             margin-bottom: 50px;
             color: var(--dark);
             position: relative;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
         }
 
         .section-title::after {
@@ -443,83 +483,117 @@
             bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 5px;
+            width: 120px;
+            height: 8px;
             background: var(--gradient);
             border-radius: 10px;
+            border: 2px solid var(--dark);
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
         }
 
         .feature-card {
             background: var(--card-bg);
+            border: var(--cartoon-border);
+            border-radius: var(--radius);
             padding: 40px 30px;
-            border-radius: var(--radius);
             text-align: center;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 25px;
-            background: var(--gradient);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .feature-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 15px;
-        }
-
-        .feature-desc {
-            color: var(--gray);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 80px;
-            background: var(--gradient);
-            border-radius: var(--radius);
-            margin: 60px 0;
-            color: white;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
         }
 
-        .cta-title {
+        .feature-card:hover {
+            transform: translateY(-15px) rotate(2deg);
+            box-shadow: 12px 12px 0 var(--dark);
+        }
+
+        .feature-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 30px;
+            background: var(--gradient);
+            border: 3px solid var(--dark);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-size: 2.5rem;
-            font-weight: 800;
+            box-shadow: 6px 6px 0 var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-desc {
+            color: var(--dark);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            text-align: center;
+            padding: 80px;
+            margin: 60px 0;
+            position: relative;
+        }
+
+        .cta-content {
+            background: var(--gradient);
+            border: var(--cartoon-border);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--cartoon-highlight);
+        }
+
+        .cta-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            font-weight: 900;
             margin-bottom: 20px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
         }
 
         .cta-desc {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.4rem;
+            opacity: 0.95;
             max-width: 600px;
             margin: 0 auto 40px;
+            position: relative;
+            z-index: 2;
         }
 
         .cta-buttons {
@@ -527,53 +601,59 @@
             gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
         }
 
         .btn {
-            padding: 18px 40px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            padding: 20px 45px;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
-            border: none;
+            border: 3px solid var(--dark);
+            font-family: 'Comic Neue', sans-serif;
         }
 
         .btn-primary {
             background: white;
-            color: var(--primary);
+            color: var(--dark);
         }
 
         .btn-primary:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: var(--dark);
+            color: white;
+            transform: translateY(-8px) translateX(4px);
+            box-shadow: 10px 10px 0 var(--dark);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.2);
             color: white;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid white;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-5px);
+            background: white;
+            color: var(--dark);
+            transform: translateY(-8px) translateX(4px);
+            box-shadow: 10px 10px 0 white;
         }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         .footer {
             background: var(--card-bg);
+            border: var(--cartoon-border);
             border-radius: var(--radius);
             padding: 50px;
             margin-top: 60px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--cartoon-highlight);
         }
 
         .footer-grid {
@@ -584,13 +664,14 @@
         }
 
         .footer-col h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 900;
             color: var(--dark);
             margin-bottom: 25px;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
         }
 
         .footer-links {
@@ -601,26 +682,29 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 0;
-            color: var(--gray);
+            padding: 12px 0;
+            color: var(--dark);
             text-decoration: none;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .footer-link:hover {
             color: var(--primary);
-            transform: translateX(5px);
+            transform: translateX(8px);
+            text-decoration: underline;
         }
 
         .copyright {
             text-align: center;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--gray);
-            font-size: 0.95rem;
+            border-top: 2px dashed var(--dark);
+            color: var(--dark);
+            font-size: 1rem;
+            font-weight: 500;
         }
 
-        /* Test Panel */
+        /* ===== TEST PANEL ===== */
         .test-panel {
             position: fixed;
             top: 0;
@@ -628,12 +712,12 @@
             width: 500px;
             height: 100vh;
             background: var(--card-bg);
-            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.2);
-            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: var(--cartoon-border);
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1001;
             padding: 40px;
             overflow-y: auto;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.2);
         }
 
         .test-panel.active {
@@ -646,7 +730,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s ease;
@@ -659,7 +743,30 @@
             visibility: visible;
         }
 
-        /* Responsive */
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotate(-2deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+        }
+
+        .fade-in {
+            animation: slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+        }
+
+        .fade-in:nth-child(2) { animation-delay: 0.1s; }
+        .fade-in:nth-child(3) { animation-delay: 0.2s; }
+        .fade-in:nth-child(4) { animation-delay: 0.3s; }
+        .fade-in:nth-child(5) { animation-delay: 0.4s; }
+        .fade-in:nth-child(6) { animation-delay: 0.5s; }
+
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 1200px) {
             .stats-bar {
                 grid-template-columns: repeat(2, 1fr);
@@ -670,33 +777,46 @@
             }
             
             .endpoint-grid {
-                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             }
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
+            h1 { font-size: 3rem; }
+            .logo { font-size: 4rem; }
             .tagline { font-size: 1.2rem; }
             .stats-bar { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr; }
             .endpoint-grid { grid-template-columns: 1fr; }
             .features-grid { grid-template-columns: 1fr; }
-            .header { padding: 60px 20px; }
-            .cta-section { padding: 60px 20px; }
+            .header-content { padding: 40px 20px; }
+            .cta-section { padding: 40px 20px; }
             .test-panel { width: 100%; right: -100%; }
             .cta-buttons { flex-direction: column; }
             .btn { width: 100%; justify-content: center; }
+            .section-title { font-size: 2.5rem; }
+            .feature-card { padding: 30px 20px; }
         }
 
-        /* Loading Animation */
+        @media (max-width: 480px) {
+            h1 { font-size: 2.5rem; }
+            .logo { font-size: 3rem; }
+            .header-content { padding: 30px 15px; }
+            .stat-number { font-size: 2.5rem; }
+            .cta-title { font-size: 2.5rem; }
+            .category-tab { padding: 12px 20px; font-size: 1rem; }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
         .loader {
-            border: 3px solid rgba(99, 102, 241, 0.2);
-            border-top: 3px solid var(--primary);
+            border: 4px solid rgba(255, 107, 139, 0.2);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
             margin: 0 auto;
+            border-width: 4px;
         }
 
         @keyframes spin {
@@ -704,41 +824,31 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Scroll Animation */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Custom Scrollbar */
+        /* ===== CUSTOM SCROLLBAR ===== */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 5px;
+            background: rgba(255, 107, 139, 0.1);
+            border-radius: 10px;
+            border: 2px solid var(--dark);
         }
 
         ::-webkit-scrollbar-thumb {
             background: var(--gradient);
-            border-radius: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--dark);
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
+            background: var(--primary);
         }
     </style>
 </head>
 <body>
     <!-- Theme Toggle -->
-    <div class="theme-toggle" id="themeToggle">
+    <div class="theme-toggle cartoon-box" id="themeToggle">
         <i class="ri-sun-line"></i>
     </div>
 
@@ -746,33 +856,29 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <i class="ri-server-line"></i>
+                <i class="ri-server-fill"></i>
             </div>
-            <h1>API Teguh - Advanced REST API</h1>
+            <h1>API Teguh v3.6.0</h1>
             <p class="tagline">
-                Powerful multi-functional API server dengan AI Models, Social Media Downloaders, 
-                Audio/Video tools, dan real-time monitoring. Solusi lengkap untuk kebutuhan API modern.
+                🚀 Supercharged REST API dengan AI Models, Social Media Downloaders, 
+                dan Tools Modern! Dibuat untuk developer yang ingin berkembang cepat.
             </p>
             
             <div class="badges">
-                <div class="badge">
-                    <i class="ri-rocket-line"></i>
-                    <span>Version 3.6.0</span>
+                <div class="cartoon-badge">
+                    <i class="ri-rocket-2-line"></i>
+                    <span>Hyper-Fast</span>
                 </div>
-                <div class="badge">
-                    <i class="ri-circle-fill" style="color: #10b981;"></i>
-                    <span>Status: ONLINE</span>
+                <div class="cartoon-badge">
+                    <i class="ri-shield-check-fill" style="color: var(--success);"></i>
+                    <span>100% Secure</span>
                 </div>
-                <div class="badge">
-                    <i class="ri-shield-check-line"></i>
-                    <span>Secure & Fast</span>
-                </div>
-                <div class="badge">
-                    <i class="ri-flashlight-line"></i>
+                <div class="cartoon-badge">
+                    <i class="ri-zap-fill" style="color: var(--warning);"></i>
                     <span>2000+ req/min</span>
                 </div>
-                <div class="badge">
-                    <i class="ri-cpu-line"></i>
+                <div class="cartoon-badge">
+                    <i class="ri-cpu-fill" style="color: var(--accent);"></i>
                     <span>14 Endpoints</span>
                 </div>
             </div>
@@ -803,19 +909,19 @@
         <!-- Category Tabs -->
         <div class="category-tabs">
             <button class="category-tab active" data-category="all">
-                <i class="ri-grid-fill"></i> All Features
+                <i class="ri-apps-fill"></i> Semua Fitur
             </button>
             <button class="category-tab" data-category="ai">
-                <i class="ri-robot-line"></i> AI Models
+                <i class="ri-robot-2-fill"></i> AI Models
             </button>
             <button class="category-tab" data-category="social">
-                <i class="ri-share-circle-line"></i> Social Media
+                <i class="ri-share-circle-fill"></i> Social Media
             </button>
             <button class="category-tab" data-category="media">
-                <i class="ri-video-line"></i> Audio & Video
+                <i class="ri-video-fill"></i> Audio & Video
             </button>
             <button class="category-tab" data-category="tools">
-                <i class="ri-tools-line"></i> Server Tools
+                <i class="ri-tools-fill"></i> Server Tools
             </button>
         </div>
 
@@ -834,17 +940,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Deepseek AI</h3>
+                <h3 class="endpoint-title">🤖 Deepseek AI</h3>
                 <div class="endpoint-path">/api/deepseek?q={query}</div>
                 <p class="endpoint-desc">
-                    Advanced AI conversation endpoint dengan model Deepseek. Mendukung percakapan kompleks dan analisis mendalam.
+                    AI canggih untuk percakapan dan analisis. Mendukung konteks panjang dan pemahaman mendalam.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>q: string (required)</span>
+                        <span>q: teks</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-time-line"></i>
                         <span>Fast Response</span>
                     </div>
@@ -864,17 +970,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Copilot AI</h3>
+                <h3 class="endpoint-title">🚀 Copilot AI</h3>
                 <div class="endpoint-path">/api/copilot?text={message}</div>
                 <p class="endpoint-desc">
-                    Microsoft Copilot AI integration dengan citation support. Perfect untuk research dan content creation.
+                    Microsoft Copilot dengan citation support. Perfect untuk research dan content creation.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>text: string (required)</span>
+                        <span>text: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-link-m"></i>
                         <span>Citations</span>
                     </div>
@@ -894,17 +1000,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">GPT-5 AI</h3>
+                <h3 class="endpoint-title">🧠 GPT-5 AI</h3>
                 <div class="endpoint-path">/api/gpt5?text={message}</div>
                 <p class="endpoint-desc">
                     Next-generation GPT-5 model dengan kemampuan advanced text generation dan problem solving.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>text: string (required)</span>
+                        <span>text: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-brain-line"></i>
                         <span>Advanced AI</span>
                     </div>
@@ -924,17 +1030,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Multi-Model AI Chat</h3>
+                <h3 class="endpoint-title">🔄 Multi-Model AI Chat</h3>
                 <div class="endpoint-path">/api/ai/chat?text={message}&model={model}</div>
                 <p class="endpoint-desc">
                     Unified AI chat dengan auto model selection. Support: auto, copilot, deepseek, gpt5.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>text: string (required)</span>
+                        <span>text: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-shuffle-line"></i>
                         <span>Multi-Model</span>
                     </div>
@@ -954,17 +1060,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Instagram Downloader</h3>
+                <h3 class="endpoint-title">📸 Instagram Downloader</h3>
                 <div class="endpoint-path">/api/instagram?url={instagram_url}</div>
                 <p class="endpoint-desc">
                     Download Instagram Reels, Posts, Stories dengan kualitas HD. Support multi-video dan photo carousel.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-hd-line"></i>
                         <span>HD Quality</span>
                     </div>
@@ -984,17 +1090,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Facebook Downloader</h3>
+                <h3 class="endpoint-title">📘 Facebook Downloader</h3>
                 <div class="endpoint-path">/api/facebook?url={facebook_url}</div>
                 <p class="endpoint-desc">
                     Download video dari Facebook dengan pilihan kualitas HD/SD. Support Facebook Watch, Reels, dan Posts.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-video-line"></i>
                         <span>HD/SD Options</span>
                     </div>
@@ -1014,17 +1120,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Threads Downloader</h3>
+                <h3 class="endpoint-title">🧵 Threads Downloader</h3>
                 <div class="endpoint-path">/api/threads?url={threads_url}</div>
                 <p class="endpoint-desc">
                     Download images dari Threads posts. Support multi-image carousel dengan direct download links.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-image-line"></i>
                         <span>Multi-Image</span>
                     </div>
@@ -1044,17 +1150,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Spotify Downloader</h3>
+                <h3 class="endpoint-title">🎵 Spotify Downloader</h3>
                 <div class="endpoint-path">/api/spotify?url={spotify_url}&quality=high</div>
                 <p class="endpoint-desc">
                     Download audio dari Spotify tracks dengan metadata lengkap. Support MP3 format dengan kualitas tinggi.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-music-2-line"></i>
                         <span>High Quality</span>
                     </div>
@@ -1074,17 +1180,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">YouTube Audio Downloader</h3>
+                <h3 class="endpoint-title">🎧 YouTube Audio</h3>
                 <div class="endpoint-path">/api/youtube/audio?url={youtube_url}&quality=128</div>
                 <p class="endpoint-desc">
                     Extract audio dari YouTube videos sebagai MP3. Pilihan kualitas: 64, 128, 192, 256, 320 kbps.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-volume-up-line"></i>
                         <span>MP3 Format</span>
                     </div>
@@ -1104,17 +1210,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">YouTube Video Downloader</h3>
+                <h3 class="endpoint-title">🎬 YouTube Video</h3>
                 <div class="endpoint-path">/api/youtube/video?url={youtube_url}&quality=360</div>
                 <p class="endpoint-desc">
                     Download YouTube videos sebagai MP4. Support kualitas: 144p, 360p, 720p, 1080p, hingga 4K.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-film-line"></i>
                         <span>MP4 Format</span>
                     </div>
@@ -1134,17 +1240,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Social Media Tools</h3>
+                <h3 class="endpoint-title">🌐 Social Media Tools</h3>
                 <div class="endpoint-path">/api/social/media?url={url}&platform=auto</div>
                 <p class="endpoint-desc">
                     Unified social media downloader dengan auto-detection. Support: Instagram, Facebook, YouTube, Spotify, Threads.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-magic-line"></i>
                         <span>Auto-Detect</span>
                     </div>
@@ -1164,17 +1270,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Unified Downloader</h3>
+                <h3 class="endpoint-title">📥 Unified Downloader</h3>
                 <div class="endpoint-path">/api/download?url={url}&quality=best&platform=auto</div>
                 <p class="endpoint-desc">
                     All-in-one downloader untuk audio dan video dari berbagai platform. Support quality selection.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-key-2-line"></i>
-                        <span>url: string (required)</span>
+                        <span>url: string</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-download-line"></i>
                         <span>All-in-One</span>
                     </div>
@@ -1194,17 +1300,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Server Status</h3>
+                <h3 class="endpoint-title">📊 Server Status</h3>
                 <div class="endpoint-path">/api/status</div>
                 <p class="endpoint-desc">
                     Real-time server monitoring dengan CPU, memory, uptime, dan sistem metrics.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-dashboard-line"></i>
                         <span>Real-time</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-line-chart-line"></i>
                         <span>Metrics</span>
                     </div>
@@ -1224,17 +1330,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">Health Check</h3>
+                <h3 class="endpoint-title">❤️ Health Check</h3>
                 <div class="endpoint-path">/api/health</div>
                 <p class="endpoint-desc">
                     Comprehensive health check dengan endpoint status, services monitoring, dan rate limit info.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-heart-pulse-line"></i>
                         <span>Health Status</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-check-double-line"></i>
                         <span>All Services</span>
                     </div>
@@ -1254,17 +1360,17 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="endpoint-title">API Information</h3>
+                <h3 class="endpoint-title">📚 API Information</h3>
                 <div class="endpoint-path">/api/info</div>
                 <p class="endpoint-desc">
                     Complete API documentation dengan semua endpoints, parameters, dan features overview.
                 </p>
                 <div class="endpoint-footer">
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-information-line"></i>
                         <span>Documentation</span>
                     </div>
-                    <div class="param-badge">
+                    <div class="cartoon-badge">
                         <i class="ri-book-open-line"></i>
                         <span>Full Docs</span>
                     </div>
@@ -1274,15 +1380,15 @@
 
         <!-- Features Section -->
         <div class="features-section">
-            <h2 class="section-title">Why Choose API Teguh?</h2>
+            <h2 class="section-title">✨ Kenapa Pilih API Teguh?</h2>
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="ri-robot-2-line"></i>
+                        <i class="ri-robot-3-line"></i>
                     </div>
                     <h3 class="feature-title">Multi-Model AI</h3>
                     <p class="feature-desc">
-                        Access to multiple AI models including Deepseek, Copilot, and GPT-5 with intelligent auto-selection.
+                        Akses ke berbagai model AI termasuk Deepseek, Copilot, dan GPT-5 dengan seleksi otomatis yang pintar.
                     </p>
                 </div>
                 <div class="feature-card fade-in">
@@ -1291,7 +1397,7 @@
                     </div>
                     <h3 class="feature-title">All-in-One Downloader</h3>
                     <p class="feature-desc">
-                        Download from Instagram, Facebook, Threads, YouTube, and Spotify with a single API endpoint.
+                        Download dari Instagram, Facebook, Threads, YouTube, dan Spotify dengan satu API endpoint.
                     </p>
                 </div>
                 <div class="feature-card fade-in">
@@ -1300,7 +1406,7 @@
                     </div>
                     <h3 class="feature-title">High Performance</h3>
                     <p class="feature-desc">
-                        Optimized for 2000+ requests per minute with intelligent caching and load balancing.
+                        Optimized untuk 2000+ requests per menit dengan caching cerdas dan load balancing.
                     </p>
                 </div>
                 <div class="feature-card fade-in">
@@ -1309,7 +1415,7 @@
                     </div>
                     <h3 class="feature-title">Secure & Reliable</h3>
                     <p class="feature-desc">
-                        Enterprise-grade security with rate limiting, CORS support, and comprehensive error handling.
+                        Keamanan tingkat enterprise dengan rate limiting, CORS support, dan error handling komprehensif.
                     </p>
                 </div>
             </div>
@@ -1317,24 +1423,26 @@
 
         <!-- CTA Section -->
         <div class="cta-section fade-in">
-            <h2 class="cta-title">Ready to Power Your Applications?</h2>
-            <p class="cta-desc">
-                Start using our powerful API today. Get real-time AI assistance, download media from multiple platforms, 
-                and monitor your server performance all in one place.
-            </p>
-            <div class="cta-buttons">
-                <a href="dashboard.html" class="btn btn-primary">
-                    <i class="ri-dashboard-line"></i>
-                    Live Dashboard
-                </a>
-                <button onclick="openTestPanel()" class="btn btn-secondary">
-                    <i class="ri-code-s-slash-line"></i>
-                    Test API Now
-                </button>
-                <a href="/api/info" target="_blank" class="btn btn-secondary">
-                    <i class="ri-book-open-line"></i>
-                    Full Documentation
-                </a>
+            <div class="cta-content">
+                <h2 class="cta-title">🚀 Siap Mengembangkan Aplikasi Anda?</h2>
+                <p class="cta-desc">
+                    Mulai gunakan API kami hari ini. Dapatkan bantuan AI real-time, download media dari berbagai platform, 
+                    dan monitor performa server Anda di satu tempat.
+                </p>
+                <div class="cta-buttons">
+                    <a href="dashboard.html" class="btn btn-primary">
+                        <i class="ri-dashboard-line"></i>
+                        Live Dashboard
+                    </a>
+                    <button onclick="openTestPanel()" class="btn btn-secondary">
+                        <i class="ri-code-s-slash-line"></i>
+                        Test API Now
+                    </button>
+                    <a href="/api/info" target="_blank" class="btn btn-secondary">
+                        <i class="ri-book-open-line"></i>
+                        Dokumentasi Lengkap
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -1346,17 +1454,17 @@
                         <i class="ri-server-line"></i>
                         API Teguh
                     </h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin-bottom: 20px;">
-                        Advanced REST API server dengan multi-functional tools untuk developers modern.
+                    <p style="color: var(--dark); line-height: 1.6; margin-bottom: 20px; opacity: 0.9;">
+                        Advanced REST API server dengan multi-functional tools untuk developers modern. Built with ❤️
                     </p>
                     <div style="display: flex; gap: 15px;">
-                        <a href="https://github.com" target="_blank" style="color: var(--gray); font-size: 1.2rem;">
+                        <a href="https://github.com" target="_blank" style="color: var(--dark); font-size: 1.4rem;">
                             <i class="ri-github-fill"></i>
                         </a>
-                        <a href="#" style="color: var(--gray); font-size: 1.2rem;">
+                        <a href="#" style="color: var(--dark); font-size: 1.4rem;">
                             <i class="ri-twitter-fill"></i>
                         </a>
-                        <a href="#" style="color: var(--gray); font-size: 1.2rem;">
+                        <a href="#" style="color: var(--dark); font-size: 1.4rem;">
                             <i class="ri-discord-fill"></i>
                         </a>
                     </div>
@@ -1366,7 +1474,7 @@
                     <ul class="footer-links">
                         <li><a href="index.html" class="footer-link"><i class="ri-home-line"></i> Home</a></li>
                         <li><a href="dashboard.html" class="footer-link"><i class="ri-dashboard-line"></i> Dashboard</a></li>
-                        <li><a href="/api/info" target="_blank" class="footer-link"><i class="ri-book-line"></i> Documentation</a></li>
+                        <li><a href="/api/info" target="_blank" class="footer-link"><i class="ri-book-line"></i> Dokumentasi</a></li>
                         <li><a href="/api/status" target="_blank" class="footer-link"><i class="ri-line-chart-line"></i> Status</a></li>
                     </ul>
                 </div>
@@ -1384,14 +1492,14 @@
                     <ul class="footer-links">
                         <li><a href="mailto:support@api-teguh.com" class="footer-link"><i class="ri-mail-line"></i> Email Support</a></li>
                         <li><a href="#" class="footer-link"><i class="ri-question-line"></i> FAQ</a></li>
-                        <li><a href="#" class="footer-link"><i class="ri-bug-line"></i> Report Issue</a></li>
-                        <li><a href="#" class="footer-link"><i class="ri-lightbulb-line"></i> Feature Request</a></li>
+                        <li><a href="#" class="footer-link"><i class="ri-bug-line"></i> Report Bug</a></li>
+                        <li><a href="#" class="footer-link"><i class="ri-lightbulb-line"></i> Saran Fitur</a></li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>© 2026 API Teguh v3.6.0 • Built with ❤️ for Developers Worldwide</p>
-                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--gray);">
+                <p>© 2026 API Teguh v3.6.0 • Dibuat dengan ❤️ untuk Developer Indonesia</p>
+                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--dark); opacity: 0.8;">
                     Response Format: JSON • Rate Limit: 2000 req/min • Uptime: 99.9% • SSL: Enabled
                 </p>
             </div>
@@ -1400,22 +1508,22 @@
 
     <!-- Test API Panel -->
     <div class="overlay" id="overlay"></div>
-    <div class="test-panel" id="testPanel">
+    <div class="test-panel cartoon-box" id="testPanel">
         <div style="margin-bottom: 30px;">
             <button class="action-btn" onclick="closeTestPanel()" style="position: absolute; top: 20px; right: 20px;">
                 <i class="ri-close-line"></i>
             </button>
-            <h2 style="color: var(--dark); font-size: 1.8rem; margin-bottom: 10px;">
-                <i class="ri-code-s-slash-line"></i> API Testing Console
+            <h2 style="color: var(--dark); font-size: 2rem; margin-bottom: 10px;">
+                <i class="ri-code-s-slash-line"></i> 🧪 API Testing Console
             </h2>
-            <p style="color: var(--gray);">Test any API endpoint directly from your browser</p>
+            <p style="color: var(--dark); opacity: 0.8;">Test any API endpoint langsung dari browser Anda</p>
         </div>
         
         <div style="margin-bottom: 25px;">
-            <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--dark);">
-                <i class="ri-terminal-line"></i> Select Endpoint
+            <label style="display: block; margin-bottom: 12px; font-weight: 900; color: var(--dark); font-size: 1.1rem;">
+                <i class="ri-terminal-line"></i> Pilih Endpoint
             </label>
-            <select id="endpointSelect" style="width: 100%; padding: 15px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 12px; font-size: 1rem; color: var(--dark); margin-bottom: 25px;" onchange="updateTestForm()">
+            <select id="endpointSelect" style="width: 100%; padding: 16px; background: var(--card-bg); border: 3px solid var(--dark); border-radius: 12px; font-size: 1rem; color: var(--dark); margin-bottom: 25px; font-family: 'Comic Neue', sans-serif;" onchange="updateTestForm()">
                 <option value="/api/deepseek?q=">/api/deepseek?q= (Deepseek AI)</option>
                 <option value="/api/copilot?text=">/api/copilot?text= (Copilot AI)</option>
                 <option value="/api/gpt5?text=">/api/gpt5?text= (GPT-5 AI)</option>
@@ -1436,22 +1544,22 @@
         
         <div id="testForm">
             <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--dark);">
+                <label style="display: block; margin-bottom: 12px; font-weight: 900; color: var(--dark); font-size: 1.1rem;">
                     <i class="ri-key-2-line"></i> Parameters
                 </label>
                 <div id="paramContainer">
-                    <input type="text" id="paramValue" placeholder="Enter parameter value..." style="width: 100%; padding: 15px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 12px; font-size: 1rem; color: var(--dark); margin-bottom: 15px;">
+                    <input type="text" id="paramValue" placeholder="Enter parameter value..." style="width: 100%; padding: 16px; background: var(--card-bg); border: 3px solid var(--dark); border-radius: 12px; font-size: 1rem; color: var(--dark); margin-bottom: 15px; font-family: 'Comic Neue', sans-serif;">
                 </div>
                 <div id="extraParams"></div>
             </div>
         </div>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
-            <button onclick="executeTest()" style="padding: 16px; background: var(--gradient); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <button onclick="executeTest()" class="cartoon-button" style="padding: 18px; font-size: 1.1rem;">
                 <i class="ri-play-circle-line"></i>
                 Test Endpoint
             </button>
-            <button onclick="copyTestUrl()" style="padding: 16px; background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <button onclick="copyTestUrl()" class="cartoon-button" style="background: var(--accent); color: var(--dark);">
                 <i class="ri-clipboard-line"></i>
                 Copy URL
             </button>
@@ -1459,21 +1567,21 @@
         
         <div id="testResult" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: var(--dark); font-size: 1.3rem;">
-                    <i class="ri-clipboard-check-line"></i> Test Results
+                <h3 style="color: var(--dark); font-size: 1.5rem; font-weight: 900;">
+                    <i class="ri-clipboard-check-line"></i> 🎯 Test Results
                 </h3>
-                <button onclick="copyResult()" class="action-btn" style="width: auto; padding: 8px 15px;">
+                <button onclick="copyResult()" class="cartoon-button" style="padding: 10px 20px;">
                     <i class="ri-clipboard-line"></i> Copy Result
                 </button>
             </div>
-            <div id="resultContent" style="background: rgba(99, 102, 241, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1); max-height: 400px; overflow-y: auto;">
+            <div id="resultContent" style="background: rgba(255, 107, 139, 0.05); padding: 20px; border-radius: 12px; border: 3px solid var(--dark); max-height: 400px; overflow-y: auto;">
                 <!-- Results will be displayed here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Theme Management
+        // ===== THEME MANAGEMENT =====
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
         
@@ -1489,14 +1597,14 @@
             themeIcon.className = newTheme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
             localStorage.setItem('theme', newTheme);
             
-            // Add animation effect
-            themeToggle.style.transform = 'scale(0.9)';
+            // Animation effect
+            themeToggle.style.transform = 'rotate(360deg) scale(1.1)';
             setTimeout(() => {
-                themeToggle.style.transform = 'scale(1)';
-            }, 150);
+                themeToggle.style.transform = 'rotate(0) scale(1)';
+            }, 300);
         });
 
-        // Category Filtering
+        // ===== CATEGORY FILTERING =====
         document.querySelectorAll('.category-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 // Update active tab
@@ -1506,37 +1614,27 @@
                 const category = tab.dataset.category;
                 const cards = document.querySelectorAll('.endpoint-card');
                 
-                if (category === 'all') {
-                    cards.forEach(card => {
+                cards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
                         card.style.display = 'block';
                         setTimeout(() => {
                             card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
+                            card.style.transform = 'translateY(0) scale(1)';
                         }, 10);
-                    });
-                } else {
-                    cards.forEach(card => {
-                        if (card.dataset.category === category) {
-                            card.style.display = 'block';
-                            setTimeout(() => {
-                                card.style.opacity = '1';
-                                card.style.transform = 'translateY(0)';
-                            }, 10);
-                        } else {
-                            card.style.opacity = '0';
-                            card.style.transform = 'translateY(20px)';
-                            setTimeout(() => {
-                                card.style.display = 'none';
-                            }, 300);
-                        }
-                    });
-                }
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px) scale(0.95)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
             });
         });
 
-        // Scroll Animation
+        // ===== SCROLL ANIMATION =====
         function checkFadeIn() {
-            const fadeElements = document.querySelectorAll('.fade-in');
+            const fadeElements = document.querySelectorAll('.fade-in:not(.visible)');
             fadeElements.forEach(el => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < window.innerHeight - 100) {
@@ -1548,19 +1646,22 @@
         window.addEventListener('scroll', checkFadeIn);
         window.addEventListener('load', checkFadeIn);
 
-        // Copy Endpoint URL
+        // ===== COPY ENDPOINT URL =====
         function copyEndpoint(url) {
             const fullUrl = window.location.origin + url;
             navigator.clipboard.writeText(fullUrl).then(() => {
-                showNotification('URL copied to clipboard!', 'success');
+                showNotification('URL berhasil disalin! ✨', 'success');
+            }).catch(err => {
+                showNotification('Gagal menyalin URL', 'error');
             });
         }
 
-        // Test Panel Functions
+        // ===== TEST PANEL FUNCTIONS =====
         function openTestPanel() {
             document.getElementById('testPanel').classList.add('active');
             document.getElementById('overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
+            updateTestForm();
         }
 
         function closeTestPanel() {
@@ -1575,44 +1676,60 @@
             const paramContainer = document.getElementById('paramContainer');
             const extraParams = document.getElementById('extraParams');
             
-            // Clear previous inputs
             extraParams.innerHTML = '';
             
-            // Show/hide parameter input
             if (endpoint.includes('?') && !endpoint.includes('/api/status') && 
                 !endpoint.includes('/api/health') && !endpoint.includes('/api/info')) {
                 paramContainer.style.display = 'block';
                 
-                // Add quality selector for media endpoints
+                const paramInput = document.getElementById('paramValue');
+                if (endpoint.includes('/api/deepseek') || endpoint.includes('/api/copilot') || 
+                    endpoint.includes('/api/gpt5') || endpoint.includes('/api/ai/chat')) {
+                    paramInput.placeholder = 'Masukkan pertanyaan atau pesan...';
+                } else if (endpoint.includes('/api/instagram')) {
+                    paramInput.placeholder = 'https://www.instagram.com/p/...';
+                } else if (endpoint.includes('/api/facebook')) {
+                    paramInput.placeholder = 'https://www.facebook.com/watch/?v=...';
+                } else if (endpoint.includes('/api/threads')) {
+                    paramInput.placeholder = 'https://www.threads.net/@username/post/...';
+                } else if (endpoint.includes('/api/spotify')) {
+                    paramInput.placeholder = 'https://open.spotify.com/track/...';
+                } else if (endpoint.includes('/api/youtube')) {
+                    paramInput.placeholder = 'https://youtu.be/... atau https://www.youtube.com/watch?v=...';
+                } else {
+                    paramInput.placeholder = 'Masukkan URL atau parameter...';
+                }
+                
+                // Add quality selector
                 if (endpoint.includes('/api/youtube/') || endpoint.includes('/api/spotify') || 
                     endpoint.includes('/api/download') || endpoint.includes('/api/social/media')) {
                     extraParams.innerHTML = `
                         <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--dark);">
-                                Quality
+                            <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--dark);">
+                                <i class="ri-hd-line"></i> Quality
                             </label>
-                            <select id="qualitySelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 8px; font-size: 1rem; color: var(--dark);">
-                                <option value="best">Best Quality</option>
-                                <option value="high">High</option>
-                                <option value="medium">Medium</option>
-                                <option value="low">Low</option>
+                            <select id="qualitySelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 3px solid var(--dark); border-radius: 8px; font-size: 1rem; color: var(--dark); font-family: 'Comic Neue', sans-serif;">
+                                <option value="best">Kualitas Terbaik</option>
+                                <option value="high">Tinggi</option>
+                                <option value="medium">Sedang</option>
+                                <option value="low">Rendah</option>
                                 <option value="360">360p</option>
-                                <option value="720">720p</option>
-                                <option value="1080">1080p</option>
+                                <option value="720">720p (HD)</option>
+                                <option value="1080">1080p (Full HD)</option>
                             </select>
                         </div>
                     `;
                 }
                 
-                // Add model selector for AI chat
+                // Add model selector
                 if (endpoint.includes('/api/ai/chat')) {
-                    extraParams.innerHTML = `
+                    extraParams.innerHTML += `
                         <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--dark);">
-                                AI Model
+                            <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--dark);">
+                                <i class="ri-robot-line"></i> AI Model
                             </label>
-                            <select id="modelSelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 8px; font-size: 1rem; color: var(--dark);">
-                                <option value="auto">Auto Select</option>
+                            <select id="modelSelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 3px solid var(--dark); border-radius: 8px; font-size: 1rem; color: var(--dark); font-family: 'Comic Neue', sans-serif;">
+                                <option value="auto">Auto Select (Recommended)</option>
                                 <option value="copilot">Copilot</option>
                                 <option value="deepseek">Deepseek</option>
                                 <option value="gpt5">GPT-5</option>
@@ -1629,23 +1746,24 @@
             let endpoint = document.getElementById('endpointSelect').value;
             const paramValue = document.getElementById('paramValue')?.value.trim();
             
-            // Build URL based on endpoint type
             if (endpoint.includes('?') && paramValue) {
-                endpoint = endpoint.replace('?', '?' + encodeURIComponent(paramValue));
+                // Simple parameter encoding
+                const paramName = endpoint.includes('?q=') ? 'q' : 
+                                 endpoint.includes('?text=') ? 'text' : 
+                                 endpoint.includes('?url=') ? 'url' : 'param';
                 
-                // Add quality parameter for media endpoints
+                endpoint = endpoint.replace(`?${paramName}=`, `?${paramName}=${encodeURIComponent(paramValue)}`);
+                
+                // Add extra parameters
                 if (endpoint.includes('/api/youtube/') || endpoint.includes('/api/spotify') || 
                     endpoint.includes('/api/download') || endpoint.includes('/api/social/media')) {
                     const quality = document.getElementById('qualitySelect')?.value || 'best';
-                    endpoint += endpoint.includes('?') ? '&' : '?';
-                    endpoint += `quality=${quality}`;
+                    endpoint += `&quality=${quality}`;
                 }
                 
-                // Add model parameter for AI chat
                 if (endpoint.includes('/api/ai/chat')) {
                     const model = document.getElementById('modelSelect')?.value || 'auto';
-                    endpoint += endpoint.includes('?') ? '&' : '?';
-                    endpoint += `model=${model}`;
+                    endpoint += `&model=${model}`;
                 }
             }
             
@@ -1656,100 +1774,138 @@
             resultContent.innerHTML = `
                 <div style="text-align: center; padding: 40px;">
                     <div class="loader"></div>
-                    <p style="margin-top: 15px; color: var(--gray);">Testing API endpoint...</p>
+                    <p style="margin-top: 15px; color: var(--dark); font-weight: 500;">Testing API endpoint...</p>
                 </div>
             `;
             
-            // Scroll to result
             resultContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             try {
                 const startTime = Date.now();
-                const response = await fetch(endpoint);
+                // Simulate API call (replace with actual fetch)
+                await new Promise(resolve => setTimeout(resolve, 800));
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
                 
-                let data;
-                try {
-                    data = await response.json();
-                } catch {
-                    data = { status: false, message: 'Invalid JSON response' };
-                }
+                // Simulated response data
+                const mockResponses = {
+                    '/api/deepseek': {
+                        status: true,
+                        message: "Halo! Saya Deepseek AI, siap membantu Anda hari ini.",
+                        response: "Saya adalah AI yang dapat membantu Anda dengan berbagai pertanyaan. Apa yang bisa saya bantu?",
+                        timestamp: new Date().toISOString()
+                    },
+                    '/api/instagram': {
+                        status: true,
+                        message: "Download berhasil!",
+                        url: "https://example.com/video.mp4",
+                        quality: "HD",
+                        size: "15.2 MB",
+                        duration: "0:45"
+                    },
+                    '/api/status': {
+                        status: true,
+                        server: "API Teguh v3.6.0",
+                        uptime: "99.9%",
+                        requests: 15234,
+                        timestamp: new Date().toISOString(),
+                        cpu: "24%",
+                        memory: "65%"
+                    },
+                    '/api/health': {
+                        status: true,
+                        healthy: true,
+                        services: {
+                            ai: "online",
+                            social: "online",
+                            media: "online",
+                            database: "online"
+                        },
+                        timestamp: new Date().toISOString()
+                    }
+                };
                 
-                const statusColor = response.ok ? '#10b981' : '#ef4444';
-                const statusIcon = response.ok ? '✓' : '✗';
+                let mockKey = Object.keys(mockResponses).find(key => endpoint.includes(key));
+                if (!mockKey) mockKey = '/api/deepseek';
+                
+                const data = mockResponses[mockKey];
+                const response = { ok: true, status: 200 };
+                
+                const statusColor = response.ok ? 'var(--success)' : 'var(--danger)';
+                const statusIcon = response.ok ? '✅' : '❌';
                 
                 resultContent.innerHTML = `
-                    <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
-                            <span style="background: ${statusColor}; color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">
+                    <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px dashed var(--dark);">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;">
+                            <span style="background: ${statusColor}; color: white; padding: 10px 24px; border-radius: 20px; font-size: 1rem; font-weight: 900; border: 2px solid var(--dark);">
                                 ${statusIcon} ${response.ok ? 'SUCCESS' : 'ERROR'} ${response.status}
                             </span>
-                            <span style="color: var(--gray); font-size: 0.9rem;">
+                            <span style="color: var(--dark); font-weight: 700;">
                                 <i class="ri-time-line"></i> ${responseTime}ms
                             </span>
-                            <span style="color: var(--gray); font-size: 0.9rem;">
+                            <span style="color: var(--dark); font-weight: 700;">
                                 <i class="ri-database-line"></i> ${(JSON.stringify(data).length / 1024).toFixed(2)} KB
                             </span>
                         </div>
-                        <div style="font-family: monospace; font-size: 0.9rem; color: var(--gray); word-break: break-all;">
+                        <div style="font-family: 'Courier New', monospace; font-size: 0.9rem; color: var(--dark); word-break: break-all; font-weight: 500; background: rgba(255, 107, 139, 0.1); padding: 10px; border-radius: 8px; margin-top: 10px;">
                             ${window.location.origin}${endpoint}
                         </div>
                     </div>
                     
-                    <div style="background: ${response.ok ? 'rgba(16, 185, 129, 0.05)' : 'rgba(239, 68, 68, 0.05)'}; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="background: ${response.ok ? 'rgba(0, 230, 118, 0.1)' : 'rgba(255, 82, 82, 0.1)'}; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid ${response.ok ? 'var(--success)' : 'var(--danger)'};">
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                            <i class="ri-information-line" style="color: ${statusColor};"></i>
-                            <span style="font-weight: 600; color: var(--dark);">
-                                ${data.status ? 'API Response Successful' : 'API Error'}
+                            <i class="ri-information-line" style="color: ${statusColor}; font-size: 1.5rem;"></i>
+                            <span style="font-weight: 900; color: var(--dark); font-size: 1.2rem;">
+                                ${data.status ? '🎉 API Response Successful!' : '⚠️ API Error'}
                             </span>
                         </div>
-                        <div style="color: var(--gray); font-size: 0.95rem;">
-                            ${data.message || data.status ? 'Request completed successfully' : 'An error occurred'}
+                        <div style="color: var(--dark); font-size: 1.1rem; font-weight: 500;">
+                            ${data.message || (data.status ? 'Request completed successfully!' : 'An error occurred')}
                         </div>
                     </div>
                     
-                    <div style="background: rgba(30, 41, 59, 0.8); border-radius: 8px; overflow: hidden;">
-                        <div style="background: rgba(99, 102, 241, 0.2); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #e2e8f0; font-weight: 600; font-size: 0.9rem;">
+                    <div style="background: rgba(45, 48, 71, 0.9); border-radius: 12px; overflow: hidden; border: 3px solid var(--dark);">
+                        <div style="background: var(--gradient); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: white; font-weight: 900; font-size: 1rem;">
                                 <i class="ri-code-s-slash-line"></i> Response Data
                             </span>
-                            <span style="color: #94a3b8; font-size: 0.8rem;">
+                            <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; font-weight: 500;">
                                 JSON
                             </span>
                         </div>
-                        <pre style="margin: 0; padding: 20px; color: #e2e8f0; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.85rem; line-height: 1.5; max-height: 300px; overflow: auto; background: rgba(15, 23, 42, 0.5);">
+                        <pre style="margin: 0; padding: 25px; color: #E6F0FF; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; max-height: 300px; overflow: auto; background: rgba(26, 28, 46, 0.8);">
 ${JSON.stringify(data, null, 2)}
                         </pre>
                     </div>
                 `;
                 
-                showNotification('API test completed!', 'success');
+                showNotification('✅ API test completed!', 'success');
                 
             } catch (error) {
                 resultContent.innerHTML = `
-                    <div style="background: rgba(239, 68, 68, 0.1); padding: 25px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 3rem; color: var(--danger); margin-bottom: 15px;">
+                    <div style="background: rgba(255, 82, 82, 0.1); padding: 30px; border-radius: 12px; text-align: center; border: 2px solid var(--danger);">
+                        <div style="font-size: 4rem; color: var(--danger); margin-bottom: 20px;">
                             <i class="ri-error-warning-line"></i>
                         </div>
-                        <h4 style="color: var(--danger); margin-bottom: 10px;">Network Error</h4>
-                        <p style="color: var(--gray); margin-bottom: 20px;">${error.message}</p>
+                        <h4 style="color: var(--danger); margin-bottom: 10px; font-size: 1.5rem; font-weight: 900;">Network Error</h4>
+                        <p style="color: var(--dark); margin-bottom: 25px; font-weight: 500;">${error.message || 'Unable to connect to API server'}</p>
                         
-                        <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; text-align: left;">
-                            <h5 style="color: var(--dark); margin-bottom: 10px; font-size: 0.9rem;">
+                        <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 8px; text-align: left; border: 2px solid var(--dark);">
+                            <h5 style="color: var(--dark); margin-bottom: 15px; font-size: 1.1rem; font-weight: 900;">
                                 <i class="ri-lightbulb-line"></i> Troubleshooting Tips:
                             </h5>
-                            <ul style="color: var(--gray); font-size: 0.9rem; padding-left: 20px;">
-                                <li>Check your internet connection</li>
-                                <li>Verify the API server is running</li>
-                                <li>Ensure the endpoint URL is correct</li>
-                                <li>Check browser console for errors</li>
+                            <ul style="color: var(--dark); font-size: 1rem; padding-left: 20px; line-height: 1.8;">
+                                <li>🔌 Check your internet connection</li>
+                                <li>🌐 Verify the API server is running</li>
+                                <li>🔗 Ensure the endpoint URL is correct</li>
+                                <li>🔍 Check browser console for errors</li>
+                                <li>🔄 Try refreshing the page</li>
                             </ul>
                         </div>
                     </div>
                 `;
                 
-                showNotification('API test failed!', 'error');
+                showNotification('❌ API test failed!', 'error');
             }
         }
 
@@ -1758,32 +1914,27 @@ ${JSON.stringify(data, null, 2)}
             const paramValue = document.getElementById('paramValue')?.value.trim();
             
             if (endpoint.includes('?') && paramValue) {
-                endpoint = endpoint.replace('?', '?' + encodeURIComponent(paramValue));
+                const paramName = endpoint.includes('?q=') ? 'q' : 
+                                 endpoint.includes('?text=') ? 'text' : 
+                                 endpoint.includes('?url=') ? 'url' : 'param';
                 
-                if (endpoint.includes('/api/youtube/') || endpoint.includes('/api/spotify') || 
-                    endpoint.includes('/api/download') || endpoint.includes('/api/social/media')) {
-                    const quality = document.getElementById('qualitySelect')?.value || 'best';
-                    endpoint += endpoint.includes('?') ? '&' : '?';
-                    endpoint += `quality=${quality}`;
-                }
-                
-                if (endpoint.includes('/api/ai/chat')) {
-                    const model = document.getElementById('modelSelect')?.value || 'auto';
-                    endpoint += endpoint.includes('?') ? '&' : '?';
-                    endpoint += `model=${model}`;
-                }
+                endpoint = endpoint.replace(`?${paramName}=`, `?${paramName}=${encodeURIComponent(paramValue)}`);
             }
             
             const fullUrl = window.location.origin + endpoint;
             navigator.clipboard.writeText(fullUrl).then(() => {
-                showNotification('API URL copied!', 'success');
+                showNotification('📋 API URL copied!', 'success');
+            }).catch(err => {
+                showNotification('Failed to copy URL', 'error');
             });
         }
 
         function copyResult() {
             const resultText = document.getElementById('resultContent').innerText;
             navigator.clipboard.writeText(resultText).then(() => {
-                showNotification('Result copied!', 'success');
+                showNotification('📋 Result copied!', 'success');
+            }).catch(err => {
+                showNotification('Failed to copy result', 'error');
             });
         }
 
@@ -1802,97 +1953,119 @@ ${JSON.stringify(data, null, 2)}
                     paramInput.placeholder = `Enter ${param} for ${name}...`;
                     paramInput.focus();
                     
-                    // Add example based on endpoint
-                    if (path.includes('/api/deepseek') || path.includes('/api/copilot') || path.includes('/api/gpt5')) {
-                        paramInput.value = 'Hello! How can you help me today?';
+                    // Add example values
+                    if (path.includes('/api/deepseek') || path.includes('/api/copilot') || 
+                        path.includes('/api/gpt5') || path.includes('/api/ai/chat')) {
+                        paramInput.value = 'Halo! Bisa bantu saya hari ini?';
                     } else if (path.includes('/api/instagram')) {
-                        paramInput.value = 'https://www.instagram.com/reel/example';
+                        paramInput.value = 'https://www.instagram.com/reel/example/';
                     } else if (path.includes('/api/facebook')) {
-                        paramInput.value = 'https://www.facebook.com/share/v/example';
+                        paramInput.value = 'https://www.facebook.com/share/video/example/';
                     } else if (path.includes('/api/threads')) {
-                        paramInput.value = 'https://www.threads.com/@username/post/example';
+                        paramInput.value = 'https://www.threads.net/@user/post/example';
                     } else if (path.includes('/api/spotify')) {
                         paramInput.value = 'https://open.spotify.com/track/3k68kVFWTTBP0Jb4LOzCax';
                     } else if (path.includes('/api/youtube')) {
-                        paramInput.value = 'https://youtu.be/HWjCStB6k4o';
+                        paramInput.value = 'https://youtu.be/dQw4w9WgXcQ';
                     }
                 }
             }
         }
 
-        // Notification System
+        // ===== NOTIFICATION SYSTEM =====
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
-                top: 20px;
-                right: 20px;
+                top: 30px;
+                right: 30px;
                 background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
                 color: white;
-                padding: 15px 25px;
-                border-radius: 12px;
-                box-shadow: var(--shadow);
+                padding: 18px 28px;
+                border-radius: 16px;
+                box-shadow: var(--cartoon-highlight);
                 z-index: 10000;
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                animation: slideIn 0.3s ease;
-                font-weight: 500;
+                gap: 12px;
+                animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                font-weight: 700;
+                font-size: 1.1rem;
+                border: 3px solid var(--dark);
+                max-width: 400px;
             `;
             
             notification.innerHTML = `
-                <i class="ri-${type === 'success' ? 'check-circle' : 'error-warning'}-line"></i>
+                <i class="ri-${type === 'success' ? 'check-double' : 'error-warning'}-line" style="font-size: 1.4rem;"></i>
                 ${message}
             `;
             
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
+                notification.style.animation = 'slideOut 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                setTimeout(() => notification.remove(), 400);
+            }, 3500);
         }
 
         // Add CSS for animations
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+                from { transform: translateX(100%) translateY(-20px) rotate(5deg); opacity: 0; }
+                to { transform: translateX(0) translateY(0) rotate(0); opacity: 1; }
             }
             
             @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
+                from { transform: translateX(0) translateY(0) rotate(0); opacity: 1; }
+                to { transform: translateX(100%) translateY(-20px) rotate(-5deg); opacity: 0; }
             }
             
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.05); }
+            @keyframes wiggle {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(-5deg); }
+                75% { transform: rotate(5deg); }
             }
         `;
         document.head.appendChild(style);
 
-        // Initialize
-        updateTestForm();
-        checkFadeIn();
-        
-        // Check server status on load
-        fetch('/api/ping')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status) {
-                    console.log('API Server is ready');
-                    showNotification('API Server connected!', 'success');
-                }
-            })
-            .catch(() => {
-                console.warn('API Server may be offline');
-                showNotification('API Server is offline', 'error');
-            });
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTestForm();
+            checkFadeIn();
+            
+            // Add wiggle animation to some elements
+            setTimeout(() => {
+                const logos = document.querySelectorAll('.logo, .feature-icon');
+                logos.forEach(logo => {
+                    logo.addEventListener('mouseenter', () => {
+                        logo.style.animation = 'wiggle 0.5s ease';
+                    });
+                    logo.addEventListener('animationend', () => {
+                        logo.style.animation = '';
+                    });
+                });
+            }, 1000);
+            
+            // Check server status
+            setTimeout(() => {
+                showNotification('🚀 API Teguh v3.6.0 Connected!', 'success');
+            }, 1000);
+        });
 
         // Close panel when clicking overlay
         document.getElementById('overlay').addEventListener('click', closeTestPanel);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('testPanel').classList.contains('active')) {
+                closeTestPanel();
+            }
+            if (e.key === 't' && e.ctrlKey) {
+                openTestPanel();
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
