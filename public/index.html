@@ -1430,18 +1430,18 @@
                     dan monitor performa server Anda di satu tempat.
                 </p>
                 <div class="cta-buttons">
-                    <a href="dashboard.html" class="btn btn-primary">
+                    <button onclick="showDashboard()" class="btn btn-primary">
                         <i class="ri-dashboard-line"></i>
                         Live Dashboard
-                    </a>
+                    </button>
                     <button onclick="openTestPanel()" class="btn btn-secondary">
                         <i class="ri-code-s-slash-line"></i>
                         Test API Now
                     </button>
-                    <a href="/api/info" target="_blank" class="btn btn-secondary">
+                    <button onclick="showDocumentation()" class="btn btn-secondary">
                         <i class="ri-book-open-line"></i>
                         Dokumentasi Lengkap
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1472,28 +1472,28 @@
                 <div class="footer-col">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html" class="footer-link"><i class="ri-home-line"></i> Home</a></li>
-                        <li><a href="dashboard.html" class="footer-link"><i class="ri-dashboard-line"></i> Dashboard</a></li>
-                        <li><a href="/api/info" target="_blank" class="footer-link"><i class="ri-book-line"></i> Dokumentasi</a></li>
-                        <li><a href="/api/status" target="_blank" class="footer-link"><i class="ri-line-chart-line"></i> Status</a></li>
+                        <li><a href="#" class="footer-link" onclick="showHome()"><i class="ri-home-line"></i> Home</a></li>
+                        <li><a href="#" class="footer-link" onclick="showDashboard()"><i class="ri-dashboard-line"></i> Dashboard</a></li>
+                        <li><a href="#" class="footer-link" onclick="showDocumentation()"><i class="ri-book-line"></i> Dokumentasi</a></li>
+                        <li><a href="#" class="footer-link" onclick="showStatus()"><i class="ri-line-chart-line"></i> Status</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h3>Endpoints</h3>
                     <ul class="footer-links">
-                        <li><a href="/api/deepseek?q=hello" target="_blank" class="footer-link"><i class="ri-robot-line"></i> AI Models</a></li>
-                        <li><a href="/api/instagram?url=" target="_blank" class="footer-link"><i class="ri-instagram-line"></i> Social Media</a></li>
-                        <li><a href="/api/spotify?url=" target="_blank" class="footer-link"><i class="ri-music-line"></i> Audio/Video</a></li>
-                        <li><a href="/api/status" target="_blank" class="footer-link"><i class="ri-tools-line"></i> Server Tools</a></li>
+                        <li><a href="#" class="footer-link" onclick="testEndpoint('/api/deepseek?q=', 'Deepseek AI', 'q')"><i class="ri-robot-line"></i> AI Models</a></li>
+                        <li><a href="#" class="footer-link" onclick="testEndpoint('/api/instagram?url=', 'Instagram', 'url')"><i class="ri-instagram-line"></i> Social Media</a></li>
+                        <li><a href="#" class="footer-link" onclick="testEndpoint('/api/spotify?url=', 'Spotify', 'url')"><i class="ri-music-line"></i> Audio/Video</a></li>
+                        <li><a href="#" class="footer-link" onclick="testEndpoint('/api/status', 'Server Status', '')"><i class="ri-tools-line"></i> Server Tools</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h3>Support</h3>
                     <ul class="footer-links">
                         <li><a href="mailto:support@api-teguh.com" class="footer-link"><i class="ri-mail-line"></i> Email Support</a></li>
-                        <li><a href="#" class="footer-link"><i class="ri-question-line"></i> FAQ</a></li>
-                        <li><a href="#" class="footer-link"><i class="ri-bug-line"></i> Report Bug</a></li>
-                        <li><a href="#" class="footer-link"><i class="ri-lightbulb-line"></i> Saran Fitur</a></li>
+                        <li><a href="#" class="footer-link" onclick="showFAQ()"><i class="ri-question-line"></i> FAQ</a></li>
+                        <li><a href="#" class="footer-link" onclick="reportBug()"><i class="ri-bug-line"></i> Report Bug</a></li>
+                        <li><a href="#" class="footer-link" onclick="suggestFeature()"><i class="ri-lightbulb-line"></i> Saran Fitur</a></li>
                     </ul>
                 </div>
             </div>
@@ -1709,13 +1709,26 @@
                                 <i class="ri-hd-line"></i> Quality
                             </label>
                             <select id="qualitySelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 3px solid var(--dark); border-radius: 8px; font-size: 1rem; color: var(--dark); font-family: 'Comic Neue', sans-serif;">
-                                <option value="best">Kualitas Terbaik</option>
-                                <option value="high">Tinggi</option>
-                                <option value="medium">Sedang</option>
-                                <option value="low">Rendah</option>
-                                <option value="360">360p</option>
-                                <option value="720">720p (HD)</option>
-                                <option value="1080">1080p (Full HD)</option>
+                                ${endpoint.includes('/api/youtube/audio') ? `
+                                    <option value="64">64 kbps</option>
+                                    <option value="128" selected>128 kbps (Recommended)</option>
+                                    <option value="192">192 kbps</option>
+                                    <option value="256">256 kbps</option>
+                                    <option value="320">320 kbps</option>
+                                ` : endpoint.includes('/api/youtube/video') ? `
+                                    <option value="144">144p</option>
+                                    <option value="240">240p</option>
+                                    <option value="360" selected>360p (Recommended)</option>
+                                    <option value="480">480p</option>
+                                    <option value="720">720p (HD)</option>
+                                    <option value="1080">1080p (Full HD)</option>
+                                    <option value="best">Best Available</option>
+                                ` : `
+                                    <option value="best" selected>Kualitas Terbaik</option>
+                                    <option value="high">Tinggi</option>
+                                    <option value="medium">Sedang</option>
+                                    <option value="low">Rendah</option>
+                                `}
                             </select>
                         </div>
                     `;
@@ -1729,7 +1742,7 @@
                                 <i class="ri-robot-line"></i> AI Model
                             </label>
                             <select id="modelSelect" style="width: 100%; padding: 12px; background: var(--card-bg); border: 3px solid var(--dark); border-radius: 8px; font-size: 1rem; color: var(--dark); font-family: 'Comic Neue', sans-serif;">
-                                <option value="auto">Auto Select (Recommended)</option>
+                                <option value="auto" selected>Auto Select (Recommended)</option>
                                 <option value="copilot">Copilot</option>
                                 <option value="deepseek">Deepseek</option>
                                 <option value="gpt5">GPT-5</option>
@@ -1782,57 +1795,29 @@
             
             try {
                 const startTime = Date.now();
-                // Simulate API call (replace with actual fetch)
-                await new Promise(resolve => setTimeout(resolve, 800));
+                const response = await fetch(endpoint);
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
                 
-                // Simulated response data
-                const mockResponses = {
-                    '/api/deepseek': {
-                        status: true,
-                        message: "Halo! Saya Deepseek AI, siap membantu Anda hari ini.",
-                        response: "Saya adalah AI yang dapat membantu Anda dengan berbagai pertanyaan. Apa yang bisa saya bantu?",
-                        timestamp: new Date().toISOString()
-                    },
-                    '/api/instagram': {
-                        status: true,
-                        message: "Download berhasil!",
-                        url: "https://example.com/video.mp4",
-                        quality: "HD",
-                        size: "15.2 MB",
-                        duration: "0:45"
-                    },
-                    '/api/status': {
-                        status: true,
-                        server: "API Teguh v3.6.0",
-                        uptime: "99.9%",
-                        requests: 15234,
-                        timestamp: new Date().toISOString(),
-                        cpu: "24%",
-                        memory: "65%"
-                    },
-                    '/api/health': {
-                        status: true,
-                        healthy: true,
-                        services: {
-                            ai: "online",
-                            social: "online",
-                            media: "online",
-                            database: "online"
-                        },
-                        timestamp: new Date().toISOString()
-                    }
-                };
-                
-                let mockKey = Object.keys(mockResponses).find(key => endpoint.includes(key));
-                if (!mockKey) mockKey = '/api/deepseek';
-                
-                const data = mockResponses[mockKey];
-                const response = { ok: true, status: 200 };
+                const data = await response.json();
                 
                 const statusColor = response.ok ? 'var(--success)' : 'var(--danger)';
                 const statusIcon = response.ok ? '✅' : '❌';
+                
+                // Format the response based on endpoint type
+                let formattedResponse = data;
+                
+                if (endpoint.includes('/api/instagram') || endpoint.includes('/api/facebook') || 
+                    endpoint.includes('/api/threads') || endpoint.includes('/api/youtube/') || 
+                    endpoint.includes('/api/spotify')) {
+                    formattedResponse = {
+                        status: data.status || data.status_code || response.status,
+                        message: data.message || 'Media download information',
+                        data: data.result || data,
+                        timestamp: data.timestamp || new Date().toISOString(),
+                        processing_time: data.processing_time || `${responseTime}ms`
+                    };
+                }
                 
                 resultContent.innerHTML = `
                     <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 3px dashed var(--dark);">
@@ -1856,12 +1841,17 @@
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                             <i class="ri-information-line" style="color: ${statusColor}; font-size: 1.5rem;"></i>
                             <span style="font-weight: 900; color: var(--dark); font-size: 1.2rem;">
-                                ${data.status ? '🎉 API Response Successful!' : '⚠️ API Error'}
+                                ${formattedResponse.status ? '🎉 API Response Successful!' : '⚠️ API Error'}
                             </span>
                         </div>
                         <div style="color: var(--dark); font-size: 1.1rem; font-weight: 500;">
-                            ${data.message || (data.status ? 'Request completed successfully!' : 'An error occurred')}
+                            ${formattedResponse.message || (formattedResponse.status ? 'Request completed successfully!' : 'An error occurred')}
                         </div>
+                        ${formattedResponse.processing_time ? `
+                            <div style="margin-top: 10px; color: var(--dark); opacity: 0.8; font-size: 0.9rem;">
+                                <i class="ri-time-line"></i> Processing time: ${formattedResponse.processing_time}
+                            </div>
+                        ` : ''}
                     </div>
                     
                     <div style="background: rgba(45, 48, 71, 0.9); border-radius: 12px; overflow: hidden; border: 3px solid var(--dark);">
@@ -1874,7 +1864,7 @@
                             </span>
                         </div>
                         <pre style="margin: 0; padding: 25px; color: #E6F0FF; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; max-height: 300px; overflow: auto; background: rgba(26, 28, 46, 0.8);">
-${JSON.stringify(data, null, 2)}
+${JSON.stringify(formattedResponse, null, 2)}
                         </pre>
                     </div>
                 `;
@@ -1882,6 +1872,7 @@ ${JSON.stringify(data, null, 2)}
                 showNotification('✅ API test completed!', 'success');
                 
             } catch (error) {
+                console.error('API Test Error:', error);
                 resultContent.innerHTML = `
                     <div style="background: rgba(255, 82, 82, 0.1); padding: 30px; border-radius: 12px; text-align: center; border: 2px solid var(--danger);">
                         <div style="font-size: 4rem; color: var(--danger); margin-bottom: 20px;">
@@ -2008,6 +1999,38 @@ ${JSON.stringify(data, null, 2)}
             }, 3500);
         }
 
+        // ===== UTILITY FUNCTIONS =====
+        function showHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showDashboard() {
+            // For now, just test the status endpoint
+            testEndpoint('/api/status', 'Server Status', '');
+            showNotification('📊 Loading server dashboard...', 'info');
+        }
+
+        function showDocumentation() {
+            testEndpoint('/api/info', 'API Information', '');
+            showNotification('📚 Loading API documentation...', 'info');
+        }
+
+        function showStatus() {
+            testEndpoint('/api/status', 'Server Status', '');
+        }
+
+        function showFAQ() {
+            showNotification('📖 FAQ section coming soon!', 'info');
+        }
+
+        function reportBug() {
+            showNotification('🐛 Bug reporting feature coming soon!', 'info');
+        }
+
+        function suggestFeature() {
+            showNotification('💡 Feature suggestion system coming soon!', 'info');
+        }
+
         // Add CSS for animations
         const style = document.createElement('style');
         style.textContent = `
@@ -2047,9 +2070,23 @@ ${JSON.stringify(data, null, 2)}
                 });
             }, 1000);
             
-            // Check server status
+            // Check server status on load
             setTimeout(() => {
                 showNotification('🚀 API Teguh v3.6.0 Connected!', 'success');
+                
+                // Auto-check server status
+                fetch('/api/status')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status) {
+                            // Update stats
+                            document.querySelector('.stat-item:nth-child(4) .stat-number').textContent = 
+                                `${data.memory?.usage_percent || '99.9'}%`;
+                        }
+                    })
+                    .catch(() => {
+                        // Silently handle error
+                    });
             }, 1000);
         });
 
