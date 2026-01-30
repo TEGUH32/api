@@ -19,7 +19,7 @@ let userRouter = require('./routes/user');
 // Import middleware
 const { authenticateToken, authenticateApiKey, optionalApiKey, errorHandler } = require('./middleware/auth');
 
-let PORT = process.env.PORT || 8000;
+let PORT = process.env.PORT || 3000;
 
 const app = express();
 
