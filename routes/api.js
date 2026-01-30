@@ -4,6 +4,8 @@ const express = require('express')
 const router = express.Router()
 const os = require('os')
 const axios = require('axios')
+const Database = require('../database') // Import database instance
+const rateLimit = require('express-rate-limit')
 
 // Helper Functions
 const formatResponse = (status, message, data = null) => ({
@@ -79,21 +81,124 @@ const getSpotifyTrackId = (url) => {
     return match ? match[1] : null
 }
 
+// API Key validation middleware
+const validateApiKey = async (req, res, next) => {
+    const apiKey = req.query.api_key || req.headers['x-api-key'] || req.headers['authorization']?.replace('Bearer ', '')
+    
+    if (!apiKey) {
+        return res.status(401).json({
+            status: false,
+            message: 'API key is required',
+            status_code: 401,
+            timestamp: new Date().toISOString(),
+            usage_hint: 'Add ?api_key=YOUR_KEY or header: x-api-key: YOUR_KEY'
+        })
+    }
+
+    try {
+        const apiKeyData = await Database.findApiKey(apiKey)
+        
+        if (!apiKeyData) {
+            return res.status(401).json({
+                status: false,
+                message: 'Invalid API key',
+                status_code: 401,
+                timestamp: new Date().toISOString()
+            })
+        }
+
+        // Check if API key is active
+        if (!apiKeyData.is_active) {
+            return res.status(403).json({
+                status: false,
+                message: 'API key is deactivated',
+                status_code: 403,
+                timestamp: new Date().toISOString()
+            })
+        }
+
+        // Check expiration
+        if (apiKeyData.expires_at && new Date(apiKeyData.expires_at) < new Date()) {
+            return res.status(403).json({
+                status: false,
+                message: 'API key has expired',
+                status_code: 403,
+                timestamp: new Date().toISOString()
+            })
+        }
+
+        // Check usage limits
+        const usageCheck = await Database.checkAndUpdateApiKeyUsage(apiKeyData.id)
+        
+        if (!usageCheck.allowed) {
+            return res.status(429).json({
+                status: false,
+                message: 'Daily request limit exceeded',
+                status_code: 429,
+                timestamp: new Date().toISOString(),
+                limit: usageCheck.limit,
+                remaining: 0,
+                reset_date: apiKeyData.last_reset_date
+            })
+        }
+
+        // Attach API key data to request
+        req.apiKey = apiKeyData
+        req.remainingQuota = usageCheck.remaining
+        req.dailyLimit = usageCheck.limit
+        
+        // Log the request
+        await Database.logUsage(
+            apiKeyData.user_id,
+            apiKeyData.id,
+            req.originalUrl,
+            200,
+            null,
+            req.ip
+        )
+        
+        next()
+    } catch (error) {
+        console.error('API Key validation error:', error)
+        return res.status(500).json({
+            status: false,
+            message: 'Internal server error during API key validation',
+            status_code: 500,
+            timestamp: new Date().toISOString()
+        })
+    }
+}
+
 // Common Headers Configuration
 const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     'Accept': 'application/json'
 }
 
-// API Endpoints
+// Apply API key validation to all scraper routes
+router.use(validateApiKey)
+
+// Add quota info middleware
+router.use((req, res, next) => {
+    // Add quota info to response headers
+    res.setHeader('X-RateLimit-Limit', req.dailyLimit)
+    res.setHeader('X-RateLimit-Remaining', req.remainingQuota)
+    res.setHeader('X-RateLimit-Reset', req.apiKey.last_reset_date)
+    next()
+})
 
 // API Status
-router.get('/status', (req, res) => {
+router.get('/status', async (req, res) => {
     try {
         const totalMemory = os.totalmem()
         const freeMemory = os.freemem()
         const usedMemory = totalMemory - freeMemory
         const memoryUsagePercent = ((usedMemory / totalMemory) * 100).toFixed(2)
+
+        // Get user info from API key
+        const user = await Database.findUserById(req.apiKey.user_id)
+        const apiKeys = await Database.getUserApiKeys(user.id)
+        const usageStats = await Database.getUserUsageStats(user.id, 7)
 
         const statusData = {
             server: {
@@ -112,10 +217,45 @@ router.get('/status', (req, res) => {
             network: {
                 interfaces: os.networkInterfaces()
             },
-            load: os.loadavg()
+            load: os.loadavg(),
+            user: {
+                id: user.id,
+                email: user.email,
+                full_name: user.full_name,
+                plan: user.plan,
+                is_verified: user.is_verified,
+                is_active: user.is_active
+            },
+            api_key: {
+                id: req.apiKey.id,
+                name: req.apiKey.name,
+                is_active: req.apiKey.is_active,
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota,
+                requests_today: req.apiKey.requests_today,
+                expires_at: req.apiKey.expires_at,
+                total_keys: apiKeys.length
+            },
+            usage_stats: {
+                last_7_days: usageStats,
+                total_requests: usageStats.reduce((sum, day) => sum + parseInt(day.total_requests), 0)
+            }
         }
 
-        return successResponse(res, 'Server is running normally', statusData)
+        return res.status(200).json({
+            status: true,
+            status_code: 200,
+            creator: global.creator,
+            message: 'Server is running normally',
+            processing_time: '0ms',
+            timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota,
+                reset_date: req.apiKey.last_reset_date
+            },
+            result: statusData
+        })
     } catch (error) {
         console.error('Status endpoint error:', error)
         return errorResponse(res, 'Failed to get server status')
@@ -123,15 +263,37 @@ router.get('/status', (req, res) => {
 })
 
 // Ping
-router.get('/ping', (req, res) => 
-    successResponse(res, 'Pong! Server is responsive')
-)
+router.get('/ping', async (req, res) => {
+    return res.status(200).json({
+        status: true,
+        status_code: 200,
+        creator: global.creator,
+        message: 'Pong! Server is responsive',
+        processing_time: '0ms',
+        timestamp: new Date().toISOString(),
+        quota: {
+            daily_limit: req.dailyLimit,
+            remaining: req.remainingQuota,
+            reset_date: req.apiKey.last_reset_date
+        }
+    })
+})
 
 // Threads Downloader
 router.get('/threads', async (req, res) => {
     const url = req.query.url
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -144,6 +306,15 @@ router.get('/threads', async (req, res) => {
     }
 
     if (!validateThreadsUrl(url)) {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -160,7 +331,6 @@ router.get('/threads', async (req, res) => {
     }
 
     try {
-        const startTime = Date.now()
         const cleanUrl = url.split('?')[0]
         
         const response = await axios.get(`https://api.vreden.my.id/api/v1/download/threads?url=${encodeURIComponent(cleanUrl)}`, {
@@ -170,6 +340,16 @@ router.get('/threads', async (req, res) => {
         })
 
         const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
         
         if (response.status === 200) {
             const data = response.data
@@ -181,6 +361,11 @@ router.get('/threads', async (req, res) => {
                 creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
                 result: {
                     media,
                     metadata: {
@@ -202,10 +387,26 @@ router.get('/threads', async (req, res) => {
             message: 'Threads API returned an error',
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: response.data?.message || 'Unknown error from external API',
             note: 'The Threads post might be unavailable, private, or the URL is invalid'
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Threads API error:', error.message)
         
         return res.status(200).json({
@@ -213,8 +414,13 @@ router.get('/threads', async (req, res) => {
             status_code: 500,
             creator: global.creator,
             message: 'Failed to fetch Threads data',
-            processing_time: '0ms',
+            processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: error.message,
             note: 'Threads API may be experiencing issues or the post is unavailable',
             fallback_data: {
@@ -237,8 +443,18 @@ router.get('/threads', async (req, res) => {
 router.get('/spotify', async (req, res) => {
     const url = req.query.url
     const quality = req.query.quality || 'high'
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -251,6 +467,15 @@ router.get('/spotify', async (req, res) => {
     }
 
     if (!validateSpotifyUrl(url)) {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -262,10 +487,18 @@ router.get('/spotify', async (req, res) => {
     }
 
     try {
-        const startTime = Date.now()
         const trackId = getSpotifyTrackId(url)
         
         if (!trackId) {
+            await Database.logUsage(
+                req.apiKey.user_id,
+                req.apiKey.id,
+                req.originalUrl,
+                400,
+                Date.now() - startTime,
+                req.ip
+            )
+            
             return res.status(400).json({
                 status: false,
                 status_code: 400,
@@ -283,6 +516,16 @@ router.get('/spotify', async (req, res) => {
 
         const processingTime = Date.now() - startTime
         
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
             const data = response.data
             
@@ -292,6 +535,11 @@ router.get('/spotify', async (req, res) => {
                 creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
                 result: {
                     id: data.result?.id || trackId,
                     title: data.result?.title || 'Unknown Track',
@@ -318,11 +566,27 @@ router.get('/spotify', async (req, res) => {
             message: 'Spotify API returned an error',
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: response.data?.message || 'Unknown error from external API',
             track_id: trackId,
             note: 'The track might be unavailable or the API is down'
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Spotify API error:', error.message)
         
         return res.status(200).json({
@@ -330,8 +594,13 @@ router.get('/spotify', async (req, res) => {
             status_code: 500,
             creator: global.creator,
             message: 'Failed to fetch Spotify data',
-            processing_time: '0ms',
+            processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: error.message,
             note: 'Spotify API may be experiencing issues or the track is unavailable',
             fallback_data: {
@@ -352,8 +621,18 @@ router.get('/spotify', async (req, res) => {
 router.get('/youtube/audio', async (req, res) => {
     const url = req.query.url
     const quality = req.query.quality || '128'
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -365,6 +644,15 @@ router.get('/youtube/audio', async (req, res) => {
     }
 
     if (!validateYouTubeUrl(url)) {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -376,11 +664,19 @@ router.get('/youtube/audio', async (req, res) => {
     }
 
     try {
-        const startTime = Date.now()
         const videoId = getVideoId(url)
         const validQualities = ['64', '128', '192', '256', '320']
         
         if (!validQualities.includes(quality)) {
+            await Database.logUsage(
+                req.apiKey.user_id,
+                req.apiKey.id,
+                req.originalUrl,
+                400,
+                Date.now() - startTime,
+                req.ip
+            )
+            
             return res.status(400).json({
                 status: false,
                 status_code: 400,
@@ -401,6 +697,16 @@ router.get('/youtube/audio', async (req, res) => {
 
         const processingTime = Date.now() - startTime
         
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
             const data = response.data
             
@@ -410,6 +716,11 @@ router.get('/youtube/audio', async (req, res) => {
                 creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
                 result: {
                     status: data.result?.status || true,
                     creator: global.creator,
@@ -454,11 +765,27 @@ router.get('/youtube/audio', async (req, res) => {
             message: 'YouTube Audio API returned an error',
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: response.data?.message || 'Unknown error from external API',
             video_id: videoId,
             note: 'The video might be unavailable, private, or restricted'
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('YouTube Audio API error:', error.message)
         
         return res.status(200).json({
@@ -466,8 +793,13 @@ router.get('/youtube/audio', async (req, res) => {
             status_code: 500,
             creator: global.creator,
             message: 'Failed to fetch YouTube audio data',
-            processing_time: '0ms',
+            processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: error.message
         })
     }
@@ -477,8 +809,18 @@ router.get('/youtube/audio', async (req, res) => {
 router.get('/youtube/video', async (req, res) => {
     const url = req.query.url
     const quality = req.query.quality || '360'
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -490,6 +832,15 @@ router.get('/youtube/video', async (req, res) => {
     }
 
     if (!validateYouTubeUrl(url)) {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
+        
         return res.status(400).json({
             status: false,
             status_code: 400,
@@ -501,12 +852,20 @@ router.get('/youtube/video', async (req, res) => {
     }
 
     try {
-        const startTime = Date.now()
         const videoId = getVideoId(url)
         const validQualities = ['144', '240', '360', '480', '720', '1080', '1440', '2160', 'best']
         const requestedQuality = parseYouTubeQuality(quality)
         
         if (!validQualities.includes(quality) && quality !== 'best') {
+            await Database.logUsage(
+                req.apiKey.user_id,
+                req.apiKey.id,
+                req.originalUrl,
+                400,
+                Date.now() - startTime,
+                req.ip
+            )
+            
             return res.status(400).json({
                 status: false,
                 status_code: 400,
@@ -527,6 +886,16 @@ router.get('/youtube/video', async (req, res) => {
 
         const processingTime = Date.now() - startTime
         
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
             const data = response.data
             
@@ -536,6 +905,11 @@ router.get('/youtube/video', async (req, res) => {
                 creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
                 result: {
                     status: data.result?.status || true,
                     creator: global.creator,
@@ -581,11 +955,27 @@ router.get('/youtube/video', async (req, res) => {
             message: 'YouTube Video API returned an error',
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: response.data?.message || 'Unknown error from external API',
             video_id: videoId,
             note: 'The video might be unavailable, private, restricted, or the quality is not available'
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('YouTube Video API error:', error.message)
         
         return res.status(200).json({
@@ -593,8 +983,13 @@ router.get('/youtube/video', async (req, res) => {
             status_code: 500,
             creator: global.creator,
             message: 'Failed to fetch YouTube video data',
-            processing_time: '0ms',
+            processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: error.message
         })
     }
@@ -604,8 +999,17 @@ router.get('/youtube/video', async (req, res) => {
 router.get('/deepseek', async (req, res) => {
     const q = req.query.q
     const model = req.query.model || 'deepseek-chat'
+    const startTime = Date.now()
 
     if (!q || q.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "q" is required', 400)
     }
 
@@ -614,16 +1018,62 @@ router.get('/deepseek', async (req, res) => {
             timeout: 30000
         })
 
+        const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
-            return successResponse(res, 'Deepseek API response successful', {
-                model: response.data.model || model,
-                response: response.data.response,
-                processing_time: response.data.processing_time || 'unknown',
-                source: 'external-api'
+            return res.status(200).json({
+                status: true,
+                status_code: 200,
+                creator: global.creator,
+                message: 'Deepseek API response successful',
+                processing_time: `${processingTime}ms`,
+                timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
+                result: {
+                    model: response.data.model || model,
+                    response: response.data.response,
+                    processing_time: response.data.processing_time || 'unknown',
+                    source: 'external-api'
+                }
             })
         }
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         return errorResponse(res, 'Deepseek API returned an error', response.status)
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Deepseek API error:', error.message)
         
         const fallbackResponses = [
@@ -632,12 +1082,25 @@ router.get('/deepseek', async (req, res) => {
             "Hello! I'm your AI assistant. How can I help you today?"
         ]
         
-        return successResponse(res, 'Deepseek API fallback response', {
-            model: 'deepseek-fallback',
-            response: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
-            processing_time: '0ms',
-            source: 'fallback',
-            note: 'External API may be experiencing issues'
+        return res.status(200).json({
+            status: true,
+            status_code: 200,
+            creator: global.creator,
+            message: 'Deepseek API fallback response',
+            processing_time: `${processingTime}ms`,
+            timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
+            result: {
+                model: 'deepseek-fallback',
+                response: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
+                processing_time: '0ms',
+                source: 'fallback',
+                note: 'External API may be experiencing issues'
+            }
         })
     }
 })
@@ -646,8 +1109,17 @@ router.get('/deepseek', async (req, res) => {
 router.get('/copilot', async (req, res) => {
     const text = req.query.text
     const model = req.query.model || 'copilot-default'
+    const startTime = Date.now()
 
     if (!text || text.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "text" is required', 400)
     }
 
@@ -657,23 +1129,65 @@ router.get('/copilot', async (req, res) => {
             headers
         })
 
+        const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
             const data = response.data
             
             return res.status(200).json({
                 status: true,
+                status_code: 200,
                 creator: global.creator,
                 message: 'Copilot AI response successful',
-                model: data.model || model,
-                result: data.result,
-                citations: data.citations || [],
-                processing_time: data.processing_time || 'unknown',
+                processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
-                source: 'microsoft-copilot'
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
+                result: {
+                    model: data.model || model,
+                    response: data.result,
+                    citations: data.citations || [],
+                    processing_time: data.processing_time || 'unknown',
+                    source: 'microsoft-copilot'
+                }
             })
         }
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         return errorResponse(res, 'Copilot API returned an error', response.status)
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Copilot API error:', error.message)
         
         const fallbackResponses = [
@@ -684,15 +1198,24 @@ router.get('/copilot', async (req, res) => {
         
         return res.status(200).json({
             status: true,
+            status_code: 200,
             creator: global.creator,
             message: 'Copilot API fallback response',
-            model: 'copilot-fallback',
-            result: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
-            citations: [],
-            processing_time: '0ms',
+            processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
-            source: 'fallback',
-            note: 'External API may be experiencing issues'
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
+            result: {
+                model: 'copilot-fallback',
+                response: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
+                citations: [],
+                processing_time: '0ms',
+                source: 'fallback',
+                note: 'External API may be experiencing issues'
+            }
         })
     }
 })
@@ -701,8 +1224,17 @@ router.get('/copilot', async (req, res) => {
 router.get('/gpt5', async (req, res) => {
     const text = req.query.text
     const model = req.query.model || 'gpt-5-smart'
+    const startTime = Date.now()
 
     if (!text || text.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "text" is required', 400)
     }
 
@@ -712,23 +1244,65 @@ router.get('/gpt5', async (req, res) => {
             headers
         })
 
+        const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
             const data = response.data
             
             return res.status(200).json({
                 status: true,
+                status_code: 200,
                 creator: global.creator,
                 message: 'GPT-5 AI response successful',
-                model: data.model || model,
-                result: data.result,
-                citations: data.citations || [],
-                processing_time: data.processing_time || 'unknown',
+                processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
-                source: 'openai-gpt5'
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
+                result: {
+                    model: data.model || model,
+                    response: data.result,
+                    citations: data.citations || [],
+                    processing_time: data.processing_time || 'unknown',
+                    source: 'openai-gpt5'
+                }
             })
         }
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         return errorResponse(res, 'GPT-5 API returned an error', response.status)
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('GPT-5 API error:', error.message)
         
         const fallbackResponses = [
@@ -739,15 +1313,24 @@ router.get('/gpt5', async (req, res) => {
         
         return res.status(200).json({
             status: true,
+            status_code: 200,
             creator: global.creator,
             message: 'GPT-5 API fallback response',
-            model: 'gpt-5-fallback',
-            result: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
-            citations: [],
-            processing_time: '0ms',
+            processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
-            source: 'fallback',
-            note: 'External API may be experiencing issues'
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
+            result: {
+                model: 'gpt-5-fallback',
+                response: fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)],
+                citations: [],
+                processing_time: '0ms',
+                source: 'fallback',
+                note: 'External API may be experiencing issues'
+            }
         })
     }
 })
@@ -755,25 +1338,52 @@ router.get('/gpt5', async (req, res) => {
 // Instagram Downloader
 router.get('/instagram', async (req, res) => {
     const url = req.query.url
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "url" is required', 400)
     }
 
     if (!validateInstagramUrl(url)) {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'URL must be a valid Instagram link', 400)
     }
 
     try {
-        const startTime = Date.now()
         const response = await axios.get(`https://api.vreden.my.id/api/v1/download/instagram?url=${encodeURIComponent(url)}`, {
             timeout: 30000,
             headers: { ...headers, 'Referer': 'https://www.instagram.com/' }
         })
 
+        const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         if (response.status === 200) {
             const data = response.data
-            const processingTime = Date.now() - startTime
             
             return res.status(200).json({
                 status: true,
@@ -782,6 +1392,11 @@ router.get('/instagram', async (req, res) => {
                 message: 'Instagram data fetched successfully',
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
                 result: data.result || data,
                 metadata: {
                     url_provided: url,
@@ -792,8 +1407,29 @@ router.get('/instagram', async (req, res) => {
                 }
             })
         }
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         return errorResponse(res, 'Instagram API returned an error', response.status)
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Instagram API error:', error.message)
         return errorResponse(res, 'Failed to fetch Instagram data')
     }
@@ -802,17 +1438,33 @@ router.get('/instagram', async (req, res) => {
 // Facebook Downloader
 router.get('/facebook', async (req, res) => {
     const url = req.query.url
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "url" is required', 400)
     }
 
     if (!validateFacebookUrl(url)) {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'URL must be a valid Facebook link', 400)
     }
 
     try {
-        const startTime = Date.now()
         const response = await axios.get(`https://api.vreden.my.id/api/v1/download/facebook?url=${encodeURIComponent(url)}`, {
             timeout: 45000,
             headers: { ...headers, 'Referer': 'https://www.facebook.com/' },
@@ -820,6 +1472,16 @@ router.get('/facebook', async (req, res) => {
         })
 
         const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
         
         if (response.status === 200) {
             const data = response.data
@@ -830,6 +1492,11 @@ router.get('/facebook', async (req, res) => {
                 creator: global.creator,
                 processing_time: `${processingTime}ms`,
                 timestamp: new Date().toISOString(),
+                quota: {
+                    daily_limit: req.dailyLimit,
+                    remaining: req.remainingQuota - 1,
+                    reset_date: req.apiKey.last_reset_date
+                },
                 result: {
                     title: data.result?.title || 'Facebook Video',
                     thumbnail: data.result?.thumbnail || null,
@@ -846,6 +1513,15 @@ router.get('/facebook', async (req, res) => {
             })
         }
 
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            response.status,
+            processingTime,
+            req.ip
+        )
+        
         return res.status(response.status).json({
             status: false,
             status_code: response.status,
@@ -853,9 +1529,25 @@ router.get('/facebook', async (req, res) => {
             message: 'Facebook API returned an error',
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             error: response.data?.message || 'Unknown error from external API'
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Facebook API error:', error.message)
         return errorResponse(res, 'Failed to fetch Facebook data')
     }
@@ -864,8 +1556,17 @@ router.get('/facebook', async (req, res) => {
 // Advanced AI Chat
 router.get('/ai/chat', async (req, res) => {
     const { text, model = 'auto' } = req.query
+    const startTime = Date.now()
 
     if (!text || text.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "text" is required', 400)
     }
 
@@ -892,17 +1593,61 @@ router.get('/ai/chat', async (req, res) => {
             })
             aiResponse = response.data
         } else {
+            await Database.logUsage(
+                req.apiKey.user_id,
+                req.apiKey.id,
+                req.originalUrl,
+                400,
+                Date.now() - startTime,
+                req.ip
+            )
             return errorResponse(res, `Model '${model}' is not supported. Available: auto, copilot, deepseek, gpt5`, 400)
         }
 
-        return successResponse(res, `${selectedModel} AI response successful`, {
-            model: selectedModel,
-            query: text,
-            response: aiResponse.result || aiResponse.response || 'No response from AI',
-            source: selectedModel,
-            details: aiResponse
+        const processingTime = Date.now() - startTime
+        
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            200,
+            processingTime,
+            req.ip
+        )
+        
+        return res.status(200).json({
+            status: true,
+            status_code: 200,
+            creator: global.creator,
+            message: `${selectedModel} AI response successful`,
+            processing_time: `${processingTime}ms`,
+            timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
+            result: {
+                model: selectedModel,
+                query: text,
+                response: aiResponse.result || aiResponse.response || 'No response from AI',
+                source: selectedModel,
+                details: aiResponse
+            }
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('AI Chat endpoint error:', error.message)
         return errorResponse(res, 'Failed to get AI response. Please try again.')
     }
@@ -911,8 +1656,17 @@ router.get('/ai/chat', async (req, res) => {
 // Social Media Tools
 router.get('/social/media', async (req, res) => {
     const { url, platform = 'auto', type = 'auto' } = req.query
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "url" is required', 400)
     }
 
@@ -942,6 +1696,8 @@ router.get('/social/media', async (req, res) => {
             }
         }
 
+        const processingTime = Date.now() - startTime
+        
         if (detectedPlatform === 'instagram') {
             const response = await axios.get(`https://api.vreden.my.id/api/v1/download/instagram?url=${encodeURIComponent(url)}`, {
                 timeout: 30000
@@ -975,16 +1731,58 @@ router.get('/social/media', async (req, res) => {
             })
             result = response.data
         } else {
+            await Database.logUsage(
+                req.apiKey.user_id,
+                req.apiKey.id,
+                req.originalUrl,
+                400,
+                processingTime,
+                req.ip
+            )
             return errorResponse(res, `Platform '${detectedPlatform}' is not supported yet. Currently supported: Instagram, Facebook, Spotify, YouTube, Threads.`, 400)
         }
 
-        return successResponse(res, `${detectedPlatform} ${detectedType} data fetched successfully`, {
-            platform: detectedPlatform,
-            content_type: detectedType,
-            url: url,
-            result: result.result || result
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            200,
+            processingTime,
+            req.ip
+        )
+        
+        return res.status(200).json({
+            status: true,
+            status_code: 200,
+            creator: global.creator,
+            message: `${detectedPlatform} ${detectedType} data fetched successfully`,
+            processing_time: `${processingTime}ms`,
+            timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
+            result: {
+                platform: detectedPlatform,
+                content_type: detectedType,
+                url: url,
+                result: result.result || result
+            }
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Social Media endpoint error:', error.message)
         return errorResponse(res, 'Failed to fetch social media data')
     }
@@ -993,8 +1791,17 @@ router.get('/social/media', async (req, res) => {
 // Unified Downloader
 router.get('/download', async (req, res) => {
     const { url, quality = 'best', platform = 'auto', type = 'auto' } = req.query
+    const startTime = Date.now()
 
     if (!url || url.trim() === '') {
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            400,
+            Date.now() - startTime,
+            req.ip
+        )
         return errorResponse(res, 'Query parameter "url" is required', 400)
     }
 
@@ -1024,7 +1831,7 @@ router.get('/download', async (req, res) => {
             }
         }
 
-        const startTime = Date.now()
+        const processingTime = Date.now() - startTime
         
         if (detectedPlatform === 'instagram') {
             const response = await axios.get(`https://api.vreden.my.id/api/v1/download/instagram?url=${encodeURIComponent(url)}`, {
@@ -1061,10 +1868,26 @@ router.get('/download', async (req, res) => {
             })
             result = response.data
         } else {
+            await Database.logUsage(
+                req.apiKey.user_id,
+                req.apiKey.id,
+                req.originalUrl,
+                400,
+                processingTime,
+                req.ip
+            )
             return errorResponse(res, `Platform '${detectedPlatform}' is not supported. Currently supported: Instagram, Facebook, Spotify, YouTube, Threads.`, 400)
         }
 
-        const processingTime = Date.now() - startTime
+        // Log usage
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            200,
+            processingTime,
+            req.ip
+        )
         
         return res.status(200).json({
             status: true,
@@ -1073,6 +1896,11 @@ router.get('/download', async (req, res) => {
             message: `${detectedPlatform} ${detectedType} data fetched successfully`,
             processing_time: `${processingTime}ms`,
             timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota - 1,
+                reset_date: req.apiKey.last_reset_date
+            },
             platform: detectedPlatform,
             content_type: detectedType,
             url: url,
@@ -1080,12 +1908,23 @@ router.get('/download', async (req, res) => {
             result: result.result || result
         })
     } catch (error) {
+        const processingTime = Date.now() - startTime
+        
+        await Database.logUsage(
+            req.apiKey.user_id,
+            req.apiKey.id,
+            req.originalUrl,
+            500,
+            processingTime,
+            req.ip
+        )
+        
         console.error('Download endpoint error:', error.message)
         return errorResponse(res, `Failed to fetch data from ${platform}`)
     }
 })
 
-// Health Check
+// Health Check (without API key for monitoring)
 router.get('/health', (req, res) => {
     const healthData = {
         status: 'healthy',
@@ -1126,7 +1965,10 @@ router.get('/health', (req, res) => {
 })
 
 // API Information
-router.get('/info', (req, res) => {
+router.get('/info', async (req, res) => {
+    const user = await Database.findUserById(req.apiKey.user_id)
+    const userPlans = await Database.getActivePlans()
+    
     const apiInfo = {
         name: 'API Teguh - Advanced REST API Server',
         version: '3.6.0',
@@ -1148,6 +1990,22 @@ router.get('/info', (req, res) => {
             download: { path: '/api/download', method: 'GET', description: 'Unified downloader for audio, video, and images' },
             ai_chat: { path: '/api/ai/chat', method: 'GET', description: 'Multi-model AI chat endpoint' }
         },
+        user_info: {
+            id: user.id,
+            email: user.email,
+            full_name: user.full_name,
+            plan: user.plan,
+            is_verified: user.is_verified,
+            is_active: user.is_active
+        },
+        api_key_info: {
+            id: req.apiKey.id,
+            name: req.apiKey.name,
+            daily_limit: req.dailyLimit,
+            remaining: req.remainingQuota,
+            expires_at: req.apiKey.expires_at
+        },
+        available_plans: userPlans,
         features: [
             'AI Chat with multiple models (Deepseek, Copilot, GPT-5)',
             'Instagram video/photo downloader',
@@ -1158,12 +2016,65 @@ router.get('/info', (req, res) => {
             'Threads images downloader',
             'Social media metadata extraction',
             'Unified audio/video/image download endpoint',
-            'Server monitoring'
+            'Server monitoring',
+            'API Key based authentication',
+            'Rate limiting by plan'
         ],
-        rate_limiting: '2000 requests per minute per IP'
+        rate_limiting: 'Daily limits based on subscription plan'
     }
 
-    return successResponse(res, 'API information retrieved successfully', apiInfo)
+    return res.status(200).json({
+        status: true,
+        status_code: 200,
+        creator: global.creator,
+        message: 'API information retrieved successfully',
+        timestamp: new Date().toISOString(),
+        quota: {
+            daily_limit: req.dailyLimit,
+            remaining: req.remainingQuota,
+            reset_date: req.apiKey.last_reset_date
+        },
+        result: apiInfo
+    })
+})
+
+// API Key usage endpoint
+router.get('/quota', async (req, res) => {
+    try {
+        const apiKeys = await Database.getUserApiKeys(req.apiKey.user_id)
+        const usageStats = await Database.getUserUsageStats(req.apiKey.user_id, 30)
+        
+        return res.status(200).json({
+            status: true,
+            status_code: 200,
+            creator: global.creator,
+            message: 'Quota information retrieved successfully',
+            timestamp: new Date().toISOString(),
+            quota: {
+                daily_limit: req.dailyLimit,
+                remaining: req.remainingQuota,
+                reset_date: req.apiKey.last_reset_date,
+                requests_today: req.apiKey.requests_today
+            },
+            result: {
+                current_key: {
+                    id: req.apiKey.id,
+                    name: req.apiKey.name,
+                    created_at: req.apiKey.created_at,
+                    expires_at: req.apiKey.expires_at,
+                    is_active: req.apiKey.is_active
+                },
+                all_keys: apiKeys,
+                usage_stats: {
+                    last_30_days: usageStats,
+                    total_requests: usageStats.reduce((sum, day) => sum + parseInt(day.total_requests), 0)
+                }
+            }
+        })
+    } catch (error) {
+        console.error('Quota endpoint error:', error)
+        return errorResponse(res, 'Failed to retrieve quota information')
+    }
 })
 
 // Catch-all for undefined routes
@@ -1188,7 +2099,8 @@ router.all('*', (req, res) =>
             'GET /api/download?url=media_url&quality=best',
             'GET /api/ai/chat?text=message&model=auto',
             'GET /api/health',
-            'GET /api/info'
+            'GET /api/info',
+            'GET /api/quota'
         ],
         timestamp: new Date().toISOString()
     })
