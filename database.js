@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
 class Database {
@@ -7,30 +8,43 @@ class Database {
         const connectionString = process.env.DATABASE_URL || process.env.NEON_URL;
         
         if (!connectionString) {
-            throw new Error('DATABASE_URL environment variable is required');
+            console.error('DATABASE_URL environment variable is not set');
+            // Fallback untuk development
+            this.pool = null;
+            return;
         }
 
-        this.pool = new Pool({
-            connectionString: connectionString,
-            ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-            max: 20, // Maximum number of clients in the pool
-            idleTimeoutMillis: 30000,
-            connectionTimeoutMillis: 2000,
-        });
+        try {
+            this.pool = new Pool({
+                connectionString: connectionString,
+                ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+                max: 20,
+                idleTimeoutMillis: 30000,
+                connectionTimeoutMillis: 5000,
+            });
 
-        this.pool.on('connect', () => {
-            console.log('Connected to PostgreSQL database');
-        });
+            this.pool.on('connect', () => {
+                console.log('Connected to PostgreSQL database');
+            });
 
-        this.pool.on('error', (err) => {
-            console.error('Unexpected error on idle client', err);
-        });
+            this.pool.on('error', (err) => {
+                console.error('Unexpected error on idle client', err);
+            });
 
-        // Initialize database
-        this.initializeTables();
+            // Initialize database
+            this.initializeTables();
+        } catch (error) {
+            console.error('Error initializing database pool:', error);
+            this.pool = null;
+        }
     }
 
     async initializeTables() {
+        if (!this.pool) {
+            console.log('Skipping table initialization - no database connection');
+            return;
+        }
+
         try {
             // Enable UUID extension
             await this.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
@@ -38,13 +52,13 @@ class Database {
             // Users table
             await this.query(`
                 CREATE TABLE IF NOT EXISTS users (
-                    id SERIAL PRIMARY KEY,
+                    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                     email VARCHAR(255) UNIQUE NOT NULL,
                     password VARCHAR(255) NOT NULL,
                     full_name VARCHAR(255),
                     plan VARCHAR(50) DEFAULT 'free',
-                    is_verified BOOLEAN DEFAULT false,
-                    is_active BOOLEAN DEFAULT true,
+                    is_verified INTEGER DEFAULT 1,
+                    is_active INTEGER DEFAULT 1,
                     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 )
@@ -53,11 +67,11 @@ class Database {
             // API Keys table
             await this.query(`
                 CREATE TABLE IF NOT EXISTS api_keys (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL,
+                    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                    user_id UUID NOT NULL,
                     key_value VARCHAR(255) UNIQUE NOT NULL,
-                    name VARCHAR(255),
-                    is_active BOOLEAN DEFAULT true,
+                    name VARCHAR(255) DEFAULT 'Default API Key',
+                    is_active INTEGER DEFAULT 1,
                     daily_limit INTEGER DEFAULT 100,
                     requests_today INTEGER DEFAULT 0,
                     last_reset_date DATE DEFAULT CURRENT_DATE,
@@ -67,30 +81,37 @@ class Database {
                 )
             `);
 
-            // Transactions table
+            // Sessions table
             await this.query(`
-                CREATE TABLE IF NOT EXISTS transactions (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL,
-                    transaction_id VARCHAR(255) UNIQUE NOT NULL,
-                    order_id VARCHAR(255),
-                    gross_amount DECIMAL(10, 2) NOT NULL,
-                    status VARCHAR(50) DEFAULT 'pending',
-                    payment_type VARCHAR(100),
-                    plan VARCHAR(50),
-                    payment_date TIMESTAMP WITH TIME ZONE,
-                    fraud_status VARCHAR(50),
+                CREATE TABLE IF NOT EXISTS sessions (
+                    id VARCHAR(255) PRIMARY KEY,
+                    user_id UUID NOT NULL,
+                    ip_address VARCHAR(45),
+                    user_agent TEXT,
                     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                 )
             `);
 
-            // Usage tracking table
+            // Reset tokens table
+            await this.query(`
+                CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                    user_id UUID NOT NULL,
+                    token VARCHAR(255) UNIQUE NOT NULL,
+                    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                    is_used INTEGER DEFAULT 0,
+                    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            `);
+
+            // Usage logs table
             await this.query(`
                 CREATE TABLE IF NOT EXISTS usage_logs (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL,
-                    api_key_id INTEGER NOT NULL,
+                    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                    user_id UUID NOT NULL,
+                    api_key_id UUID NOT NULL,
                     endpoint VARCHAR(255) NOT NULL,
                     status_code INTEGER,
                     response_time INTEGER,
@@ -101,115 +122,51 @@ class Database {
                 )
             `);
 
-            // Pricing plans table
-            await this.query(`
-                CREATE TABLE IF NOT EXISTS pricing_plans (
-                    id SERIAL PRIMARY KEY,
-                    name VARCHAR(255) UNIQUE NOT NULL,
-                    price INTEGER NOT NULL,
-                    daily_limit INTEGER NOT NULL,
-                    monthly_limit INTEGER NOT NULL,
-                    features TEXT,
-                    is_active BOOLEAN DEFAULT true,
-                    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-                )
-            `);
+            // Create indexes for better performance
+            await this.query('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_api_keys_user_id ON api_keys(user_id)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_api_keys_value ON api_keys(key_value)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_reset_tokens_token ON password_reset_tokens(token)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_reset_tokens_expires ON password_reset_tokens(expires_at)');
+            await this.query('CREATE INDEX IF NOT EXISTS idx_usage_logs_user_date ON usage_logs(user_id, created_at)');
 
-            // Sessions table
-            await this.query(`
-                CREATE TABLE IF NOT EXISTS sessions (
-                    id VARCHAR(255) PRIMARY KEY,
-                    user_id INTEGER NOT NULL,
-                    ip_address VARCHAR(45),
-                    user_agent TEXT,
-                    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-                    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-                )
-            `);
-
-            await this.insertDefaultPlans();
             console.log('Database tables initialized successfully');
         } catch (error) {
             console.error('Error initializing database tables:', error);
         }
     }
 
-    async insertDefaultPlans() {
-        try {
-            const plans = [
-                {
-                    name: 'free',
-                    price: 0,
-                    daily_limit: 100,
-                    monthly_limit: 3000,
-                    features: JSON.stringify(['100 requests/day', 'Basic support', 'Rate limiting'])
-                },
-                {
-                    name: 'basic',
-                    price: 49000,
-                    daily_limit: 1000,
-                    monthly_limit: 30000,
-                    features: JSON.stringify(['1000 requests/day', 'Priority support', 'Faster response', 'Rate limiting'])
-                },
-                {
-                    name: 'pro',
-                    price: 99000,
-                    daily_limit: 5000,
-                    monthly_limit: 150000,
-                    features: JSON.stringify(['5000 requests/day', '24/7 support', 'Fastest response', 'Advanced analytics', 'Rate limiting'])
-                },
-                {
-                    name: 'enterprise',
-                    price: 249000,
-                    daily_limit: 99999,
-                    monthly_limit: 999999,
-                    features: JSON.stringify(['Unlimited requests', 'Dedicated support', 'Custom integration', 'Advanced analytics', 'Priority queue', 'Rate limiting'])
-                }
-            ];
-
-            for (const plan of plans) {
-                await this.query(
-                    `INSERT INTO pricing_plans (name, price, daily_limit, monthly_limit, features) 
-                     VALUES ($1, $2, $3, $4, $5) 
-                     ON CONFLICT (name) DO NOTHING`,
-                    [plan.name, plan.price, plan.daily_limit, plan.monthly_limit, plan.features]
-                );
-            }
-        } catch (error) {
-            console.error('Error inserting default plans:', error);
-        }
-    }
-
     async query(text, params) {
+        if (!this.pool) {
+            throw new Error('Database connection not available');
+        }
+
         const client = await this.pool.connect();
         try {
             const result = await client.query(text, params);
             return result;
         } catch (error) {
-            console.error('Database query error:', error);
+            console.error('Database query error:', error.message);
             throw error;
         } finally {
             client.release();
         }
     }
 
-    // User methods
-    async createUser(email, password, fullName) {
+    // ============= USER METHODS =============
+    async createUser(userData) {
         try {
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const { id, email, password, full_name, plan } = userData;
             const result = await this.query(
-                `INSERT INTO users (email, password, full_name) 
-                 VALUES ($1, $2, $3) 
-                 RETURNING id, email, full_name, created_at`,
-                [email, hashedPassword, fullName]
+                `INSERT INTO users (id, email, password, full_name, plan) 
+                 VALUES ($1, $2, $3, $4, $5) 
+                 RETURNING *`,
+                [id, email.toLowerCase().trim(), password, full_name, plan || 'free']
             );
-            return {
-                id: result.rows[0].id,
-                email: result.rows[0].email,
-                fullName: result.rows[0].full_name,
-                createdAt: result.rows[0].created_at
-            };
+            return result.rows[0];
         } catch (error) {
             console.error('Error creating user:', error);
             throw error;
@@ -220,7 +177,7 @@ class Database {
         try {
             const result = await this.query(
                 `SELECT * FROM users WHERE email = $1`,
-                [email]
+                [email.toLowerCase().trim()]
             );
             return result.rows[0];
         } catch (error) {
@@ -242,37 +199,74 @@ class Database {
         }
     }
 
-    async updateUserPlan(userId, plan) {
+    async updateUser(userId, updateData) {
         try {
-            const result = await this.query(
-                `UPDATE users 
-                 SET plan = $1, updated_at = CURRENT_TIMESTAMP 
-                 WHERE id = $2 
-                 RETURNING *`,
-                [plan, userId]
-            );
+            const fields = [];
+            const values = [];
+            let paramCount = 1;
+
+            for (const [key, value] of Object.entries(updateData)) {
+                fields.push(`${key} = $${paramCount}`);
+                values.push(value);
+                paramCount++;
+            }
+
+            // Always update updated_at
+            fields.push('updated_at = CURRENT_TIMESTAMP');
+            values.push(userId);
+
+            const query = `
+                UPDATE users 
+                SET ${fields.join(', ')} 
+                WHERE id = $${paramCount} 
+                RETURNING id, email, full_name, plan, is_verified, created_at
+            `;
+
+            const result = await this.query(query, values);
             return result.rows[0];
         } catch (error) {
-            console.error('Error updating user plan:', error);
+            console.error('Error updating user:', error);
             throw error;
         }
     }
 
-    // API Key methods
-    async createApiKey(userId, name, expiresIn = 365) {
+    async deleteUser(userId) {
+        const client = await this.pool.connect();
         try {
-            const keyValue = 'api_' + require('crypto').randomBytes(32).toString('hex');
-            const expiresAt = new Date();
-            expiresAt.setDate(expiresAt.getDate() + expiresIn);
+            await client.query('BEGIN');
 
-            const user = await this.findUserById(userId);
-            const dailyLimit = this.getDailyLimitForPlan(user.plan);
+            // Delete related records first
+            await client.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
+            await client.query('DELETE FROM password_reset_tokens WHERE user_id = $1', [userId]);
+            await client.query('DELETE FROM usage_logs WHERE user_id = $1', [userId]);
+            await client.query('DELETE FROM api_keys WHERE user_id = $1', [userId]);
+            
+            // Finally delete the user
+            const result = await client.query(
+                'DELETE FROM users WHERE id = $1 RETURNING id',
+                [userId]
+            );
 
+            await client.query('COMMIT');
+            return result.rowCount > 0;
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('Error deleting user:', error);
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
+    // ============= API KEY METHODS =============
+    async createApiKey(apiKeyData) {
+        try {
+            const { id, user_id, key_value, name, daily_limit, expires_at } = apiKeyData;
             const result = await this.query(
-                `INSERT INTO api_keys (user_id, key_value, name, daily_limit, expires_at) 
-                 VALUES ($1, $2, $3, $4, $5) 
+                `INSERT INTO api_keys (id, user_id, key_value, name, daily_limit, expires_at) 
+                 VALUES ($1, $2, $3, $4, $5, $6) 
                  RETURNING *`,
-                [userId, keyValue, name, dailyLimit, expiresAt.toISOString()]
+                [id, user_id, key_value, name, daily_limit, expires_at]
             );
             return result.rows[0];
         } catch (error) {
@@ -281,99 +275,10 @@ class Database {
         }
     }
 
-    getDailyLimitForPlan(plan) {
-        const limits = {
-            'free': 100,
-            'basic': 1000,
-            'pro': 5000,
-            'enterprise': 99999
-        };
-        return limits[plan] || 100;
-    }
-
-    async findApiKey(keyValue) {
-        try {
-            const result = await this.query(
-                `SELECT * FROM api_keys 
-                 WHERE key_value = $1 AND is_active = true`,
-                [keyValue]
-            );
-            return result.rows[0];
-        } catch (error) {
-            console.error('Error finding API key:', error);
-            throw error;
-        }
-    }
-
-    async checkAndUpdateApiKeyUsage(apiKeyId) {
-        const client = await this.pool.connect();
-        try {
-            await client.query('BEGIN');
-
-            // Check if we need to reset the daily counter
-            await client.query(
-                `UPDATE api_keys 
-                 SET requests_today = CASE 
-                     WHEN last_reset_date < CURRENT_DATE THEN 0 
-                     ELSE requests_today 
-                 END,
-                 last_reset_date = CASE 
-                     WHEN last_reset_date < CURRENT_DATE THEN CURRENT_DATE 
-                     ELSE last_reset_date 
-                 END
-                 WHERE id = $1`,
-                [apiKeyId]
-            );
-
-            // Get the current usage and limit
-            const usageResult = await client.query(
-                `SELECT requests_today, daily_limit FROM api_keys WHERE id = $1`,
-                [apiKeyId]
-            );
-
-            if (usageResult.rows.length === 0) {
-                throw new Error('API key not found');
-            }
-
-            const row = usageResult.rows[0];
-            const hasLimit = row.requests_today < row.daily_limit;
-
-            if (hasLimit) {
-                // Increment the counter
-                await client.query(
-                    `UPDATE api_keys SET requests_today = requests_today + 1 WHERE id = $1`,
-                    [apiKeyId]
-                );
-
-                await client.query('COMMIT');
-                return {
-                    allowed: true,
-                    remaining: row.daily_limit - row.requests_today - 1,
-                    limit: row.daily_limit
-                };
-            } else {
-                await client.query('COMMIT');
-                return {
-                    allowed: false,
-                    remaining: 0,
-                    limit: row.daily_limit
-                };
-            }
-        } catch (error) {
-            await client.query('ROLLBACK');
-            console.error('Error checking API key usage:', error);
-            throw error;
-        } finally {
-            client.release();
-        }
-    }
-
     async getUserApiKeys(userId) {
         try {
             const result = await this.query(
-                `SELECT id, key_value, name, is_active, daily_limit, 
-                        requests_today, last_reset_date, created_at, expires_at 
-                 FROM api_keys 
+                `SELECT * FROM api_keys 
                  WHERE user_id = $1 
                  ORDER BY created_at DESC`,
                 [userId]
@@ -385,165 +290,81 @@ class Database {
         }
     }
 
-    async deleteApiKey(keyId, userId) {
+    async findApiKeyByValue(keyValue) {
+        try {
+            const result = await this.query(
+                `SELECT ak.*, u.plan, u.is_active as user_active
+                 FROM api_keys ak
+                 JOIN users u ON ak.user_id = u.id
+                 WHERE ak.key_value = $1 AND ak.is_active = 1 AND u.is_active = 1`,
+                [keyValue]
+            );
+            return result.rows[0];
+        } catch (error) {
+            console.error('Error finding API key by value:', error);
+            throw error;
+        }
+    }
+
+    async updateApiKeyUsage(apiKeyId) {
+        const client = await this.pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            // Reset counter if it's a new day
+            await client.query(
+                `UPDATE api_keys 
+                 SET requests_today = CASE 
+                     WHEN last_reset_date < CURRENT_DATE THEN 1 
+                     ELSE requests_today + 1 
+                 END,
+                 last_reset_date = CASE 
+                     WHEN last_reset_date < CURRENT_DATE THEN CURRENT_DATE 
+                     ELSE last_reset_date 
+                 END
+                 WHERE id = $1`,
+                [apiKeyId]
+            );
+
+            // Get updated usage
+            const result = await client.query(
+                `SELECT requests_today, daily_limit FROM api_keys WHERE id = $1`,
+                [apiKeyId]
+            );
+
+            await client.query('COMMIT');
+            return result.rows[0];
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('Error updating API key usage:', error);
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
+    async deleteApiKey(apiKeyId, userId) {
         try {
             const result = await this.query(
                 `DELETE FROM api_keys WHERE id = $1 AND user_id = $2 RETURNING id`,
-                [keyId, userId]
+                [apiKeyId, userId]
             );
-            return result.rowCount;
+            return result.rowCount > 0;
         } catch (error) {
             console.error('Error deleting API key:', error);
             throw error;
         }
     }
 
-    // Transaction methods
-    async createTransaction(userId, transactionId, orderId, grossAmount, plan) {
+    // ============= SESSION METHODS =============
+    async createSession(sessionData) {
         try {
+            const { id, user_id, ip_address, user_agent } = sessionData;
             const result = await this.query(
-                `INSERT INTO transactions (user_id, transaction_id, order_id, gross_amount, plan) 
-                 VALUES ($1, $2, $3, $4, $5) 
-                 RETURNING id`,
-                [userId, transactionId, orderId, grossAmount, plan]
-            );
-            return { id: result.rows[0].id };
-        } catch (error) {
-            console.error('Error creating transaction:', error);
-            throw error;
-        }
-    }
-
-    async updateTransactionStatus(transactionId, status, paymentData = {}) {
-        try {
-            const result = await this.query(
-                `UPDATE transactions 
-                 SET status = $1, 
-                     payment_type = $2, 
-                     payment_date = $3, 
-                     fraud_status = $4 
-                 WHERE transaction_id = $5 
+                `INSERT INTO sessions (id, user_id, ip_address, user_agent) 
+                 VALUES ($1, $2, $3, $4) 
                  RETURNING *`,
-                [
-                    status,
-                    paymentData.payment_type || null,
-                    paymentData.payment_date || null,
-                    paymentData.fraud_status || null,
-                    transactionId
-                ]
-            );
-            return result.rowCount;
-        } catch (error) {
-            console.error('Error updating transaction status:', error);
-            throw error;
-        }
-    }
-
-    async getUserTransactions(userId, limit = 20) {
-        try {
-            const result = await this.query(
-                `SELECT * FROM transactions 
-                 WHERE user_id = $1 
-                 ORDER BY created_at DESC 
-                 LIMIT $2`,
-                [userId, limit]
-            );
-            return result.rows;
-        } catch (error) {
-            console.error('Error getting user transactions:', error);
-            throw error;
-        }
-    }
-
-    // Usage tracking
-    async logUsage(userId, apiKeyId, endpoint, statusCode, responseTime, ipAddress) {
-        try {
-            const result = await this.query(
-                `INSERT INTO usage_logs (user_id, api_key_id, endpoint, status_code, response_time, ip_address) 
-                 VALUES ($1, $2, $3, $4, $5, $6) 
-                 RETURNING id`,
-                [userId, apiKeyId, endpoint, statusCode, responseTime, ipAddress]
-            );
-            return result.rows[0].id;
-        } catch (error) {
-            console.error('Error logging usage:', error);
-            throw error;
-        }
-    }
-
-    async getUserUsageStats(userId, days = 7) {
-        try {
-            const startDate = new Date();
-            startDate.setDate(startDate.getDate() - days);
-
-            const result = await this.query(
-                `SELECT 
-                    DATE(created_at) as date,
-                    COUNT(*) as total_requests,
-                    AVG(response_time) as avg_response_time,
-                    SUM(CASE WHEN status_code >= 400 THEN 1 ELSE 0 END) as error_count
-                 FROM usage_logs 
-                 WHERE user_id = $1 AND created_at >= $2
-                 GROUP BY DATE(created_at)
-                 ORDER BY date DESC`,
-                [userId, startDate.toISOString()]
-            );
-            return result.rows;
-        } catch (error) {
-            console.error('Error getting user usage stats:', error);
-            throw error;
-        }
-    }
-
-    // Pricing plans
-    async getActivePlans() {
-        try {
-            const result = await this.query(
-                `SELECT * FROM pricing_plans 
-                 WHERE is_active = true 
-                 ORDER BY price ASC`
-            );
-            return result.rows.map(row => ({
-                ...row,
-                features: row.features ? JSON.parse(row.features) : []
-            }));
-        } catch (error) {
-            console.error('Error getting active plans:', error);
-            throw error;
-        }
-    }
-
-    async getPlanByName(planName) {
-        try {
-            const result = await this.query(
-                `SELECT * FROM pricing_plans WHERE name = $1`,
-                [planName]
-            );
-            if (result.rows[0]) {
-                return {
-                    ...result.rows[0],
-                    features: result.rows[0].features ? JSON.parse(result.rows[0].features) : []
-                };
-            }
-            return null;
-        } catch (error) {
-            console.error('Error getting plan by name:', error);
-            throw error;
-        }
-    }
-
-    // Session management
-    async createSession(sessionId, userId, ipAddress, userAgent, expiresIn = '7d') {
-        try {
-            const expiresAt = new Date();
-            const expiresInSeconds = expiresIn === '7d' ? 7 * 24 * 60 * 60 : 24 * 60 * 60;
-            expiresAt.setSeconds(expiresAt.getSeconds() + expiresInSeconds);
-
-            const result = await this.query(
-                `INSERT INTO sessions (id, user_id, ip_address, user_agent, expires_at) 
-                 VALUES ($1, $2, $3, $4, $5) 
-                 RETURNING *`,
-                [sessionId, userId, ipAddress, userAgent, expiresAt.toISOString()]
+                [id, user_id, ip_address, user_agent]
             );
             return result.rows[0];
         } catch (error) {
@@ -555,8 +376,7 @@ class Database {
     async findSession(sessionId) {
         try {
             const result = await this.query(
-                `SELECT * FROM sessions 
-                 WHERE id = $1 AND expires_at > CURRENT_TIMESTAMP`,
+                `SELECT * FROM sessions WHERE id = $1`,
                 [sessionId]
             );
             return result.rows[0];
@@ -572,7 +392,7 @@ class Database {
                 `DELETE FROM sessions WHERE id = $1 RETURNING id`,
                 [sessionId]
             );
-            return result.rowCount;
+            return result.rowCount > 0;
         } catch (error) {
             console.error('Error deleting session:', error);
             throw error;
@@ -581,8 +401,9 @@ class Database {
 
     async cleanupExpiredSessions() {
         try {
+            // Delete sessions older than 7 days
             const result = await this.query(
-                `DELETE FROM sessions WHERE expires_at < CURRENT_TIMESTAMP RETURNING id`
+                `DELETE FROM sessions WHERE created_at < CURRENT_TIMESTAMP - INTERVAL '7 days'`
             );
             return result.rowCount;
         } catch (error) {
@@ -591,12 +412,150 @@ class Database {
         }
     }
 
-    async close() {
+    // ============= PASSWORD RESET METHODS =============
+    async saveResetToken(userId, token, expiry) {
         try {
-            await this.pool.end();
-            console.log('Database connection pool closed');
+            await this.query(
+                `INSERT INTO password_reset_tokens (user_id, token, expires_at) 
+                 VALUES ($1, $2, $3)`,
+                [userId, token, expiry]
+            );
+            return true;
         } catch (error) {
-            console.error('Error closing database connection pool:', error);
+            console.error('Error saving reset token:', error);
+            throw error;
+        }
+    }
+
+    async verifyResetToken(token) {
+        try {
+            const result = await this.query(
+                `SELECT * FROM password_reset_tokens 
+                 WHERE token = $1 
+                   AND expires_at > CURRENT_TIMESTAMP 
+                   AND is_used = 0`,
+                [token]
+            );
+            return result.rows[0];
+        } catch (error) {
+            console.error('Error verifying reset token:', error);
+            throw error;
+        }
+    }
+
+    async invalidateResetToken(token) {
+        try {
+            const result = await this.query(
+                `UPDATE password_reset_tokens 
+                 SET is_used = 1 
+                 WHERE token = $1`,
+                [token]
+            );
+            return result.rowCount > 0;
+        } catch (error) {
+            console.error('Error invalidating reset token:', error);
+            throw error;
+        }
+    }
+
+    // ============= USAGE STATS METHODS =============
+    async logUsage(usageData) {
+        try {
+            const { user_id, api_key_id, endpoint, status_code, response_time, ip_address } = usageData;
+            const result = await this.query(
+                `INSERT INTO usage_logs (user_id, api_key_id, endpoint, status_code, response_time, ip_address) 
+                 VALUES ($1, $2, $3, $4, $5, $6) 
+                 RETURNING id`,
+                [user_id, api_key_id, endpoint, status_code, response_time, ip_address]
+            );
+            return result.rows[0].id;
+        } catch (error) {
+            console.error('Error logging usage:', error);
+            throw error;
+        }
+    }
+
+    async getUserUsageStats(userId, days = 1) {
+        try {
+            const result = await this.query(
+                `SELECT 
+                    DATE(created_at) as date,
+                    COUNT(*) as total_requests,
+                    AVG(response_time) as avg_response_time
+                 FROM usage_logs 
+                 WHERE user_id = $1 
+                   AND created_at >= CURRENT_DATE - INTERVAL '${days} days'
+                 GROUP BY DATE(created_at)
+                 ORDER BY date DESC`,
+                [userId]
+            );
+            return result.rows;
+        } catch (error) {
+            console.error('Error getting user usage stats:', error);
+            throw error;
+        }
+    }
+
+    async getApiKeyUsageStats(apiKeyId, days = 7) {
+        try {
+            const result = await this.query(
+                `SELECT 
+                    DATE(created_at) as date,
+                    COUNT(*) as total_requests,
+                    AVG(response_time) as avg_response_time
+                 FROM usage_logs 
+                 WHERE api_key_id = $1 
+                   AND created_at >= CURRENT_DATE - INTERVAL '${days} days'
+                 GROUP BY DATE(created_at)
+                 ORDER BY date DESC`,
+                [apiKeyId]
+            );
+            return result.rows;
+        } catch (error) {
+            console.error('Error getting API key usage stats:', error);
+            throw error;
+        }
+    }
+
+    // ============= HELPER METHODS =============
+    async testConnection() {
+        try {
+            const result = await this.query('SELECT NOW() as current_time');
+            console.log('Database connection test successful:', result.rows[0].current_time);
+            return true;
+        } catch (error) {
+            console.error('Database connection test failed:', error);
+            return false;
+        }
+    }
+
+    async getDatabaseStats() {
+        try {
+            const stats = {};
+            
+            // Get table counts
+            const tables = ['users', 'api_keys', 'sessions', 'usage_logs', 'password_reset_tokens'];
+            
+            for (const table of tables) {
+                const result = await this.query(`SELECT COUNT(*) FROM ${table}`);
+                stats[table] = parseInt(result.rows[0].count);
+            }
+            
+            return stats;
+        } catch (error) {
+            console.error('Error getting database stats:', error);
+            return null;
+        }
+    }
+
+    async close() {
+        if (this.pool) {
+            try {
+                await this.pool.end();
+                console.log('Database connection pool closed');
+            } catch (error) {
+                console.error('Error closing database connection pool:', error);
+            }
         }
     }
 }
